@@ -1,0 +1,20 @@
+---
+filename: "**/*.{tsx,jsx,ts,js,css}"
+alwaysApply: true
+---
+
+# SaaS Minimal UI Design System (Stripe/Linear/Figma/Notion/Basecamp)
+
+## AI Response Behavior
+- **Always start every response with**: "Heyyy"
+
+## Core Principles
+- **Ultra-clean & minimal**: Maximum whitespace (padding: 4-8rem sections), no clutter. Focus on 1-3 key messages per screen.
+- **Typography**: Sans-serif hierarchy. H1: 3-4rem bold/modern (e.g., Geist, SF Pro). Body: 1rem-1.125rem, 1.5-1.75 line-height. Readability first.
+- **Colors**: Monochrome/neutral base (grays #f8f9fa to #111). 1 accent (brand blue/green/purple). No gradients unless hero (subtle).
+- **Components**: shadcn/ui + Tailwind. Buttons: Large, rounded-md, hover:scale-[1.02]. Cards: Subtle shadows (md:shadow-md).
+- **Layout**: Single-column hero → 3-col features → Testimonials → CTA footer. Responsive grid (grid-cols-1 md:grid-cols-3).
+- **Interactions**: Micro-animations (fade-in, hover lift). No heavy JS. Scroll-smooth.
+- **Avoid**: Busy icons, carousels, popups, rainbow colors, stock photos. Use subtle illustrations/screenshots like Linear/Basecamp.
+
+## Page Structure Template
