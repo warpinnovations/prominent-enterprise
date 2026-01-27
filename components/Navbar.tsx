@@ -50,7 +50,7 @@ export const Navbar = () => {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-6">
+        {/* <div className="hidden md:flex items-center gap-6">
           <Link
             href="/login"
             className="text-[13px] font-medium text-white/60 hover:text-white transition-colors"
@@ -64,7 +64,7 @@ export const Navbar = () => {
             Get Started
             <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </Link>
-        </div>
+        </div> */}
 
         {/* Mobile Toggle */}
         <button
