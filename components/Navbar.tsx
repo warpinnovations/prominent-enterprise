@@ -42,12 +42,18 @@ export const Navbar = () => {
           {["Features", "Method", "Customers", "Pricing"].map((item) => (
             <Link
               key={item}
-              href={`#${item.toLowerCase()}`}
+              href={item === "Prototype" ? "/prototype/payroll" : `/#${item.toLowerCase()}`}
               className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
             >
               {item}
             </Link>
           ))}
+          <Link
+            href="/prototype/payroll"
+            className="text-[13px] font-medium text-primary-purple hover:text-primary-purple/80 transition-colors tracking-wide"
+          >
+            Prototype
+          </Link>
         </div>
 
         <div className="hidden md:flex items-center gap-6">
@@ -82,17 +88,20 @@ export const Navbar = () => {
           animate={{ opacity: 1, y: 0 }}
           className="absolute top-full left-0 right-0 bg-bg-layout-purple border-b border-white/10 p-6 md:hidden flex flex-col gap-6"
         >
-          <Link href="#features" className="text-lg font-medium text-white">
+          <Link href="/#features" className="text-lg font-medium text-white">
             Features
           </Link>
-          <Link href="#method" className="text-lg font-medium text-white">
+          <Link href="/#method" className="text-lg font-medium text-white">
             Method
           </Link>
-          <Link href="#customers" className="text-lg font-medium text-white">
+          <Link href="/#customers" className="text-lg font-medium text-white">
             Customers
           </Link>
-          <Link href="#pricing" className="text-lg font-medium text-white">
+          <Link href="/#pricing" className="text-lg font-medium text-white">
             Pricing
+          </Link>
+          <Link href="/prototype/payroll" className="text-lg font-medium text-primary-purple">
+            Prototype
           </Link>
           <div className="flex flex-col gap-4 pt-4 border-t border-white/10">
             <Link href="/login" className="text-lg font-medium text-white">
