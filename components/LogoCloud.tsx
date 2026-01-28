@@ -16,7 +16,7 @@ export const LogoCloud = () => {
         staggerChildren: 0.1,
       },
     },
-  };
+  } as const;
 
   const itemVariants = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -28,7 +28,7 @@ export const LogoCloud = () => {
         ease: "easeOut",
       },
     },
-  };
+  } as const;
 
   return (
     <section className="py-20 border-y border-white/5 bg-bg-layout-purple/50">
