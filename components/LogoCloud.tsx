@@ -16,7 +16,7 @@ export const LogoCloud = () => {
         staggerChildren: 0.1,
       },
     },
-  };
+  } as const;
 
   const itemVariants = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -28,12 +28,12 @@ export const LogoCloud = () => {
         ease: "easeOut",
       },
     },
-  };
+  } as const;
 
   return (
     <section className="py-20 border-y border-white/5 bg-bg-layout-purple/50">
       <div className="container mx-auto px-6">
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -41,7 +41,7 @@ export const LogoCloud = () => {
         >
           Trusted by industry leaders worldwide
         </motion.p>
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"

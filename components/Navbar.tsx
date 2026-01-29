@@ -6,7 +6,11 @@ import { motion } from "framer-motion";
 import { Menu, X, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export const Navbar = () => {
+type NavbarProps = {
+  variant?: "default" | "quiz";
+};
+
+export const Navbar = ({ variant = "default" }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -37,46 +41,45 @@ export const Navbar = () => {
           </span>
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-10">
-          {["Features", "Method", "Customers", "Pricing"].map((item) => (
-            <Link
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
-            >
-              {item}
-            </Link>
-          ))}
-        </div>
-
-        {/* <div className="hidden md:flex items-center gap-6">
+        {/* QUIZ variant: only show back button */}
+        {variant === "quiz" && (
           <Link
-            href="/login"
-            className="text-[13px] font-medium text-white/60 hover:text-white transition-colors"
+            href="/"
+            className="text-sm text-white/70 hover:text-white transition px-4 py-2 rounded-xl border border-white/10 bg-white/5"
           >
-            Log in
+            Back to site
           </Link>
-          <Link
-            href="/signup"
-            className="px-5 py-2.5 bg-white text-bg-layout-purple hover:bg-white/90 text-[13px] font-bold rounded-full transition-all flex items-center gap-1 group"
-          >
-            Get Started
-            <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-        </div> */}
+        )}
 
-        {/* Mobile Toggle */}
-        <button
-          className="md:hidden text-white"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X /> : <Menu />}
-        </button>
+        {/* Desktop Menu (default only) */}
+        {variant === "default" && (
+          <div className="hidden md:flex items-center gap-10">
+            {["Features", "Method", "Customers", "Pricing"].map((item) => (
+              <Link
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
+              >
+                {item}
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* Mobile Toggle (default only) */}
+        {variant === "default" && (
+          <button
+            className="md:hidden text-white"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X /> : <Menu />}
+          </button>
+        )}
       </div>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
+      {/* Mobile Menu (default only) */}
+      {variant === "default" && mobileMenuOpen && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -94,6 +97,7 @@ export const Navbar = () => {
           <Link href="#pricing" className="text-lg font-medium text-white">
             Pricing
           </Link>
+
           <div className="flex flex-col gap-4 pt-4 border-t border-white/10">
             <Link href="/login" className="text-lg font-medium text-white">
               Log in
