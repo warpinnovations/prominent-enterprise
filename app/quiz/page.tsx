@@ -76,15 +76,23 @@ export default function QuizPage() {
   const current = QUESTIONS[step]
   const total = QUESTIONS.length
 
+  const readinessPercent = useMemo(() => {
+    const scores = QUESTIONS.map((q) => answers[q.id]).filter(Boolean) as number[]
+    if (!scores.length) return 0
+    const avg = scores.reduce((a, b) => a + b, 0) / scores.length
+    return Math.round(((avg - 1) / 4) * 100)
+  }, [answers])
+
   const progress = useMemo(() => {
-    const answered = Object.keys(answers).length
-    return Math.round((answered / total) * 100)
-  }, [answers, total])
+    if (done) return readinessPercent
+    return Math.round(((step + 1) / total) * 100)
+  }, [step, total, done, readinessPercent])
 
   const computed = useMemo(() => {
     const scores = QUESTIONS.map((q) => answers[q.id]).filter(Boolean) as number[]
     const totalScore = scores.reduce((a, b) => a + b, 0)
     const avg = scores.length ? totalScore / scores.length : 0
+
     const lowest = QUESTIONS.reduce(
       (acc, q) => {
         const s = answers[q.id]
@@ -98,16 +106,16 @@ export default function QuizPage() {
     return {
       totalScore,
       avg,
+      percent: readinessPercent,
       label: readinessLabel(avg),
       lowestArea: lowest?.area,
     }
-  }, [answers])
+  }, [answers, readinessPercent])
 
   function pick(score: number) {
-    setAnswers((prev) => ({ ...prev, [current.id]: score }))
-  }
+    const qid = current.id
+    setAnswers((prev) => ({ ...prev, [qid]: score }))
 
-  function next() {
     if (step < total - 1) setStep((s) => s + 1)
     else setDone(true)
   }
@@ -123,15 +131,13 @@ export default function QuizPage() {
     setDone(false)
   }
 
-  const isAnswered = answers[current?.id] != null
-
   return (
     <main className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_15%,rgba(168,85,247,0.55),rgba(42,0,79,0)_70%),radial-gradient(70%_60%_at_80%_75%,rgba(236,72,153,0.35),rgba(42,0,79,0)_65%)]" />
       <div className="absolute inset-0 bg-[#2a004f]" />
 
       <div className="relative mx-auto max-w-3xl px-6 py-10">
-        <Navbar variant="quiz" />         
+        <Navbar variant="quiz" />
 
         <div className="mt-10 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/8 text-white/80 text-sm">
@@ -142,9 +148,7 @@ export default function QuizPage() {
           <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
             Is your business <span className="text-white/60">Digitally Ready?</span>
           </h1>
-          <p className="mt-4 text-white/70">
-            8 quick questions. Choose one answer per item.
-          </p>
+          <p className="mt-4 text-white/70">8 quick questions. Choose one answer per item.</p>
         </div>
 
         <div className="mt-10 rounded-[28px] border border-white/10 bg-white/8 backdrop-blur-xl shadow-2xl shadow-purple-500/10 overflow-hidden">
@@ -155,7 +159,7 @@ export default function QuizPage() {
             </div>
             <div className="mt-3 h-2 rounded-full bg-white/10 overflow-hidden">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-fuchsia-400 to-orange-400 transition-all"
+                className="h-full rounded-full bg-gradient-to-r from-fuchsia-400 to-orange-400 transition-all duration-700"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -169,9 +173,7 @@ export default function QuizPage() {
                 </div>
               </div>
 
-              <h2 className="mt-4 text-xl sm:text-2xl font-semibold text-white leading-snug">
-                {current.text}
-              </h2>
+              <h2 className="mt-4 text-xl sm:text-2xl font-semibold text-white leading-snug">{current.text}</h2>
 
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {OPTIONS.map((opt) => {
@@ -187,10 +189,7 @@ export default function QuizPage() {
                       ].join(" ")}
                     >
                       <div className="flex items-center justify-between gap-3">
-                        <div>
-                          <div className="text-white font-semibold">{opt.label}</div>
-                        </div>
-                      
+                        <div className="text-white font-semibold">{opt.label}</div>
                       </div>
                     </button>
                   )
@@ -201,56 +200,70 @@ export default function QuizPage() {
                 <button
                   onClick={back}
                   disabled={step === 0}
-                  className="px-5 py-3 rounded-2xl border border-white/10 bg-white/8 text-white/80 hover:bg-white/10 disabled:opacity-40 disabled:hover:8 transition"
+                  className="px-5 py-3 rounded-2xl border border-white/10 bg-white/8 text-white/80 hover:bg-white/10 disabled:opacity-40 transition"
                 >
                   Back
                 </button>
-
-                <button
-                  onClick={next}
-                  disabled={!isAnswered}
-                  className="px-6 py-3 rounded-2xl bg-orange-500 hover:bg-orange-400 text-white font-semibold transition disabled:opacity-50 disabled:hover:bg-orange-500"
-                >
-                  {step === total - 1 ? "See Results" : "Next"}
-                </button>
               </div>
 
-              <div className="mt-4 text-center text-xs text-white/50">
-                Tip: Don’t overthink — pick what’s true most of the time.
-              </div>
+              <div className="mt-4 text-center text-xs text-white/50">Tip: Don’t overthink — pick what’s true most of the time.</div>
             </div>
           ) : (
             <div className="px-6 pb-8 pt-6">
-              <div className="text-center">
-                <div className="text-white/70 text-sm">Your result</div>
-                <h2 className="mt-2 text-3xl font-extrabold text-white">{computed.label.title}</h2>
-                <p className="mt-2 text-white/70">{computed.label.hint}</p>
-              </div>
+                <div className="space-y-6">
 
-              <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="rounded-2xl border border-white/10 bg-white/8 p-4">
-                  <div className="text-white/60 text-sm">Total score</div>
-                  <div className="text-white text-2xl font-bold">{computed.totalScore} / {total * 5}</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/8 p-4">
-                  <div className="text-white/60 text-sm">Average</div>
-                  <div className="text-white text-2xl font-bold">{computed.avg.toFixed(1)} / 5</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/8 p-4">
-                  <div className="text-white/60 text-sm">Lowest area</div>
-                  <div className="text-white text-lg font-semibold">
-                    {computed.lowestArea ?? "—"}
+                  {/* Top row (full width) */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-white/70 text-xs w-fit">
+                    Your result
+                  </div>
+
+                  {/* Main aligned row */}
+                  <div className="grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr] gap-6 md:gap-8 items-start">
+
+                    {/* Left */}
+                    <div>
+                      <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+                        {computed.label.title}
+                      </h2>
+
+                      <p className="mt-3 text-white/70 leading-relaxed">
+                        {computed.label.hint}
+                      </p>
+
+                      <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <div className="text-white font-semibold">What to improve first</div>
+                        <p className="mt-1 text-white/70">
+                          Start with your lowest area and create{" "}
+                          <span className="text-white">one source of truth</span>.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Right */}
+                    <div className="relative flex justify-center">
+
+                      <div className="absolute -inset-2 rounded-[28px] bg-gradient-to-r from-fuchsia-500/20 to-orange-500/20 blur-2xl" />
+
+                      <div className="relative rounded-[27px] border border-white/10 bg-white/8 backdrop-blur-xl p-6 text-center">
+                        <div className="text-white/60 text-xs uppercase tracking-[0.2em]">
+                          Preparedness
+                        </div>
+
+                        <div className="mt-3 flex justify-center items-end gap-2 leading-none">
+                          <span className="text-6xl font-extrabold bg-gradient-to-r from-fuchsia-400 to-orange-400 bg-clip-text text-transparent">
+                            {computed.percent}
+                          </span>
+                          <span className="text-xl font-bold text-white/70 mb-2">%</span>
+                        </div>
+
+                        <div className="mt-2 text-white/70">
+                          Digital readiness level
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="mt-6 rounded-2xl border border-white/10 bg-gradient-to-r from-white/5 to-white/0 p-4">
-                <div className="text-white font-semibold">What to improve first</div>
-                <p className="mt-1 text-white/70">
-                  Start with your lowest area and create <span className="text-white">one source of truth</span> (one place everyone uses).
-                  That alone usually bumps your score fast.
-                </p>
-              </div>
 
               <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:justify-between">
                 <button
