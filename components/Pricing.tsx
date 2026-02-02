@@ -129,50 +129,49 @@ export const Pricing = () => {
       {/* Background glow effects */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[128px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[128px] pointer-events-none" />
-
-      <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-16"
-        >
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-primary-purple mb-4">
-            Industry Solutions
-          </h2>
-          <h3 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            Built for your <span className="text-gradient">business.</span>
-          </h3>
-          <p className="text-text-gray text-lg">
-            Choose the package designed for your industry or get everything with our complete bundle.
-          </p>
-        </motion.div>
-
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-center max-w-3xl mx-auto mb-16"
+      >
+        <h2 className="text-sm font-semibold uppercase tracking-widest text-primary-purple mb-4">
+          Industry Solutions
+        </h2>
+        <h3 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+          Built for your <span className="text-gradient">business.</span>
+        </h3>
+        <p className="text-text-gray text-lg">
+          Choose the package designed for your industry or get everything with our complete bundle.
+        </p>
+      </motion.div>
+      {/* <div className="container mx-auto px-6 relative z-10"> */}
+       
         {/* All-in-One Bundle - Liquid Glass Card */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="max-w-4xl mx-auto mb-20"
         >
-          <div className="relative group">
+          <div className="relative group"> */}
             {/* Liquid glass outer glow */}
-            <div className="absolute -inset-1 bg-linear-to-r from-primary-purple via-button-orange to-primary-purple rounded-[2.5rem] opacity-50 blur-lg group-hover:opacity-75 transition-opacity duration-500" />
+            {/* <div className="absolute -inset-1 bg-linear-to-r from-primary-purple via-button-orange to-primary-purple rounded-[2.5rem] opacity-50 blur-lg group-hover:opacity-75 transition-opacity duration-500" /> */}
 
             {/* Main liquid glass card */}
-            <div className="relative p-10 rounded-[2.5rem] border border-white/20 overflow-hidden"
+            {/* <div className="relative p-10 rounded-[2.5rem] border border-white/20 overflow-hidden"
               style={{
                 background: "linear-gradient(135deg, rgba(152, 56, 217, 0.15) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(243, 91, 4, 0.1) 100%)",
                 backdropFilter: "blur(20px)",
                 boxShadow: "inset 0 1px 1px rgba(255,255,255,0.1), 0 20px 50px rgba(0,0,0,0.3)",
               }}
-            >
+            > */}
               {/* Liquid highlight effect */}
-              <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent" />
-              <div className="absolute top-0 left-0 bottom-0 w-px bg-linear-to-b from-white/20 via-transparent to-transparent" />
+              {/* <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent" />
+              <div className="absolute top-0 left-0 bottom-0 w-px bg-linear-to-b from-white/20 via-transparent to-transparent" /> */}
 
               {/* Best Value Badge */}
-              <div className="absolute top-6 right-6 flex items-center gap-2 bg-linear-to-r from-button-orange to-orange-secondary px-4 py-2 rounded-full">
+              {/* <div className="absolute top-6 right-6 flex items-center gap-2 bg-linear-to-r from-button-orange to-orange-secondary px-4 py-2 rounded-full">
                 <Sparkles className="w-4 h-4 text-white" />
                 <span className="text-white text-sm font-bold">Save 50%</span>
               </div>
@@ -228,12 +227,12 @@ export const Pricing = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </motion.div> */}
 
         {/* Section Divider */}
-        <div className="text-center mb-12">
+        {/* <div className="text-center mb-12">
           <span className="text-text-gray text-sm uppercase tracking-widest">Or choose by industry</span>
-        </div>
+        </div> */}
 
         {/* Industry Packages Grid */}
         <motion.div
@@ -515,7 +514,7 @@ export const Pricing = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      {/* </div> */}
     </section>
   );
 };
