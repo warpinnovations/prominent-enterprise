@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, Variants } from "framer-motion";
 import { ChevronRight, Play, Users, TrendingUp, Bell } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link"
 
 export const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -143,13 +144,19 @@ export const Hero = () => {
           variants={itemVariants}
           className="flex flex-col sm:flex-row items-center justify-center gap-5"
         >
-          <button className="px-8 py-4 bg-button-orange hover:bg-bg-orange-btn text-white font-semibold rounded-2xl transition-all flex items-center gap-2 text-lg group hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-button-orange/20">
-            Get Started
-            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </button>
+
+
+          <Link href="/quiz">
+            <button
+              className="px-8 py-4 bg-button-orange hover:bg-bg-orange-btn text-white font-semibold rounded-2xl transition-all flex items-center gap-2 text-lg group hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-button-orange/20"
+            >
+              Take The Quiz
+            </button>
+          </Link>
+
           <button className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-2xl border border-white/10 transition-all flex items-center gap-2 text-lg hover:scale-[1.02] active:scale-[0.98]">
             <Play className="w-5 h-5 fill-white" />
-            Watch Demo
+            Try It Out
           </button>
         </motion.div>
 
