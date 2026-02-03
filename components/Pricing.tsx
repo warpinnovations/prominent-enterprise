@@ -98,10 +98,6 @@ export const Pricing = () => {
     );
   };
 
-  const selectedTotal = packages
-    .filter(p => selectedPackages.includes(p.id))
-    .reduce((sum, p) => sum + p.price, 0);
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -184,14 +180,7 @@ export const Pricing = () => {
                     <h4 className="text-2xl font-bold text-white">{allInOneBundle.name}</h4>
                   </div>
 
-                  <div className="flex items-baseline gap-3 mb-4 flex-wrap">
-                    <span className="text-5xl font-bold text-white">${allInOneBundle.discountedPrice}</span>
-                    <span className="text-text-gray">/month</span>
-                    <span className="text-xl text-text-gray line-through">${allInOneBundle.originalPrice}</span>
-                    <span className="bg-primary-purple/20 text-primary-purple px-3 py-1 rounded-full text-sm font-semibold">
-                      Save ${allInOneBundle.savings}
-                    </span>
-                  </div>
+                  {/* Price removed as per request */}
 
                   <p className="text-text-gray mb-6">{allInOneBundle.description}</p>
 
@@ -351,20 +340,6 @@ export const Pricing = () => {
                 <h4 className="text-xl font-bold text-white">{pkg.name}</h4>
                 <p className="text-primary-purple text-sm font-medium mb-3">{pkg.subtitle}</p>
 
-                {/* Price */}
-                <div className="flex items-baseline gap-1 mb-4">
-                  <motion.span
-                    className="text-3xl font-bold"
-                    animate={{
-                      color: isSelected ? "rgb(175, 129, 255)" : "rgb(255, 255, 255)",
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    ${pkg.price}
-                  </motion.span>
-                  <span className="text-text-gray text-sm">/month</span>
-                </div>
-
                 {/* Description */}
                 <p className="text-text-gray text-sm mb-4">{pkg.description}</p>
 
@@ -463,7 +438,7 @@ export const Pricing = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
                   <div>
                     <motion.p
-                      className="text-white/70 text-sm"
+                      className="text-white text-lg font-semibold"
                       key={selectedPackages.length}
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -471,35 +446,7 @@ export const Pricing = () => {
                     >
                       {selectedPackages.length} package{selectedPackages.length > 1 ? "s" : ""} selected
                     </motion.p>
-                    <div className="flex items-baseline gap-2">
-                      <motion.span
-                        className="text-2xl font-bold text-white"
-                        key={selectedTotal}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 500,
-                          damping: 25,
-                        }}
-                      >
-                        ${selectedTotal}
-                      </motion.span>
-                      <span className="text-text-gray">/month</span>
-                      <AnimatePresence>
-                        {selectedTotal > allInOneBundle.discountedPrice && (
-                          <motion.span
-                            className="text-button-orange text-sm"
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 10 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            (Complete Suite saves ${selectedTotal - allInOneBundle.discountedPrice})
-                          </motion.span>
-                        )}
-                      </AnimatePresence>
-                    </div>
+                    <p className="text-white/60 text-sm mt-1">Contact us for pricing details</p>
                   </div>
                   <motion.button
                     className="px-6 py-3 bg-primary-purple text-white font-bold rounded-xl flex items-center gap-2 group"
