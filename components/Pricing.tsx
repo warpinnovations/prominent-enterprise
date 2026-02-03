@@ -179,7 +179,6 @@ export const Pricing = () => {
                     <h4 className="text-2xl font-bold text-white">{allInOneBundle.name}</h4>
                   </div>
 
-                  {/* Price removed as per request */}
 
                   <p className="text-text-gray mb-6">{allInOneBundle.description}</p>
 
@@ -216,9 +215,9 @@ export const Pricing = () => {
               </div>
             </div>
           </div>
-        </motion.div> */}
+        </motion.div> 
+        */}
 
-        {/* Section Divider */}
         {/* <div className="text-center mb-12">
           <span className="text-text-gray text-sm uppercase tracking-widest">Or choose by industry</span>
         </div> */}
