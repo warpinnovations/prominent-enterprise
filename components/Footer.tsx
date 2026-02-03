@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -46,13 +47,15 @@ export const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
           <div className="col-span-2 lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-primary-purple rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">P</span>
+            <Link href="/" className="flex items-center mb-6 group">
+              <div className="relative w-32 h-16 md:w-40 md:h-20 group-hover:scale-105 transition-transform duration-300">
+                <Image
+                  src="/prominent-logo.png"
+                  alt="The Prominent"
+                  fill
+                  className="object-contain"
+                />
               </div>
-              <span className="text-xl font-bold tracking-tight text-white">
-                The Prominent
-              </span>
             </Link>
             <p className="text-text-gray text-sm leading-relaxed">
               The next generation ERP system for modern enterprises. Built for
