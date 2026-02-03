@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Menu, X, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -32,39 +33,54 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
       )}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 bg-primary-purple rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-500">
-            <span className="text-white font-bold text-lg">P</span>
+        <Link href="/" className="flex items-center group">
+          <div className="relative w-32 h-16 md:w-40 md:h-20 group-hover:scale-105 transition-transform duration-500">
+            <Image
+              src="/prominent-logo.png"
+              alt="The Prominent"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
-          <span className="text-xl font-bold tracking-tighter text-white">
-            The Prominent
-          </span>
         </Link>
 
-        {/* QUIZ variant: only show back button */}
-        {variant === "quiz" && (
-          <Link
-            href="/"
-            className="text-sm text-white/70 hover:text-white transition px-4 py-2 rounded-xl border border-white/10 bg-white/5"
-          >
-            Back to site
-          </Link>
-        )}
-
-        {/* Desktop Menu (default only) */}
+        {/* Desktop Menu */}
         {variant === "default" && (
           <div className="hidden md:flex items-center gap-10">
             {["Features", "Method", "Customers", "Pricing"].map((item) => (
               <Link
                 key={item}
-                href={`#${item.toLowerCase()}`}
+                href={`/#${item.toLowerCase()}`}
                 className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
               >
                 {item}
               </Link>
             ))}
+            <Link
+              href="/prototype/payroll"
+              className="text-[13px] font-medium text-primary-purple hover:text-primary-purple/80 transition-colors tracking-wide"
+            >
+              Prototype
+            </Link>
           </div>
         )}
+
+        {/* Right side buttons */}
+        <div className="hidden md:flex items-center gap-6">
+          {variant === "quiz" ? (
+            <Link
+              href="/"
+              className="text-sm text-white/70 hover:text-white transition px-4 py-2 rounded-xl border border-white/10 bg-white/5"
+            >
+              Back to site
+            </Link>
+          ) : (
+            <>
+
+            </>
+          )}
+        </div>
 
         {/* Mobile Toggle (default only) */}
         {variant === "default" && (
@@ -85,30 +101,21 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
           animate={{ opacity: 1, y: 0 }}
           className="absolute top-full left-0 right-0 bg-bg-layout-purple border-b border-white/10 p-6 md:hidden flex flex-col gap-6"
         >
-          <Link href="#features" className="text-lg font-medium text-white">
+          <Link href="/#features" className="text-lg font-medium text-white">
             Features
           </Link>
-          <Link href="#method" className="text-lg font-medium text-white">
+          <Link href="/#method" className="text-lg font-medium text-white">
             Method
           </Link>
-          <Link href="#customers" className="text-lg font-medium text-white">
+          <Link href="/#customers" className="text-lg font-medium text-white">
             Customers
           </Link>
-          <Link href="#pricing" className="text-lg font-medium text-white">
+          <Link href="/#pricing" className="text-lg font-medium text-white">
             Pricing
           </Link>
-
-          <div className="flex flex-col gap-4 pt-4 border-t border-white/10">
-            <Link href="/login" className="text-lg font-medium text-white">
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="px-6 py-3 bg-button-orange text-white text-center font-medium rounded-full"
-            >
-              Sign up
-            </Link>
-          </div>
+          <Link href="/prototype/payroll" className="text-lg font-medium text-primary-purple">
+            Prototype
+          </Link>
         </motion.div>
       )}
     </nav>

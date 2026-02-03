@@ -1,47 +1,29 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, useMotionValue, Variants } from "framer-motion";
-import { ChevronRight, Play, Users, TrendingUp, Bell } from "lucide-react";
-import Image from "next/image";
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform, Variants, AnimatePresence } from "framer-motion";
+import { ChevronRight, Gift, X, Sparkles } from "lucide-react";
 import Link from "next/link"
 
 export const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
+  const [showGiftModal, setShowGiftModal] = useState(false);
+  
+  // Auto-show gift modal after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowGiftModal(true);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
   
   // Parallax and scroll effects
   const y1 = useTransform(scrollY, [0, 500], [0, 60]);
-  const y2 = useTransform(scrollY, [0, 500], [0, -40]);
   
-  // Fix: Opacity now fades much more slowly and stays visible (0.4) instead of 0
+  // Opacity fade on scroll
   const opacity = useTransform(scrollY, [0, 800], [1, 0.85]);
-  
-  // Scroll animation for the main image (The "looking at" effect)
-  const imageScale = useTransform(scrollY, [0, 500], [0.9, 1]);
-  const imageRotateX = useTransform(scrollY, [0, 500], [15, 0]);
-  const imageTranslateY = useTransform(scrollY, [0, 500], [50, 0]);
-
-  // Mouse Parallax Effect for the Hero Image (active when not scrolling)
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springRotateX = useSpring(useTransform(mouseY, [-300, 300], [10, -10]), { stiffness: 100, damping: 30 });
-  const springRotateY = useSpring(useTransform(mouseX, [-300, 300], [-10, 10]), { stiffness: 100, damping: 30 });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    mouseX.set(x);
-    mouseY.set(y);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -66,229 +48,354 @@ export const Hero = () => {
     },
   };
 
-  const floatVariants: Variants = {
-    animate: {
-      y: [0, -15, 0],
-      transition: {
-        duration: 4,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
-  };
-
-  const floatReverseVariants: Variants = {
-    animate: {
-      y: [0, 15, 0],
-      transition: {
-        duration: 5,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
-  };
-
   return (
     <section 
       ref={containerRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="relative pt-32 pb-20 md:pt-48 md:pb-60 overflow-hidden"
+      className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden min-h-screen flex items-center"
     >
       {/* Background Glows */}
       <motion.div 
         style={{ y: y1 }}
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[600px] bg-primary-purple/20 blur-[140px] rounded-full -z-10" 
+        className="absolute top-0 left-1/4 -translate-x-1/2 w-full max-w-4xl h-[600px] bg-primary-purple/20 blur-[140px] rounded-full -z-10" 
       />
-      <div className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[80%] h-[400px] bg-gradient-to-b from-primary-purple/15 to-transparent blur-[120px] -z-10" />
-      <div className="absolute top-[20%] right-[10%] w-72 h-72 bg-button-orange/10 blur-[100px] rounded-full -z-10" />
-      <div className="absolute bottom-[10%] left-[5%] w-96 h-96 bg-primary-purple/10 blur-[120px] rounded-full -z-10" />
+      <div className="absolute top-[10%] right-[20%] w-96 h-96 bg-button-orange/10 blur-[120px] rounded-full -z-10" />
+      <div className="absolute bottom-[20%] left-[10%] w-80 h-80 bg-primary-purple/10 blur-[100px] rounded-full -z-10" />
 
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         style={{ opacity }}
-        className="container mx-auto px-6 text-center"
+        className="container mx-auto px-6"
       >
-        <motion.div
-          variants={itemVariants}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[13px] font-medium text-widget-title-purple mb-10 relative group cursor-pointer overflow-hidden transition-all hover:border-white/20 hover:bg-white/10"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-purple/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <span className="flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-primary-purple opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-purple"></span>
-          </span>
-          <span className="relative z-10">New: AI-Powered Resource Planning</span>
-          <ChevronRight className="w-3.5 h-3.5 relative z-10 group-hover:translate-x-0.5 transition-transform" />
-        </motion.div>
-
-        <motion.h1
-          variants={itemVariants}
-          className="text-6xl md:text-8xl font-bold tracking-tighter mb-8 leading-[0.95] text-white"
-        >
-          The prominent way <br />
-          <span className="text-gradient">to manage enterprise.</span>
-        </motion.h1>
-
-        <motion.p
-          variants={itemVariants}
-          className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-12 leading-relaxed font-normal"
-        >
-          Streamline operations, finance, and human resources with a
-          purpose-built ERP. Designed for speed, scale, and the modern enterprise.
-        </motion.p>
-
-        <motion.div
-          variants={itemVariants}
-          className="flex flex-col sm:flex-row items-center justify-center gap-5"
-        >
-
-
-          <Link href="/quiz">
-            <button
-              className="px-8 py-4 bg-button-orange hover:bg-bg-orange-btn text-white font-semibold rounded-2xl transition-all flex items-center gap-2 text-lg group hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-button-orange/20"
-            >
-              Take The Quiz
-            </button>
-          </Link>
-
-          <button className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-2xl border border-white/10 transition-all flex items-center gap-2 text-lg hover:scale-[1.02] active:scale-[0.98]">
-            <Play className="w-5 h-5 fill-white" />
-            Try It Out
-          </button>
-        </motion.div>
-
-        {/* Hero Image Container with Entrance/Scroll Animation */}
-        <motion.div
-          variants={itemVariants}
-          style={{ 
-            perspective: 1500,
-            scale: imageScale,
-            rotateX: imageRotateX,
-            y: imageTranslateY,
-          }}
-          className="mt-24 relative mx-auto max-w-6xl px-4"
-        >
-          <motion.div
-            style={{ 
-              rotateX: springRotateX,
-              rotateY: springRotateY,
-              transformStyle: "preserve-3d"
-            }}
-            className="relative glass rounded-3xl p-1.5 md:p-2.5 overflow-hidden shadow-[0_0_80px_-15px_rgba(152,56,217,0.3)] border-white/10 group"
-          >
-            <div className="relative aspect-[16/10] bg-bg-purple/50 rounded-2xl overflow-hidden border border-white/5">
-              <Image
-                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop"
-                alt="Dashboard Preview"
-                fill
-                className="object-cover opacity-90 transition-transform duration-700 group-hover:scale-[1.02]"
-                priority
-              />
-              
-              {/* Scanning Light Effect */}
-              <motion.div 
-                animate={{
-                  x: ["-100%", "200%"],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "linear",
-                  repeatDelay: 5
-                }}
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 z-10"
-              />
-
-              {/* Refined Overlays */}
-              <div className="absolute inset-0 bg-gradient-to-t from-bg-layout-purple/40 via-transparent to-transparent opacity-40" />
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary-purple/20 via-transparent to-button-orange/10 opacity-50" />
-              
-              {/* Inner Glow/Highlight */}
-              <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-transparent pointer-events-none" />
-            </div>
-          </motion.div>
-
-          {/* Floating UI Elements with Scroll Parallax */}
+        <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
           
-          {/* Analytics Badge */}
-          <motion.div 
-            style={{ y: y2 }}
-            variants={floatVariants}
-            animate="animate"
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.8 }}
-            className="absolute -right-12 top-1/4 glass p-5 rounded-2xl border border-white/10 hidden lg:block shadow-2xl z-20"
+          {/* LEFT SIDE - The Prominent Branding */}
+          <motion.div
+            variants={itemVariants}
+            className="space-y-8"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary-purple/20 flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-primary-purple" />
+            <motion.div
+              variants={itemVariants}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[13px] font-medium text-widget-title-purple relative group cursor-pointer overflow-hidden transition-all hover:border-white/20 hover:bg-white/10"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-purple/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <span className="flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-primary-purple opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-purple"></span>
+              </span>
+              <span className="relative z-10">New: AI-Powered Resource Planning</span>
+              <ChevronRight className="w-3.5 h-3.5 relative z-10 group-hover:translate-x-0.5 transition-transform" />
+            </motion.div>
+
+            <motion.h1
+              variants={itemVariants}
+              className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.95] text-white"
+            >
+              Smart Solutions for <br />
+              <span className="text-gradient">Smart Businesses</span>
+            </motion.h1>
+
+            <motion.p
+              variants={itemVariants}
+              className="text-lg md:text-xl text-white/60 leading-relaxed font-normal max-w-xl"
+            >
+              Streamline operations, finance, and human resources with a
+              purpose-built ERP. Designed for speed, scale, and the modern enterprise.
+            </motion.p>
+
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col sm:flex-row items-start gap-4"
+            >
+              <button
+                onClick={() => setShowGiftModal(true)}
+                className="px-8 py-4 bg-gradient-to-r from-primary-purple to-purple-600 hover:from-purple-600 hover:to-primary-purple text-white font-bold rounded-2xl transition-all flex items-center gap-3 text-base hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary-purple/30 group relative overflow-hidden"
+              >
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
+                >
+                  <Gift className="w-5 h-5" />
+                </motion.div>
+                <span className="relative z-10">Claim Your Free Trial</span>
+                <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                <motion.div
+                  animate={{ x: ["-100%", "100%"] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 1 }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                />
+              </button>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              variants={itemVariants}
+              className="flex items-center gap-8 pt-8 border-t border-white/5"
+            >
+              <div>
+                <p className="text-3xl font-bold text-white">500+</p>
+                <p className="text-sm text-white/40">Enterprises</p>
               </div>
-              <div className="text-left">
-                <p className="text-[10px] uppercase tracking-[0.15em] text-text-gray font-bold">Monthly Growth</p>
-                <p className="text-2xl font-bold text-white">+24.8%</p>
+              <div>
+                <p className="text-3xl font-bold text-white">99.9%</p>
+                <p className="text-sm text-white/40">Uptime</p>
               </div>
-            </div>
+              <div>
+                <p className="text-3xl font-bold text-white">24/7</p>
+                <p className="text-sm text-white/40">Support</p>
+              </div>
+            </motion.div>
           </motion.div>
 
-          {/* Team Members Badge */}
-          <motion.div 
-            style={{ y: y1 }}
-            variants={floatReverseVariants}
-            animate="animate"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ delay: 1 }}
-            className="absolute -left-16 bottom-1/4 glass p-4 rounded-2xl border border-white/10 hidden lg:block shadow-2xl z-20"
+          {/* RIGHT SIDE - Digital Readiness Quiz CTA */}
+          <motion.div
+            variants={itemVariants}
+            className="relative"
           >
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-button-orange/20 flex items-center justify-center">
-                  <Users className="w-4 h-4 text-button-orange" />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              className="relative bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl rounded-[40px] p-12 border border-white/10 shadow-2xl overflow-hidden group hover:border-white/20 transition-all"
+            >
+              {/* Animated Background Gradient */}
+              <motion.div
+                animate={{
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 90, 0],
+                  opacity: [0.3, 0.5, 0.3]
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-primary-purple/30 to-button-orange/30 blur-3xl rounded-full"
+              />
+              
+              <div className="relative z-10 space-y-8">
+                <div className="space-y-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-button-orange/20 border border-button-orange/30 text-xs font-bold uppercase tracking-wider text-button-orange"
+                  >
+                    <span className="flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-button-orange opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-button-orange"></span>
+                    </span>
+                    Free Assessment
+                  </motion.div>
+
+                  <motion.h2
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                    className="text-4xl md:text-5xl font-bold leading-tight text-white"
+                  >
+                    Is your business <br />
+                    <span className="bg-gradient-to-r from-button-orange to-primary-purple bg-clip-text text-transparent">
+                      digitally ready?
+                    </span>
+                  </motion.h2>
+
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 }}
+                    className="text-white/50 text-base leading-relaxed"
+                  >
+                    Take our 2-minute assessment to discover how The Prominent can transform your operations.
+                  </motion.p>
                 </div>
-                <span className="text-sm font-bold text-white">Project Velocity</span>
-              </div>
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-9 h-9 rounded-full border-2 border-bg-layout-purple overflow-hidden">
-                    <Image 
-                      src={`https://i.pravatar.cc/150?u=${i + 20}`} 
-                      alt="Avatar" 
-                      width={36} 
-                      height={36} 
-                    />
-                  </div>
-                ))}
-                <div className="w-9 h-9 rounded-full border-2 border-bg-layout-purple bg-white/10 flex items-center justify-center text-[10px] font-black text-white backdrop-blur-sm">
-                  +12
-                </div>
-              </div>
-            </div>
-          </motion.div>
 
-          {/* Notification Toast */}
-          <motion.div 
-            style={{ y: useTransform(scrollY, [0, 500], [0, -50]) }}
-            className="absolute right-[10%] -bottom-6 glass px-6 py-4 rounded-2xl border border-white/10 hidden lg:flex items-center gap-4 shadow-2xl z-20"
-          >
-            <div className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-            </div>
-            <span className="text-sm font-semibold text-white/90">New invoice paid by Acme Corp</span>
-            <div className="w-8 h-8 rounded-lg bg-widget-title-purple/20 flex items-center justify-center">
-              <Bell className="w-4 h-4 text-widget-title-purple" />
-            </div>
-          </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.9 }}
+                >
+                  <Link href="/quiz">
+                    <button className="w-full px-8 py-5 bg-gradient-to-r from-button-orange to-bg-orange-btn hover:from-bg-orange-btn hover:to-button-orange text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-3 text-lg group hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-button-orange/30 relative overflow-hidden">
+                      <span className="relative z-10">Take The Quiz</span>
+                      <ChevronRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+                      <motion.div
+                        animate={{ x: ["-100%", "100%"] }}
+                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      />
+                    </button>
+                  </Link>
+                </motion.div>
 
-          {/* Decorative Background Elements */}
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-button-orange/10 blur-[100px] rounded-full -z-10" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-primary-purple/10 blur-[100px] rounded-full -z-10" />
-        </motion.div>
+                {/* Benefits List */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1 }}
+                  className="space-y-3 pt-6 border-t border-white/5"
+                >
+                  {[
+                    "Get personalized recommendations",
+                    "Discover optimization opportunities",
+                    "See your digital maturity score"
+                  ].map((benefit, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1.1 + idx * 0.1 }}
+                      className="flex items-center gap-3"
+                    >
+                      <div className="w-5 h-5 rounded-full bg-primary-purple/20 flex items-center justify-center flex-shrink-0">
+                        <ChevronRight className="w-3 h-3 text-primary-purple" />
+                      </div>
+                      <span className="text-white/60 text-sm">{benefit}</span>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
+
+              {/* Decorative Elements */}
+              <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary-purple/20 blur-3xl rounded-full" />
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-button-orange/20 blur-3xl rounded-full" />
+            </motion.div>
+          </motion.div>
+        </div>
+
       </motion.div>
+
+      {/* Gift Modal/Popup */}
+      <AnimatePresence>
+        {showGiftModal && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowGiftModal(false)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+            >
+              {/* Modal Content */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: 50 }}
+                transition={{ type: "spring", duration: 0.5 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative bg-gradient-to-br from-white/[0.12] to-white/[0.04] backdrop-blur-2xl rounded-[32px] md:rounded-[40px] p-6 md:p-10 max-w-xl md:max-w-2xl w-full border border-white/20 shadow-2xl overflow-hidden"
+              >
+                {/* Animated Background */}
+                <motion.div
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 180, 360],
+                    opacity: [0.3, 0.5, 0.3]
+                  }}
+                  transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-primary-purple/40 to-button-orange/40 blur-3xl rounded-full"
+                />
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setShowGiftModal(false)}
+                  className="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center transition-all group z-10"
+                >
+                  <X className="w-4 h-4 md:w-5 md:h-5 text-white group-hover:rotate-90 transition-transform duration-300" />
+                </button>
+
+                {/* Gift Icon */}
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                  className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-6 bg-gradient-to-br from-primary-purple/30 to-purple-600/30 rounded-2xl flex items-center justify-center border border-primary-purple/40 relative"
+                >
+                  <Gift className="w-8 h-8 md:w-10 md:h-10 text-primary-purple" />
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute inset-0 bg-primary-purple/20 rounded-2xl"
+                  />
+                </motion.div>
+
+                {/* Content */}
+                <div className="relative z-10 text-center space-y-4 md:space-y-5">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                      🎁 Exclusive Gift for You!
+                    </h3>
+                    <p className="text-white/60 text-sm md:text-base">
+                      Experience the power of The Prominent with our interactive payroll prototype
+                    </p>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-6 space-y-3"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-primary-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <ChevronRight className="w-3 h-3 text-primary-purple" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="font-bold text-white mb-0.5 text-sm">Full Payroll Calculations</h4>
+                        <p className="text-white/50 text-xs">Process SSS, Pag-ibig, PhilHealth & TRAIN tax automatically</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-primary-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <ChevronRight className="w-3 h-3 text-primary-purple" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="font-bold text-white mb-0.5 text-sm">Upload & Process Excel</h4>
+                        <p className="text-white/50 text-xs">Import 50+ employees instantly with our smart parser</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-primary-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <ChevronRight className="w-3 h-3 text-primary-purple" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="font-bold text-white mb-0.5 text-sm">Beautiful UI & Reports</h4>
+                        <p className="text-white/50 text-xs">Generate professional payslips with detailed breakdowns</p>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="pt-2"
+                  >
+                    <Link href="/prototype/payroll">
+                      <button className="w-full px-6 md:px-8 py-3.5 md:py-4 bg-gradient-to-r from-primary-purple to-purple-600 hover:from-purple-600 hover:to-primary-purple text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-base group hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary-purple/40 relative overflow-hidden">
+                        <span className="relative z-10">Try The Prototype Now</span>
+                        <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                        <motion.div
+                          animate={{ x: ["-100%", "100%"] }}
+                          transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5 }}
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        />
+                      </button>
+                    </Link>
+                    <p className="text-white/40 text-[10px] md:text-xs mt-3">No credit card required • Instant access</p>
+                  </motion.div>
+                </div>
+
+                {/* Decorative Elements */}
+                <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-primary-purple/20 blur-3xl rounded-full" />
+                <div className="absolute -top-16 -right-16 w-48 h-48 bg-button-orange/20 blur-3xl rounded-full" />
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
