@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Menu, X, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -32,13 +33,16 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
       )}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 bg-primary-purple rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-500">
-            <span className="text-white font-bold text-lg">P</span>
+        <Link href="/" className="flex items-center group">
+          <div className="relative w-32 h-16 md:w-40 md:h-20 group-hover:scale-105 transition-transform duration-500">
+            <Image
+              src="/prominent-logo.png"
+              alt="The Prominent"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
-          <span className="text-xl font-bold tracking-tighter text-white">
-            The Prominent
-          </span>
         </Link>
 
         {/* Desktop Menu */}
