@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { Navbar } from "@/components/Navbar"
 
@@ -67,6 +67,56 @@ function readinessLabel(avg: number) {
   if (avg >= 2.2) return { title: "Needs Structure 🧩", hint: "You’ll feel big wins by centralizing your workflows." }
   return { title: "Early Stage 🌱", hint: "Start simple: one system at a time." }
 }
+type CSSVars = React.CSSProperties & {
+  "--mx"?: string
+  "--my"?: string
+}
+
+function BentoSurface({
+  className = "",
+  children,
+}: {
+  className?: string
+  children: React.ReactNode
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={(e) => {
+        if (!ref.current) return
+        const r = ref.current.getBoundingClientRect()
+        setPos({ x: e.clientX - r.left, y: e.clientY - r.top })
+      }}
+      style={
+        {
+          "--mx": `${pos.x}px`,
+          "--my": `${pos.y}px`,
+        } as CSSVars
+      }
+      className={[
+        "relative rounded-[32px] border border-white/10",
+        "bg-white/[0.06] backdrop-blur-xl",
+        "shadow-[0_40px_100px_-60px_rgba(168,85,247,0.55)]",
+        "overflow-hidden",
+        className,
+      ].join(" ")}
+    >
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(420px 320px at var(--mx) var(--my), rgba(168,85,247,0.18), transparent 60%), radial-gradient(520px 360px at calc(var(--mx) + 140px) calc(var(--my) + 120px), rgba(249,115,22,0.12), transparent 60%)",
+        }}
+      />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/[0.06] to-transparent" />
+      {children}
+    </div>
+  )
+}
+
 
 export default function QuizPage() {
   const [step, setStep] = useState(0)
@@ -76,15 +126,23 @@ export default function QuizPage() {
   const current = QUESTIONS[step]
   const total = QUESTIONS.length
 
+  const readinessPercent = useMemo(() => {
+    const scores = QUESTIONS.map((q) => answers[q.id]).filter(Boolean) as number[]
+    if (!scores.length) return 0
+    const avg = scores.reduce((a, b) => a + b, 0) / scores.length
+    return Math.round(((avg - 1) / 4) * 100)
+  }, [answers])
+
   const progress = useMemo(() => {
-    const answered = Object.keys(answers).length
-    return Math.round((answered / total) * 100)
-  }, [answers, total])
+    if (done) return readinessPercent
+    return Math.round(((step + 1) / total) * 100)
+  }, [step, total, done, readinessPercent])
 
   const computed = useMemo(() => {
     const scores = QUESTIONS.map((q) => answers[q.id]).filter(Boolean) as number[]
     const totalScore = scores.reduce((a, b) => a + b, 0)
     const avg = scores.length ? totalScore / scores.length : 0
+
     const lowest = QUESTIONS.reduce(
       (acc, q) => {
         const s = answers[q.id]
@@ -98,16 +156,16 @@ export default function QuizPage() {
     return {
       totalScore,
       avg,
+      percent: readinessPercent,
       label: readinessLabel(avg),
       lowestArea: lowest?.area,
     }
-  }, [answers])
+  }, [answers, readinessPercent])
 
   function pick(score: number) {
-    setAnswers((prev) => ({ ...prev, [current.id]: score }))
-  }
+    const qid = current.id
+    setAnswers((prev) => ({ ...prev, [qid]: score }))
 
-  function next() {
     if (step < total - 1) setStep((s) => s + 1)
     else setDone(true)
   }
@@ -123,39 +181,37 @@ export default function QuizPage() {
     setDone(false)
   }
 
-  const isAnswered = answers[current?.id] != null
-
   return (
     <main className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_15%,rgba(168,85,247,0.55),rgba(42,0,79,0)_70%),radial-gradient(70%_60%_at_80%_75%,rgba(236,72,153,0.35),rgba(42,0,79,0)_65%)]" />
-      <div className="absolute inset-0 bg-[#2a004f]" />
+      <div className="absolute inset-0 bg-[#22003d]" />
+      <div className="absolute inset-0 bg-[radial-gradient(900px_600px_at_20%_10%,rgba(168,85,247,0.38),transparent_60%),radial-gradient(900px_700px_at_80%_20%,rgba(249,115,22,0.22),transparent_60%),radial-gradient(900px_700px_at_40%_90%,rgba(236,72,153,0.18),transparent_60%)]" />
+      <div className="absolute inset-0 opacity-30 [background-image:radial-gradient(rgba(255,255,255,0.10)_1px,transparent_1px)] [background-size:22px_22px]" />
 
       <div className="relative mx-auto max-w-3xl px-6 py-10">
-        <Navbar variant="quiz" />         
+        <Navbar variant="quiz" />
 
         <div className="mt-10 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/8 text-white/80 text-sm">
-            <span className="h-2 w-2 rounded-full bg-orange-400" />
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.06] text-white/80 text-sm backdrop-blur">
+            <span className="h-2 w-2 rounded-full bg-orange-400 shadow-[0_0_0_6px_rgba(249,115,22,0.15)]" />
             Digitally Ready Quick Check
           </div>
 
           <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Is your business <span className="text-white/60">Digitally Ready?</span>
+            Is your business <span className="text-white/55">Digitally Ready?</span>
           </h1>
-          <p className="mt-4 text-white/70">
-            8 quick questions. Choose one answer per item.
-          </p>
+          <p className="mt-4 text-white/65">8 quick questions. Choose one answer per item.</p>
         </div>
 
-        <div className="mt-10 rounded-[28px] border border-white/10 bg-white/8 backdrop-blur-xl shadow-2xl shadow-purple-500/10 overflow-hidden">
+        <BentoSurface className="mt-10">
           <div className="px-6 pt-6">
             <div className="flex items-center justify-between text-sm text-white/70">
               <span>{done ? "Results" : `Question ${step + 1} of ${total}`}</span>
-              <span>{progress}%</span>
+              <span className="tabular-nums">{progress}%</span>
             </div>
+
             <div className="mt-3 h-2 rounded-full bg-white/10 overflow-hidden">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-fuchsia-400 to-orange-400 transition-all"
+                className="h-full rounded-full bg-gradient-to-r from-fuchsia-400 to-orange-400 transition-all duration-700"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -164,7 +220,7 @@ export default function QuizPage() {
           {!done ? (
             <div className="px-6 pb-6 pt-6">
               <div className="flex items-center gap-3">
-                <div className="px-3 py-1 rounded-full text-xs font-semibold border border-white/10 bg-white/8 text-white/70">
+                <div className="px-3 py-1 rounded-full text-xs font-semibold border border-white/10 bg-white/[0.06] text-white/70">
                   {current.area}
                 </div>
               </div>
@@ -181,16 +237,28 @@ export default function QuizPage() {
                       key={opt.score}
                       onClick={() => pick(opt.score)}
                       className={[
-                        "text-left px-4 py-4 rounded-2xl border transition-all",
-                        "bg-white/8 hover:bg-white/10 border-white/10",
-                        selected ? "ring-2 ring-orange-400/60 border-orange-400/30" : "",
+                        "group relative text-left px-4 py-4 rounded-2xl border transition-all",
+                        "border-white/10 bg-white/[0.05] hover:bg-white/[0.07]",
+                        "hover:shadow-[0_20px_60px_-40px_rgba(168,85,247,0.6)]",
+                        "focus:outline-none focus:ring-2 focus:ring-orange-400/40",
+                        selected ? "ring-2 ring-orange-400/50 border-orange-400/30" : "",
                       ].join(" ")}
                     >
-                      <div className="flex items-center justify-between gap-3">
-                        <div>
-                          <div className="text-white font-semibold">{opt.label}</div>
+                      {/* tiny hover glow */}
+                      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute inset-0 bg-[radial-gradient(260px_180px_at_30%_20%,rgba(168,85,247,0.22),transparent_65%)]" />
+                      </div>
+
+                      <div className="relative flex items-center justify-between gap-3">
+                        <div className="text-white font-semibold">{opt.label}</div>
+                        <div
+                          className={[
+                            "h-7 w-7 rounded-full border border-white/10 bg-white/[0.06] grid place-items-center",
+                            selected ? "border-orange-400/40 bg-orange-400/10" : "",
+                          ].join(" ")}
+                        >
+                          <span className="text-xs text-white/70">{opt.score}</span>
                         </div>
-                      
                       </div>
                     </button>
                   )
@@ -201,17 +269,9 @@ export default function QuizPage() {
                 <button
                   onClick={back}
                   disabled={step === 0}
-                  className="px-5 py-3 rounded-2xl border border-white/10 bg-white/8 text-white/80 hover:bg-white/10 disabled:opacity-40 disabled:hover:8 transition"
+                  className="px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.06] text-white/80 hover:bg-white/[0.08] disabled:opacity-40 transition"
                 >
                   Back
-                </button>
-
-                <button
-                  onClick={next}
-                  disabled={!isAnswered}
-                  className="px-6 py-3 rounded-2xl bg-orange-500 hover:bg-orange-400 text-white font-semibold transition disabled:opacity-50 disabled:hover:bg-orange-500"
-                >
-                  {step === total - 1 ? "See Results" : "Next"}
                 </button>
               </div>
 
@@ -221,41 +281,63 @@ export default function QuizPage() {
             </div>
           ) : (
             <div className="px-6 pb-8 pt-6">
-              <div className="text-center">
-                <div className="text-white/70 text-sm">Your result</div>
-                <h2 className="mt-2 text-3xl font-extrabold text-white">{computed.label.title}</h2>
-                <p className="mt-2 text-white/70">{computed.label.hint}</p>
-              </div>
+              <div className="space-y-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.06] text-white/70 text-xs w-fit">
+                  Your result
+                </div>
 
-              <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="rounded-2xl border border-white/10 bg-white/8 p-4">
-                  <div className="text-white/60 text-sm">Total score</div>
-                  <div className="text-white text-2xl font-bold">{computed.totalScore} / {total * 5}</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/8 p-4">
-                  <div className="text-white/60 text-sm">Average</div>
-                  <div className="text-white text-2xl font-bold">{computed.avg.toFixed(1)} / 5</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/8 p-4">
-                  <div className="text-white/60 text-sm">Lowest area</div>
-                  <div className="text-white text-lg font-semibold">
-                    {computed.lowestArea ?? "—"}
+                <div className="grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr] gap-6 md:gap-8 items-start">
+                  {/* Left */}
+                  <div>
+                    <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+                      {computed.label.title}
+                    </h2>
+                    <p className="mt-3 text-white/70 leading-relaxed">{computed.label.hint}</p>
+
+                    <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.06] p-4">
+                      <div className="text-white font-semibold">What to improve first</div>
+                      <p className="mt-1 text-white/70">
+                        Start with your lowest area and create{" "}
+                        <span className="text-white">one source of truth</span>.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Right */}
+                  <div className="relative flex justify-center">
+                    <div className="absolute -inset-6 rounded-[32px] bg-gradient-to-r from-fuchsia-500/15 to-orange-500/15 blur-3xl" />
+
+                    <div className="relative rounded-[28px] border border-white/10 bg-white/[0.06] backdrop-blur-xl px-8 py-7 text-center w-full max-w-[320px]">
+                      <div className="text-white/60 text-[11px] uppercase tracking-[0.22em]">
+                        Preparedness
+                      </div>
+
+                      <div className="mt-4 flex justify-center items-baseline gap-2 leading-none">
+                        <span className="text-7xl font-extrabold bg-gradient-to-r from-fuchsia-400 to-orange-400 bg-clip-text text-transparent tabular-nums">
+                          {computed.percent}
+                        </span>
+                        <span className="text-2xl font-bold text-white/70">%</span>
+                      </div>
+
+                      <div className="mt-3 text-white/70">Digital readiness level</div>
+
+                      <div className="mt-5 flex items-center justify-center gap-2">
+                        <div className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[11px] text-white/70">
+                          {computed.lowestArea ?? "—"}
+                        </div>
+                        <div className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[11px] text-white/70">
+                          {total} questions
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="mt-6 rounded-2xl border border-white/10 bg-gradient-to-r from-white/5 to-white/0 p-4">
-                <div className="text-white font-semibold">What to improve first</div>
-                <p className="mt-1 text-white/70">
-                  Start with your lowest area and create <span className="text-white">one source of truth</span> (one place everyone uses).
-                  That alone usually bumps your score fast.
-                </p>
               </div>
 
               <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:justify-between">
                 <button
                   onClick={back}
-                  className="px-5 py-3 rounded-2xl border border-white/10 bg-white/8 text-white/80 hover:bg-white/10 transition"
+                  className="px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.06] text-white/80 hover:bg-white/[0.08] transition"
                 >
                   Review answers
                 </button>
@@ -263,14 +345,14 @@ export default function QuizPage() {
                 <div className="flex gap-3">
                   <button
                     onClick={reset}
-                    className="px-5 py-3 rounded-2xl border border-white/10 bg-white/8 text-white/80 hover:bg-white/10 transition"
+                    className="px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.06] text-white/80 hover:bg-white/[0.08] transition"
                   >
                     Retake
                   </button>
 
                   <Link
                     href="/#pricing"
-                    className="px-6 py-3 rounded-2xl bg-orange-500 hover:bg-orange-400 text-white font-semibold transition text-center"
+                    className="px-6 py-3 rounded-2xl bg-orange-500 hover:bg-orange-400 text-white font-semibold transition text-center shadow-[0_18px_50px_-30px_rgba(249,115,22,0.8)]"
                   >
                     See a plan that fits →
                   </Link>
@@ -278,7 +360,7 @@ export default function QuizPage() {
               </div>
             </div>
           )}
-        </div>
+        </BentoSurface>
       </div>
     </main>
   )
