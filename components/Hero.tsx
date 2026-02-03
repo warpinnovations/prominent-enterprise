@@ -1,13 +1,23 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useScroll, useTransform, Variants } from "framer-motion";
-import { ChevronRight, Play } from "lucide-react";
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform, Variants, AnimatePresence } from "framer-motion";
+import { ChevronRight, Gift, X, Sparkles } from "lucide-react";
 import Link from "next/link"
 
 export const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
+  const [showGiftModal, setShowGiftModal] = useState(false);
+  
+  // Auto-show gift modal after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowGiftModal(true);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
   
   // Parallax and scroll effects
   const y1 = useTransform(scrollY, [0, 500], [0, 60]);
@@ -82,8 +92,8 @@ export const Hero = () => {
               variants={itemVariants}
               className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.95] text-white"
             >
-              The prominent way <br />
-              <span className="text-gradient">to manage enterprise.</span>
+              Smart Solutions for <br />
+              <span className="text-gradient">Smart Businesses</span>
             </motion.h1>
 
             <motion.p
@@ -98,12 +108,24 @@ export const Hero = () => {
               variants={itemVariants}
               className="flex flex-col sm:flex-row items-start gap-4"
             >
-              <Link href="/prototype/payroll">
-                <button className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-2xl border border-white/10 transition-all flex items-center gap-2 text-base hover:scale-[1.02] active:scale-[0.98] group">
-                  <Play className="w-5 h-5 fill-white group-hover:scale-110 transition-transform" />
-                  Try The Prototype
-                </button>
-              </Link>
+              <button
+                onClick={() => setShowGiftModal(true)}
+                className="px-8 py-4 bg-gradient-to-r from-primary-purple to-purple-600 hover:from-purple-600 hover:to-primary-purple text-white font-bold rounded-2xl transition-all flex items-center gap-3 text-base hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary-purple/30 group relative overflow-hidden"
+              >
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
+                >
+                  <Gift className="w-5 h-5" />
+                </motion.div>
+                <span className="relative z-10">Claim Your Free Trial</span>
+                <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                <motion.div
+                  animate={{ x: ["-100%", "100%"] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 1 }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                />
+              </button>
             </motion.div>
 
             {/* Stats */}
@@ -239,6 +261,141 @@ export const Hero = () => {
         </div>
 
       </motion.div>
+
+      {/* Gift Modal/Popup */}
+      <AnimatePresence>
+        {showGiftModal && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowGiftModal(false)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+            >
+              {/* Modal Content */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: 50 }}
+                transition={{ type: "spring", duration: 0.5 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative bg-gradient-to-br from-white/[0.12] to-white/[0.04] backdrop-blur-2xl rounded-[32px] md:rounded-[40px] p-6 md:p-10 max-w-xl md:max-w-2xl w-full border border-white/20 shadow-2xl overflow-hidden"
+              >
+                {/* Animated Background */}
+                <motion.div
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 180, 360],
+                    opacity: [0.3, 0.5, 0.3]
+                  }}
+                  transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-primary-purple/40 to-button-orange/40 blur-3xl rounded-full"
+                />
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setShowGiftModal(false)}
+                  className="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center transition-all group z-10"
+                >
+                  <X className="w-4 h-4 md:w-5 md:h-5 text-white group-hover:rotate-90 transition-transform duration-300" />
+                </button>
+
+                {/* Gift Icon */}
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                  className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-6 bg-gradient-to-br from-primary-purple/30 to-purple-600/30 rounded-2xl flex items-center justify-center border border-primary-purple/40 relative"
+                >
+                  <Gift className="w-8 h-8 md:w-10 md:h-10 text-primary-purple" />
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute inset-0 bg-primary-purple/20 rounded-2xl"
+                  />
+                </motion.div>
+
+                {/* Content */}
+                <div className="relative z-10 text-center space-y-4 md:space-y-5">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                      🎁 Exclusive Gift for You!
+                    </h3>
+                    <p className="text-white/60 text-sm md:text-base">
+                      Experience the power of The Prominent with our interactive payroll prototype
+                    </p>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-6 space-y-3"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-primary-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <ChevronRight className="w-3 h-3 text-primary-purple" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="font-bold text-white mb-0.5 text-sm">Full Payroll Calculations</h4>
+                        <p className="text-white/50 text-xs">Process SSS, Pag-ibig, PhilHealth & TRAIN tax automatically</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-primary-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <ChevronRight className="w-3 h-3 text-primary-purple" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="font-bold text-white mb-0.5 text-sm">Upload & Process Excel</h4>
+                        <p className="text-white/50 text-xs">Import 50+ employees instantly with our smart parser</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-primary-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <ChevronRight className="w-3 h-3 text-primary-purple" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="font-bold text-white mb-0.5 text-sm">Beautiful UI & Reports</h4>
+                        <p className="text-white/50 text-xs">Generate professional payslips with detailed breakdowns</p>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="pt-2"
+                  >
+                    <Link href="/prototype/payroll">
+                      <button className="w-full px-6 md:px-8 py-3.5 md:py-4 bg-gradient-to-r from-primary-purple to-purple-600 hover:from-purple-600 hover:to-primary-purple text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-base group hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary-purple/40 relative overflow-hidden">
+                        <span className="relative z-10">Try The Prototype Now</span>
+                        <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                        <motion.div
+                          animate={{ x: ["-100%", "100%"] }}
+                          transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5 }}
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        />
+                      </button>
+                    </Link>
+                    <p className="text-white/40 text-[10px] md:text-xs mt-3">No credit card required • Instant access</p>
+                  </motion.div>
+                </div>
+
+                {/* Decorative Elements */}
+                <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-primary-purple/20 blur-3xl rounded-full" />
+                <div className="absolute -top-16 -right-16 w-48 h-48 bg-button-orange/20 blur-3xl rounded-full" />
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
