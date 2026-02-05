@@ -249,7 +249,7 @@ export const Features = () => {
   };
 
   return (
-    <section id="features" className="py-24 bg-bg-layout-purple relative overflow-hidden">
+    <section id="modules" className="py-24 bg-bg-layout-purple relative overflow-hidden">
       {/* Background glow effects */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[150px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[150px] pointer-events-none" />

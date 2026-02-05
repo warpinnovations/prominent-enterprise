@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export const CTA = () => {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section id="cta" className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-primary-purple/5 -z-10" />
       <div className="container mx-auto px-6 text-center">
         <motion.div

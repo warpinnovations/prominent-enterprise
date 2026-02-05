@@ -121,7 +121,7 @@ export const Pricing = () => {
   };
 
   return (
-    <section id="pricing" className="py-24 bg-bg-layout-purple/30 relative overflow-hidden">
+    <section id="solutions" className="py-24 bg-bg-layout-purple/30 relative overflow-hidden">
       {/* Background glow effects */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[128px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[128px] pointer-events-none" />
