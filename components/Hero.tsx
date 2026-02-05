@@ -10,14 +10,27 @@ export const Hero = () => {
   const { scrollY } = useScroll();
   const [showGiftModal, setShowGiftModal] = useState(false);
   
-  // Auto-show gift modal after 3 seconds
+  // Auto-show gift modal once per browser session
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowGiftModal(true);
-    }, 2000);
+    // Check if user has already seen the modal in this session
+    const hasSeenModal = sessionStorage.getItem('hasSeenGiftModal');
+    
+    if (!hasSeenModal) {
+      const timer = setTimeout(() => {
+        setShowGiftModal(true);
+        // Mark as seen in this session
+        sessionStorage.setItem('hasSeenGiftModal', 'true');
+      }, 2000);
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, []);
+
+  // Handle modal close
+  const handleCloseModal = () => {
+    setShowGiftModal(false);
+    sessionStorage.setItem('hasSeenGiftModal', 'true');
+  };
   
   // Parallax and scroll effects
   const y1 = useTransform(scrollY, [0, 500], [0, 60]);
@@ -271,7 +284,7 @@ export const Hero = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setShowGiftModal(false)}
+              onClick={handleCloseModal}
               className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
             >
               {/* Modal Content */}
@@ -296,7 +309,7 @@ export const Hero = () => {
 
                 {/* Close Button */}
                 <button
-                  onClick={() => setShowGiftModal(false)}
+                  onClick={handleCloseModal}
                   className="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center transition-all group z-10"
                 >
                   <X className="w-4 h-4 md:w-5 md:h-5 text-white group-hover:rotate-90 transition-transform duration-300" />
@@ -384,7 +397,6 @@ export const Hero = () => {
                         />
                       </button>
                     </Link>
-                    <p className="text-white/40 text-[10px] md:text-xs mt-3">No credit card required • Instant access</p>
                   </motion.div>
                 </div>
 
