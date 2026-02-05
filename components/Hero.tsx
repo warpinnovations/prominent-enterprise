@@ -9,6 +9,27 @@ export const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
   const [showGiftModal, setShowGiftModal] = useState(false);
+  const [currentHeadlineIndex, setCurrentHeadlineIndex] = useState(0);
+  
+  // Rotating headlines
+  const headlines = [
+    "Are you frustrated with manual processes?",
+    "Are you ready to be digital-ready?",
+    "Do you want to save time and money?",
+    "Are you frustrated with delays?",
+    "Are you ready to grow your business?",
+    "Do you want to take control of your business?",
+    "Let us introduce you to Smart solutions.",
+  ];
+  
+  // Rotate headlines every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentHeadlineIndex((prev) => (prev + 1) % headlines.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [headlines.length]);
   
   // Auto-show gift modal once per browser session
   useEffect(() => {
@@ -88,26 +109,20 @@ export const Hero = () => {
             variants={itemVariants}
             className="space-y-8"
           >
-            <motion.div
-              variants={itemVariants}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[13px] font-medium text-widget-title-purple relative group cursor-pointer overflow-hidden transition-all hover:border-white/20 hover:bg-white/10"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-primary-purple/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <span className="flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-primary-purple opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-purple"></span>
-              </span>
-              <span className="relative z-10">New: AI-Powered Resource Planning</span>
-              <ChevronRight className="w-3.5 h-3.5 relative z-10 group-hover:translate-x-0.5 transition-transform" />
-            </motion.div>
-
-            <motion.h1
-              variants={itemVariants}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.95] text-white"
-            >
-              Smart Solutions for <br />
-              <span className="text-gradient">Smart Businesses</span>
-            </motion.h1>
+            <div className="relative h-[180px] md:h-[340px] lg:h-[400px] flex items-center overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.h1
+                  key={currentHeadlineIndex}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                  className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.95] text-white absolute inset-0 flex items-center"
+                >
+                  <span className="text-gradient">{headlines[currentHeadlineIndex]}</span>
+                </motion.h1>
+              </AnimatePresence>
+            </div>
 
             <motion.p
               variants={itemVariants}
@@ -139,25 +154,6 @@ export const Hero = () => {
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                 />
               </button>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              variants={itemVariants}
-              className="flex items-center gap-8 pt-8 border-t border-white/5"
-            >
-              <div>
-                <p className="text-3xl font-bold text-white">500+</p>
-                <p className="text-sm text-white/40">Enterprises</p>
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-white">99.9%</p>
-                <p className="text-sm text-white/40">Uptime</p>
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-white">24/7</p>
-                <p className="text-sm text-white/40">Support</p>
-              </div>
             </motion.div>
           </motion.div>
 
@@ -216,7 +212,7 @@ export const Hero = () => {
                     transition={{ delay: 0.8 }}
                     className="text-white/50 text-base leading-relaxed"
                   >
-                    Take our 2-minute assessment to discover how The Prominent can transform your operations.
+                    Take a 2 minute assessment to see how digitally ready your business is.
                   </motion.p>
                 </div>
 
@@ -366,7 +362,7 @@ export const Hero = () => {
                       </div>
                       <div className="text-left">
                         <h4 className="font-bold text-white mb-0.5 text-sm">Upload & Process Excel</h4>
-                        <p className="text-white/50 text-xs">Import 50+ employees instantly with our smart parser</p>
+                        <p className="text-white/50 text-xs">Process up to 50 employee records instantly</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -374,7 +370,7 @@ export const Hero = () => {
                         <ChevronRight className="w-3 h-3 text-primary-purple" />
                       </div>
                       <div className="text-left">
-                        <h4 className="font-bold text-white mb-0.5 text-sm">Beautiful UI & Reports</h4>
+                        <h4 className="font-bold text-white mb-0.5 text-sm">Seamless UI & Reports</h4>
                         <p className="text-white/50 text-xs">Generate professional payslips with detailed breakdowns</p>
                       </div>
                     </div>
