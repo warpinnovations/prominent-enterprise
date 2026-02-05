@@ -36,15 +36,12 @@ export const Features = () => {
             <Layers className="w-4 h-4 text-primary-purple" />
             <span className="text-sm text-white/70">Enterprise Modules</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight">
-            Everything you need.
-            <br />
-            <span className="text-gradient">
-              Nothing you don&apos;t.
-            </span>
-          </h2>
-          <p className="text-base md:text-lg text-white/40 max-w-lg mx-auto px-4">
-            Twelve integrated modules built for enterprises that demand excellence.
+          <h3 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+            Everything you need to{" "}
+            <span className="text-gradient">run your business.</span>
+          </h3>
+          <p className="text-text-gray text-lg">
+            A complete suite of integrated modules designed for modern enterprises.
           </p>
         </div>
 
