@@ -24,9 +24,10 @@ import {
 
 export const Features = () => {
   return (
-    <section id="features" className="py-16 md:py-24 lg:py-32 bg-bg-layout-purple relative overflow-hidden">
-      {/* Subtle ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[1000px] h-[400px] md:h-[600px] bg-primary-purple/10 rounded-full blur-[120px] pointer-events-none" />
+    <section id="modules" className="py-24 bg-bg-layout-purple relative overflow-hidden">
+      {/* Background glow effects */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Header */}
@@ -35,15 +36,12 @@ export const Features = () => {
             <Layers className="w-4 h-4 text-primary-purple" />
             <span className="text-sm text-white/70">Enterprise Modules</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight">
-            Everything you need.
-            <br />
-            <span className="text-gradient">
-              Nothing you don&apos;t.
-            </span>
-          </h2>
-          <p className="text-base md:text-lg text-white/40 max-w-lg mx-auto px-4">
-            Twelve integrated modules built for enterprises that demand excellence.
+          <h3 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+            Everything you need to{" "}
+            <span className="text-gradient">run your business.</span>
+          </h3>
+          <p className="text-text-gray text-lg">
+            A complete suite of integrated modules designed for modern enterprises.
           </p>
         </div>
 

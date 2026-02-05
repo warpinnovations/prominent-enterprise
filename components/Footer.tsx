@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export const CTA = () => {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section id="cta" className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-primary-purple/5 -z-10" />
       <div className="container mx-auto px-6 text-center">
         <motion.div
@@ -19,21 +19,19 @@ export const CTA = () => {
           className="max-w-4xl mx-auto glass p-12 md:p-20 rounded-[3rem] border border-white/10"
         >
           <h2 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
-            Ready to scale your <br />
+            Ready to scale YOUR <br />
             <span className="text-gradient">enterprise operations?</span>
           </h2>
           <p className="text-xl text-text-gray mb-10 max-w-2xl mx-auto">
-            Join the world&apos;s most innovative companies using The Prominent to
-            drive growth and efficiency.
+            Transform your business operations with smart solutions designed for growth and efficiency.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="px-8 py-4 bg-button-orange hover:bg-bg-orange-btn text-white font-semibold rounded-full transition-all flex items-center gap-2 text-lg group">
-              Get Started Now
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-full border border-white/10 transition-all text-lg">
-              Contact Sales
-            </button>
+            <Link href="/waitlist">
+              <button className="px-8 py-4 bg-button-orange hover:bg-bg-orange-btn text-white font-semibold rounded-full transition-all flex items-center gap-2 text-lg group">
+                Enter the waitlist
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </Link>
           </div>
         </motion.div>
       </div>

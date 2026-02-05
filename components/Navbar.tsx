@@ -48,15 +48,24 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
         {/* Desktop Menu */}
         {variant === "default" && (
           <div className="hidden md:flex items-center gap-10">
-            {["Features", "Method", "Customers", "Pricing"].map((item) => (
-              <Link
-                key={item}
-                href={`/#${item.toLowerCase()}`}
-                className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
-              >
-                {item}
-              </Link>
-            ))}
+            <Link
+              href="/#modules"
+              className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
+            >
+              Modules
+            </Link>
+            <Link
+              href="/#solutions"
+              className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
+            >
+              Solutions
+            </Link>
+            <Link
+              href="/#cta"
+              className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
+            >
+              Contact
+            </Link>
             <Link
               href="/prototype/payroll"
               className="text-[13px] font-medium text-primary-purple hover:text-primary-purple/80 transition-colors tracking-wide"
@@ -76,9 +85,18 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
               Back to site
             </Link>
           ) : (
-            <>
-
-            </>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link
+                href="/waitlist"
+                className="px-6 py-2.5 bg-gradient-to-r from-primary-purple to-button-orange text-white text-[13px] font-semibold rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2"
+              >
+                Join the Waitlist
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
           )}
         </div>
 
@@ -101,20 +119,24 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
           animate={{ opacity: 1, y: 0 }}
           className="absolute top-full left-0 right-0 bg-bg-layout-purple border-b border-white/10 p-6 md:hidden flex flex-col gap-6"
         >
-          <Link href="/#features" className="text-lg font-medium text-white">
-            Features
+          <Link href="/#modules" className="text-lg font-medium text-white">
+            Modules
           </Link>
-          <Link href="/#method" className="text-lg font-medium text-white">
-            Method
-          </Link>
-          <Link href="/#customers" className="text-lg font-medium text-white">
-            Customers
-          </Link>
-          <Link href="/#pricing" className="text-lg font-medium text-white">
-            Pricing
+          <Link href="/#solutions" className="text-lg font-medium text-white">
+            Solutions
           </Link>
           <Link href="/prototype/payroll" className="text-lg font-medium text-primary-purple">
             Prototype
+          </Link>
+          <Link href="/#cta" className="text-lg font-medium text-white">
+            Contact
+          </Link>
+          <Link
+            href="/waitlist"
+            className="px-6 py-3 bg-gradient-to-r from-primary-purple to-button-orange text-white text-base font-semibold rounded-xl flex items-center justify-center gap-2 mt-2"
+          >
+            Join the Waitlist
+            <ChevronRight className="w-4 h-4" />
           </Link>
         </motion.div>
       )}
