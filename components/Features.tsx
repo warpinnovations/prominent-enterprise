@@ -73,64 +73,61 @@ const BentoCard = ({
   );
 };
 
-// Animated orbiting element
+// Static icon positioned around a center point
 const OrbitingIcon = ({
   Icon,
   radius,
-  duration,
   delay = 0,
   color
 }: {
   Icon: IconComponent;
   radius: number;
-  duration: number;
+  duration?: number;
   delay?: number;
   color: string;
-}) => (
-  <motion.div
-    className={`absolute w-8 h-8 rounded-lg ${color} flex items-center justify-center shadow-lg`}
-    animate={{
-      x: [radius, 0, -radius, 0, radius],
-      y: [0, radius, 0, -radius, 0],
-    }}
-    transition={{
-      duration,
-      repeat: Infinity,
-      delay,
-      ease: "linear",
-    }}
-    style={{ left: "50%", top: "50%", marginLeft: -16, marginTop: -16 }}
-  >
-    <Icon className="w-4 h-4 text-white" />
-  </motion.div>
-);
+}) => {
+  const angle = delay * 45; // spread icons by delay value
+  const rad = (angle * Math.PI) / 180;
+  const x = Math.cos(rad) * radius;
+  const y = Math.sin(rad) * radius;
 
-// Floating cursor with name
+  return (
+    <motion.div
+      className={`absolute w-8 h-8 rounded-lg ${color} flex items-center justify-center shadow-lg`}
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: delay * 0.15, type: "spring", stiffness: 200 }}
+      style={{
+        left: "50%",
+        top: "50%",
+        marginLeft: -16 + x,
+        marginTop: -16 + y,
+      }}
+    >
+      <Icon className="w-4 h-4 text-white" />
+    </motion.div>
+  );
+};
+
+// Static cursor with name
 const FloatingCursor = ({
   name,
   color,
   initialX,
   initialY,
-  animateX,
-  animateY,
-  duration
 }: {
   name: string;
   color: string;
   initialX: number;
   initialY: number;
-  animateX: number[];
-  animateY: number[];
-  duration: number;
+  animateX?: number[];
+  animateY?: number[];
+  duration?: number;
 }) => (
   <motion.div
     initial={{ x: initialX, y: initialY, opacity: 0 }}
-    animate={{
-      x: animateX,
-      y: animateY,
-      opacity: 1
-    }}
-    transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
+    animate={{ x: initialX, y: initialY, opacity: 1 }}
+    transition={{ duration: 0.5, ease: "easeOut" }}
     className={`absolute flex items-center gap-1.5 ${color} px-2 py-1 rounded-full text-[10px] font-bold text-white shadow-xl z-20`}
   >
     <MousePointer2 className="w-2.5 h-2.5 fill-white" />
@@ -182,13 +179,9 @@ const ListItem = ({ icon: Icon, text, delay }: { icon: IconComponent; text: stri
   </motion.div>
 );
 
-// Pulsing notification dot
-const PulsingDot = ({ color, delay = 0 }: { color: string; delay?: number }) => (
-  <motion.div
-    animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
-    transition={{ duration: 2, repeat: Infinity, delay }}
-    className={`w-2 h-2 rounded-full ${color}`}
-  />
+// Static notification dot
+const PulsingDot = ({ color }: { color: string; delay?: number }) => (
+  <div className={`w-2 h-2 rounded-full ${color}`} />
 );
 
 // Transaction row animation
@@ -236,13 +229,12 @@ export const Features = () => {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
-      scale: 1,
       transition: {
-        duration: 0.6,
+        duration: 0.4,
         ease: [0.16, 1, 0.3, 1] as const,
       },
     },
@@ -399,12 +391,7 @@ export const Features = () => {
                 <OrbitingIcon Icon={ScanBarcode} radius={50} duration={8} delay={2.67} color="bg-orange-500/80" />
                 <OrbitingIcon Icon={Package} radius={50} duration={8} delay={5.33} color="bg-yellow-500/80" />
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    <Package className="w-6 h-6 text-amber-400" />
-                  </motion.div>
+                  <Package className="w-6 h-6 text-amber-400" />
                 </div>
               </div>
 
@@ -444,25 +431,14 @@ export const Features = () => {
                   <p className="text-text-gray text-xs">Lightning-fast checkout</p>
                 </div>
 
-                {/* Animated card swipe */}
+                {/* Card icon */}
                 <div className="relative">
-                  <motion.div
-                    animate={{
-                      y: [0, -5, 0],
-                      rotateZ: [0, -5, 0]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="glass rounded-lg p-3 border border-white/10"
-                  >
+                  <div className="glass rounded-lg p-3 border border-white/10">
                     <CreditCard className="w-8 h-8 text-pink-400" />
-                  </motion.div>
-                  <motion.div
-                    animate={{ opacity: [0, 1, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-[8px] text-emerald-400 font-medium whitespace-nowrap"
-                  >
+                  </div>
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-[8px] text-emerald-400 font-medium whitespace-nowrap">
                     ✓ Payment received
-                  </motion.div>
+                  </div>
                 </div>
               </div>
             </BentoCard>
@@ -659,15 +635,9 @@ export const Features = () => {
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${project.progress}%` }}
-                          transition={{ delay: 0.5 + i * 0.2, duration: 1, ease: "easeOut" }}
-                          className={`h-full ${project.color} rounded-full relative`}
-                        >
-                          <motion.div
-                            animate={{ x: ["-100%", "100%"] }}
-                            transition={{ duration: 1.5, repeat: Infinity, delay: 1 + i * 0.2 }}
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                          />
-                        </motion.div>
+                          transition={{ delay: 0.3 + i * 0.15, duration: 0.8, ease: "easeOut" }}
+                          className={`h-full ${project.color} rounded-full`}
+                        />
                       </div>
                     </div>
                   ))}
@@ -733,26 +703,13 @@ export const Features = () => {
                 <h3 className="text-sm font-bold text-white mb-1">Compliance</h3>
                 <p className="text-text-gray text-[10px] mb-4">Audit & governance</p>
 
-                {/* Animated shield with checkmarks */}
+                {/* Shield icon */}
                 <div className="flex-1 flex items-center justify-center">
                   <div className="relative">
-                    <motion.div
-                      animate={{
-                        scale: [1, 1.05, 1],
-                        opacity: [0.5, 1, 0.5]
-                      }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    >
-                      <Shield className="w-12 h-12 text-red-400/30" />
-                    </motion.div>
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.5, type: "spring" }}
-                      className="absolute inset-0 flex items-center justify-center"
-                    >
+                    <Shield className="w-12 h-12 text-red-400/30" />
+                    <div className="absolute inset-0 flex items-center justify-center">
                       <Lock className="w-5 h-5 text-red-400" />
-                    </motion.div>
+                    </div>
                   </div>
                 </div>
               </div>
