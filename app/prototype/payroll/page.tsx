@@ -13,6 +13,8 @@ interface Employee {
   id: string;
   name: string;
   basicSalary: number;
+  dailyRate: number;
+  hourlyRate: number;
   sss: number;
   pagIbig: number;
   philHealth: number;
@@ -38,6 +40,8 @@ export default function PayrollPrototype() {
   const [viewMode, setViewMode] = useState<"card" | "table">("table");
   const [loadingMessage, setLoadingMessage] = useState(loadingMessages[0]);
   const [sortConfig, setSortConfig] = useState<{ key: keyof Employee; direction: "asc" | "desc" } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -78,9 +82,19 @@ export default function PayrollPrototype() {
     return sorted;
   }, [employees, sortConfig]);
 
+  // Pagination logic
+  const totalPages = Math.ceil(sortedEmployees.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedEmployees = sortedEmployees.slice(startIndex, endIndex);
+
   const calculatePayroll = (data: Array<{ [key: string]: string | number | undefined }>) => {
     return data.map((row, index) => {
       const basicSalary = parseFloat(String(row.Salary || row.salary || row["Basic Salary"] || 0));
+      
+      // Calculate daily and hourly rates (Philippine standard: 22 working days, 8 hours/day)
+      const dailyRate = basicSalary / 22;
+      const hourlyRate = dailyRate / 8;
       
       // SSS: Simplified Philippine Payroll Logic (2025 Rates - approx 4.5% for employee)
       const sss = Math.min(basicSalary * 0.045, 1350);
@@ -116,6 +130,8 @@ export default function PayrollPrototype() {
         id: String(row.ID || row.id || `EMP-${(index + 1).toString().padStart(3, '0')}`),
         name: String(row.Name || row.name || `Employee ${index + 1}`),
         basicSalary,
+        dailyRate,
+        hourlyRate,
         sss,
         pagIbig,
         philHealth,
@@ -128,6 +144,7 @@ export default function PayrollPrototype() {
 
   const handleFileUpload = (file: File) => {
     setIsProcessing(true);
+    setCurrentPage(1);
     const reader = new FileReader();
     reader.onload = (e) => {
       const data = new Uint8Array(e.target?.result as ArrayBuffer);
@@ -164,7 +181,7 @@ export default function PayrollPrototype() {
     }
   };
 
-  const downloadTemplate = () => {
+  const generateSampleData = () => {
     const names = [
       "Alex Rivera", "Sam Chen", "Jordan Martinez", "Taylor Brown", "Morgan Davis",
       "Casey Wilson", "Riley Thompson", "Avery Garcia", "Quinn Anderson", "Drew Lopez",
@@ -184,10 +201,27 @@ export default function PayrollPrototype() {
       Salary: 20000 + (Math.floor(Math.random() * 80) * 1000)
     }));
 
+    return template;
+  };
+
+  const downloadTemplate = () => {
+    const template = generateSampleData();
     const ws = XLSX.utils.json_to_sheet(template);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Employees");
     XLSX.writeFile(wb, "Prominent_Payroll_50_Employees.xlsx");
+  };
+
+  const loadSampleData = () => {
+    setIsProcessing(true);
+    setCurrentPage(1);
+    const sampleData = generateSampleData();
+    
+    setTimeout(() => {
+      const processed = calculatePayroll(sampleData);
+      setEmployees(processed);
+      setIsProcessing(false);
+    }, 2000);
   };
 
   return (
@@ -266,11 +300,18 @@ export default function PayrollPrototype() {
                   Select File
                 </button>
                 <button
+                  onClick={loadSampleData}
+                  className="px-10 py-4 bg-gradient-to-r from-primary-purple to-purple-600 text-white font-bold rounded-full hover:opacity-90 hover:scale-105 transition-all flex items-center gap-3 shadow-xl shadow-primary-purple/30 group"
+                >
+                  <Calculator className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                  Try Sample Data
+                </button>
+                <button
                   onClick={downloadTemplate}
                   className="px-10 py-4 bg-white/5 border border-white/20 text-white font-bold rounded-full hover:bg-white/10 hover:border-white/30 transition-all flex items-center gap-3 group"
                 >
                   <Download className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
-                  Download Sample (50)
+                  Download Sample
                 </button>
               </div>
               <input
@@ -342,15 +383,15 @@ export default function PayrollPrototype() {
                 <div className="relative z-10">
                   <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
                     <Calculator className="w-5 h-5 text-primary-purple" />
-                    Want Unlimited Payroll Processing?
+                    Like what you see? Go Pro!
                   </h3>
-                  <p className="text-white/50 text-sm">Upgrade to The Prominent and automate everything.</p>
+                  <p className="text-white/50 text-sm">Get unlimited access and unlock all features today.</p>
                 </div>
                 <Link
-                  href="/#pricing"
+                  href="/waitlist"
                   className="relative z-10 px-8 py-3 bg-primary-purple hover:bg-primary-purple/90 text-white font-bold rounded-full transition-all hover:scale-105 shadow-xl shadow-primary-purple/30 flex items-center gap-2 group"
                 >
-                  View Pricing
+                  Enter the waitlist 
                   <motion.svg 
                     className="w-4 h-4 group-hover:translate-x-1 transition-transform" 
                     fill="none" 
@@ -395,7 +436,10 @@ export default function PayrollPrototype() {
                     </button>
                   </div>
                   <button 
-                    onClick={() => setEmployees([])}
+                    onClick={() => {
+                      setEmployees([]);
+                      setCurrentPage(1);
+                    }}
                     className="px-6 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs font-medium transition-all"
                   >
                     Clear
@@ -414,7 +458,7 @@ export default function PayrollPrototype() {
                     className="grid grid-cols-1 md:grid-cols-2 gap-6"
                   >
                   <AnimatePresence mode="popLayout">
-                    {sortedEmployees.map((emp, idx) => (
+                    {paginatedEmployees.map((emp, idx) => (
                     <motion.div
                       key={emp.id}
                       layout
@@ -505,8 +549,28 @@ export default function PayrollPrototype() {
                                   transition={{ delay: 0.15 }}
                                   className="flex justify-between text-base py-2 px-4 bg-white/[0.02] rounded-xl"
                                 >
-                                  <span className="text-white/70 font-medium">Basic Salary</span>
+                                  <span className="text-white/70 font-medium">Basic Salary (Monthly)</span>
                                   <span className="font-bold">₱{emp.basicSalary.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                </motion.div>
+                                
+                                <motion.div 
+                                  initial={{ x: -20, opacity: 0 }}
+                                  animate={{ x: 0, opacity: 1 }}
+                                  transition={{ delay: 0.18 }}
+                                  className="flex justify-between text-sm py-2 px-4 bg-white/[0.01] rounded-xl"
+                                >
+                                  <span className="text-white/60">Daily Rate</span>
+                                  <span className="font-semibold text-white/80">₱{emp.dailyRate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                </motion.div>
+                                
+                                <motion.div 
+                                  initial={{ x: -20, opacity: 0 }}
+                                  animate={{ x: 0, opacity: 1 }}
+                                  transition={{ delay: 0.21 }}
+                                  className="flex justify-between text-sm py-2 px-4 bg-white/[0.01] rounded-xl"
+                                >
+                                  <span className="text-white/60">Hourly Rate</span>
+                                  <span className="font-semibold text-white/80">₱{emp.hourlyRate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                                 </motion.div>
                                 
                                 <motion.div
@@ -649,8 +713,30 @@ export default function PayrollPrototype() {
                               onClick={() => handleSort("basicSalary")}
                             >
                               <div className="flex items-center justify-end gap-2">
-                                Basic Salary
+                                Monthly
                                 {sortConfig?.key === "basicSalary" && (
+                                  sortConfig.direction === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />
+                                )}
+                              </div>
+                            </th>
+                            <th 
+                              className="text-right p-3 text-xs font-bold uppercase tracking-wider text-white/60 cursor-pointer hover:text-white transition-colors group"
+                              onClick={() => handleSort("dailyRate")}
+                            >
+                              <div className="flex items-center justify-end gap-2">
+                                Daily
+                                {sortConfig?.key === "dailyRate" && (
+                                  sortConfig.direction === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />
+                                )}
+                              </div>
+                            </th>
+                            <th 
+                              className="text-right p-3 text-xs font-bold uppercase tracking-wider text-white/60 cursor-pointer hover:text-white transition-colors group"
+                              onClick={() => handleSort("hourlyRate")}
+                            >
+                              <div className="flex items-center justify-end gap-2">
+                                Hourly
+                                {sortConfig?.key === "hourlyRate" && (
                                   sortConfig.direction === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />
                                 )}
                               </div>
@@ -714,7 +800,7 @@ export default function PayrollPrototype() {
                         </thead>
                         <tbody>
                           <AnimatePresence mode="popLayout">
-                            {sortedEmployees.map((emp, idx) => (
+                            {paginatedEmployees.map((emp, idx) => (
                               <motion.tr
                                 key={emp.id}
                                 layout
@@ -730,6 +816,12 @@ export default function PayrollPrototype() {
                                 <td className="p-3 text-sm font-medium">{emp.name}</td>
                                 <td className="p-3 text-sm text-right font-medium">
                                   ₱{emp.basicSalary.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                </td>
+                                <td className="p-3 text-sm text-right text-white/70">
+                                  ₱{emp.dailyRate.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                </td>
+                                <td className="p-3 text-sm text-right text-white/70">
+                                  ₱{emp.hourlyRate.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                 </td>
                                 <td className="p-3 text-sm text-right text-red-400/80">
                                   -₱{emp.sss.toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -758,6 +850,12 @@ export default function PayrollPrototype() {
                             <td className="p-3 text-sm text-right font-bold text-white">
                               ₱{sortedEmployees.reduce((sum, emp) => sum + emp.basicSalary, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                             </td>
+                            <td className="p-3 text-sm text-right font-bold text-white/70">
+                              ₱{(sortedEmployees.reduce((sum, emp) => sum + emp.dailyRate, 0) / sortedEmployees.length).toLocaleString(undefined, { minimumFractionDigits: 2 })} avg
+                            </td>
+                            <td className="p-3 text-sm text-right font-bold text-white/70">
+                              ₱{(sortedEmployees.reduce((sum, emp) => sum + emp.hourlyRate, 0) / sortedEmployees.length).toLocaleString(undefined, { minimumFractionDigits: 2 })} avg
+                            </td>
                             <td className="p-3 text-sm text-right font-bold text-red-400">
                               -₱{sortedEmployees.reduce((sum, emp) => sum + emp.sss, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                             </td>
@@ -780,6 +878,89 @@ export default function PayrollPrototype() {
                   </motion.div>
                 )}
               </AnimatePresence>
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-white/10"
+                >
+                  <div className="text-sm text-white/60">
+                    Showing {startIndex + 1} to {Math.min(endIndex, sortedEmployees.length)} of {sortedEmployees.length} employees
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                      className={cn(
+                        "px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-2",
+                        currentPage === 1
+                          ? "bg-white/5 text-white/30 cursor-not-allowed"
+                          : "bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20"
+                      )}
+                    >
+                      <ChevronUp className="w-4 h-4 rotate-[-90deg]" />
+                      Previous
+                    </button>
+                    
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                        // Show first page, last page, current page, and pages around current
+                        const showPage = 
+                          page === 1 || 
+                          page === totalPages || 
+                          (page >= currentPage - 1 && page <= currentPage + 1);
+                        
+                        const showEllipsis = 
+                          (page === 2 && currentPage > 3) ||
+                          (page === totalPages - 1 && currentPage < totalPages - 2);
+
+                        if (showEllipsis) {
+                          return (
+                            <span key={page} className="px-2 text-white/40">
+                              ...
+                            </span>
+                          );
+                        }
+
+                        if (!showPage) return null;
+
+                        return (
+                          <button
+                            key={page}
+                            onClick={() => setCurrentPage(page)}
+                            className={cn(
+                              "w-10 h-10 rounded-xl font-medium transition-all",
+                              currentPage === page
+                                ? "bg-primary-purple text-white shadow-lg shadow-primary-purple/30"
+                                : "bg-white/5 hover:bg-white/10 text-white/70 hover:text-white border border-white/10 hover:border-white/20"
+                            )}
+                          >
+                            {page}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    
+                    <button
+                      onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      disabled={currentPage === totalPages}
+                      className={cn(
+                        "px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-2",
+                        currentPage === totalPages
+                          ? "bg-white/5 text-white/30 cursor-not-allowed"
+                          : "bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20"
+                      )}
+                    >
+                      Next
+                      <ChevronDown className="w-4 h-4 rotate-[-90deg]" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
 
             </motion.div>
           )}
