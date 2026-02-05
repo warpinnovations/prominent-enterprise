@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, ChevronRight, Package, Sparkles } from "lucide-react";
+import { Check, ChevronRight, ChevronDown } from "lucide-react";
 
 const packages = [
   {
@@ -67,31 +67,21 @@ const packages = [
   },
 ];
 
-const allInOneBundle = {
-  name: "Complete Enterprise Suite",
-  originalPrice: 404,
-  discountedPrice: 199,
-  savings: 205,
-  description: "Get access to ALL modules across all industries. Perfect for growing businesses with diverse operations.",
-  modules: [
-    "POS",
-    "Inventory & Warehouse",
-    "Finance & Accounting",
-    "Sales & Order Management",
-    "CRM",
-    "Project Management",
-    "Procurement & Supplier",
-    "HR & Payroll",
-    "Advanced Reporting",
-  ],
-  bonusFeatures: ["Priority 24/7 support", "Custom onboarding", "Dedicated account manager", "99.9% SLA guarantee"],
-};
-
 export const Pricing = () => {
   const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
+  const [expandedPackages, setExpandedPackages] = useState<string[]>([]);
 
   const togglePackage = (packageId: string) => {
     setSelectedPackages(prev =>
+      prev.includes(packageId)
+        ? prev.filter(id => id !== packageId)
+        : [...prev, packageId]
+    );
+  };
+
+  const toggleExpand = (packageId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedPackages(prev =>
       prev.includes(packageId)
         ? prev.filter(id => id !== packageId)
         : [...prev, packageId]
@@ -135,92 +125,12 @@ export const Pricing = () => {
           Industry Solutions
         </h2>
         <h3 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-          Built for your <span className="text-gradient">business.</span>
+          Built for YOUR <span className="text-gradient">business.</span>
         </h3>
         <p className="text-text-gray text-lg">
-          Choose the package designed for your industry or get everything with our complete bundle.
+          Or choose our pre-selected packages for specific industries
         </p>
       </motion.div>
-      {/* <div className="container mx-auto px-6 relative z-10"> */}
-       
-        {/* All-in-One Bundle - Liquid Glass Card */}
-        {/* <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto mb-20"
-        >
-          <div className="relative group"> */}
-            {/* Liquid glass outer glow */}
-            {/* <div className="absolute -inset-1 bg-linear-to-r from-primary-purple via-button-orange to-primary-purple rounded-[2.5rem] opacity-50 blur-lg group-hover:opacity-75 transition-opacity duration-500" /> */}
-
-            {/* Main liquid glass card */}
-            {/* <div className="relative p-10 rounded-[2.5rem] border border-white/20 overflow-hidden"
-              style={{
-                background: "linear-gradient(135deg, rgba(152, 56, 217, 0.15) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(243, 91, 4, 0.1) 100%)",
-                backdropFilter: "blur(20px)",
-                boxShadow: "inset 0 1px 1px rgba(255,255,255,0.1), 0 20px 50px rgba(0,0,0,0.3)",
-              }}
-            > */}
-              {/* Liquid highlight effect */}
-              {/* <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent" />
-              <div className="absolute top-0 left-0 bottom-0 w-px bg-linear-to-b from-white/20 via-transparent to-transparent" /> */}
-
-              {/* Best Value Badge */}
-              {/* <div className="absolute top-6 right-6 flex items-center gap-2 bg-linear-to-r from-button-orange to-orange-secondary px-4 py-2 rounded-full">
-                <Sparkles className="w-4 h-4 text-white" />
-                <span className="text-white text-sm font-bold">Save 50%</span>
-              </div>
-
-              <div className="flex flex-col lg:flex-row gap-10">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Package className="w-8 h-8 text-primary-purple" />
-                    <h4 className="text-2xl font-bold text-white">{allInOneBundle.name}</h4>
-                  </div>
-
-
-                  <p className="text-text-gray mb-6">{allInOneBundle.description}</p>
-
-                  <button className="w-full lg:w-auto px-8 py-4 bg-linear-to-r from-primary-purple to-button-orange text-white font-bold rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 group">
-                    Get Complete Suite
-                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-
-                <div className="flex-1 lg:border-l lg:border-white/10 lg:pl-10">
-                  <h5 className="text-sm font-semibold uppercase tracking-widest text-primary-purple mb-4">
-                    All Modules Included
-                  </h5>
-                  <div className="grid grid-cols-2 gap-3 mb-6">
-                    {allInOneBundle.modules.map((item) => (
-                      <div key={item} className="flex items-center gap-2 text-sm text-white/80">
-                        <Check className="w-4 h-4 text-primary-purple shrink-0" />
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                  <h5 className="text-sm font-semibold uppercase tracking-widest text-button-orange mb-3">
-                    Bonus Features
-                  </h5>
-                  <div className="space-y-2">
-                    {allInOneBundle.bonusFeatures.map((feature) => (
-                      <div key={feature} className="flex items-center gap-2 text-sm text-white/80">
-                        <Sparkles className="w-4 h-4 text-button-orange shrink-0" />
-                        {feature}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div> 
-        */}
-
-        {/* <div className="text-center mb-12">
-          <span className="text-text-gray text-sm uppercase tracking-widest">Or choose by industry</span>
-        </div> */}
 
         {/* Industry Packages Grid */}
         <motion.div
@@ -338,56 +248,72 @@ export const Pricing = () => {
                 <h4 className="text-xl font-bold text-white">{pkg.name}</h4>
                 <p className="text-primary-purple text-sm font-medium mb-3">{pkg.subtitle}</p>
 
-                {/* Description */}
-                <p className="text-text-gray text-sm mb-4">{pkg.description}</p>
+                {/* Expand/Collapse Button */}
+                <button
+                  onClick={(e) => toggleExpand(pkg.id, e)}
+                  className="flex items-center gap-2 text-white/60 hover:text-white text-xs font-medium mb-3 transition-colors"
+                >
+                  <span>{expandedPackages.includes(pkg.id) ? "Hide Details" : "View Details"}</span>
+                  <motion.div
+                    animate={{ rotate: expandedPackages.includes(pkg.id) ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </motion.div>
+                </button>
 
-                {/* Pain Points */}
-                <div className="mb-4">
-                  <p className="text-white/50 text-xs uppercase tracking-wider mb-2">Solves</p>
-                  <div className="flex flex-wrap gap-2">
-                    {pkg.painPoints.map((point) => (
-                      <span
-                        key={point}
-                        className="text-xs bg-white/5 text-white/70 px-2 py-1 rounded-full"
-                      >
-                        {point}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                {/* Collapsible Content */}
+                <AnimatePresence>
+                  {expandedPackages.includes(pkg.id) && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      {/* Description */}
+                      <p className="text-text-gray text-sm mb-4">{pkg.description}</p>
 
-                {/* Modules included */}
-                <div>
-                  <p className="text-white/50 text-xs uppercase tracking-wider mb-2">Modules Included</p>
-                  <ul className="space-y-1.5">
-                    {pkg.modules.map((module, index) => (
-                      <motion.li
-                        key={module}
-                        className="flex items-center gap-2 text-sm text-white/70"
-                        animate={{
-                          opacity: isSelected ? 1 : 0.7,
-                        }}
-                        transition={{
-                          delay: isSelected ? index * 0.05 : 0,
-                          duration: 0.3,
-                        }}
-                      >
-                        <motion.div
-                          animate={{
-                            scale: isSelected ? [1, 1.3, 1] : 1,
-                          }}
-                          transition={{
-                            delay: isSelected ? index * 0.05 : 0,
-                            duration: 0.3,
-                          }}
-                        >
-                          <Check className="w-4 h-4 text-primary-purple shrink-0" />
-                        </motion.div>
-                        {module}
-                      </motion.li>
-                    ))}
-                  </ul>
-                </div>
+                      {/* Pain Points */}
+                      <div className="mb-4">
+                        <p className="text-white/50 text-xs uppercase tracking-wider mb-2">Solves</p>
+                        <div className="flex flex-wrap gap-2">
+                          {pkg.painPoints.map((point) => (
+                            <span
+                              key={point}
+                              className="text-xs bg-white/5 text-white/70 px-2 py-1 rounded-full"
+                            >
+                              {point}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Modules included */}
+                      <div>
+                        <p className="text-white/50 text-xs uppercase tracking-wider mb-2">Modules Included</p>
+                        <ul className="space-y-1.5">
+                          {pkg.modules.map((module, index) => (
+                            <motion.li
+                              key={module}
+                              className="flex items-center gap-2 text-sm text-white/70"
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{
+                                delay: index * 0.05,
+                                duration: 0.2,
+                              }}
+                            >
+                              <Check className="w-4 h-4 text-primary-purple shrink-0" />
+                              {module}
+                            </motion.li>
+                          ))}
+                        </ul>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             );
           })}
