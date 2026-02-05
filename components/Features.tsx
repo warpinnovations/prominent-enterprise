@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import React from "react";
 import { cn } from "@/lib/utils";
 import {
   Calculator,
@@ -16,802 +15,333 @@ import {
   Plug,
   Monitor,
   Clock,
-  TrendingUp,
-  CreditCard,
-  Boxes,
-  ScanBarcode,
-  ClipboardList,
-  Send,
-  CheckCircle2,
+  Check,
+  Zap,
+  Globe,
   Lock,
-  MousePointer2,
-  DollarSign,
-  Receipt,
-  Wallet,
-  ArrowUpRight,
-  ArrowDownRight,
-  Shield,
-  Database,
-  Cloud,
-  Smartphone,
+  Layers,
 } from "lucide-react";
 
-type IconComponent = React.ComponentType<{ className?: string }>;
-
-// Reusable Bento Card with mouse follow effect
-const BentoCard = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children?: React.ReactNode;
-}) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
-  return (
-    <div
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
-      style={{
-        "--mouse-x": `${mousePos.x}px`,
-        "--mouse-y": `${mousePos.y}px`,
-      } as React.CSSProperties}
-      className={cn("bento-card group", className)}
-    >
-      {children}
-    </div>
-  );
-};
-
-// Animated orbiting element
-const OrbitingIcon = ({
-  Icon,
-  radius,
-  duration,
-  delay = 0,
-  color
-}: {
-  Icon: IconComponent;
-  radius: number;
-  duration: number;
-  delay?: number;
-  color: string;
-}) => (
-  <motion.div
-    className={`absolute w-8 h-8 rounded-lg ${color} flex items-center justify-center shadow-lg`}
-    animate={{
-      x: [radius, 0, -radius, 0, radius],
-      y: [0, radius, 0, -radius, 0],
-    }}
-    transition={{
-      duration,
-      repeat: Infinity,
-      delay,
-      ease: "linear",
-    }}
-    style={{ left: "50%", top: "50%", marginLeft: -16, marginTop: -16 }}
-  >
-    <Icon className="w-4 h-4 text-white" />
-  </motion.div>
-);
-
-// Floating cursor with name
-const FloatingCursor = ({
-  name,
-  color,
-  initialX,
-  initialY,
-  animateX,
-  animateY,
-  duration
-}: {
-  name: string;
-  color: string;
-  initialX: number;
-  initialY: number;
-  animateX: number[];
-  animateY: number[];
-  duration: number;
-}) => (
-  <motion.div
-    initial={{ x: initialX, y: initialY, opacity: 0 }}
-    animate={{
-      x: animateX,
-      y: animateY,
-      opacity: 1
-    }}
-    transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
-    className={`absolute flex items-center gap-1.5 ${color} px-2 py-1 rounded-full text-[10px] font-bold text-white shadow-xl z-20`}
-  >
-    <MousePointer2 className="w-2.5 h-2.5 fill-white" />
-    {name}
-  </motion.div>
-);
-
-// Animated donut chart
-const DonutChart = () => (
-  <div className="relative w-24 h-24">
-    <svg className="w-full h-full -rotate-90">
-      <circle cx="48" cy="48" r="36" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
-      <motion.circle
-        cx="48"
-        cy="48"
-        r="36"
-        fill="none"
-        stroke="url(#gradient)"
-        strokeWidth="8"
-        strokeLinecap="round"
-        strokeDasharray="226"
-        initial={{ strokeDashoffset: 226 }}
-        animate={{ strokeDashoffset: 60 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
-      />
-      <defs>
-        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#9838D9" />
-          <stop offset="100%" stopColor="#F35B04" />
-        </linearGradient>
-      </defs>
-    </svg>
-    <div className="absolute inset-0 flex items-center justify-center">
-      <span className="text-white font-bold">73%</span>
-    </div>
-  </div>
-);
-
-// Animated list item
-const ListItem = ({ icon: Icon, text, delay }: { icon: IconComponent; text: string; delay: number }) => (
-  <motion.div
-    initial={{ opacity: 0, x: -10 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ delay, duration: 0.3 }}
-    className="flex items-center gap-2 text-xs text-white/60"
-  >
-    <Icon className="w-3 h-3 text-primary-purple" />
-    {text}
-  </motion.div>
-);
-
-// Pulsing notification dot
-const PulsingDot = ({ color, delay = 0 }: { color: string; delay?: number }) => (
-  <motion.div
-    animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
-    transition={{ duration: 2, repeat: Infinity, delay }}
-    className={`w-2 h-2 rounded-full ${color}`}
-  />
-);
-
-// Transaction row animation
-const TransactionRow = ({
-  icon: Icon,
-  label,
-  amount,
-  isPositive,
-  delay
-}: {
-  icon: IconComponent;
-  label: string;
-  amount: string;
-  isPositive: boolean;
-  delay: number;
-}) => (
-  <motion.div
-    initial={{ opacity: 0, x: -20 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ delay }}
-    className="flex items-center justify-between py-2 border-b border-white/5"
-  >
-    <div className="flex items-center gap-2">
-      <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-        <Icon className="w-3 h-3 text-white/60" />
-      </div>
-      <span className="text-xs text-white/70">{label}</span>
-    </div>
-    <div className={`flex items-center gap-1 text-xs font-medium ${isPositive ? "text-emerald-400" : "text-red-400"}`}>
-      {isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-      {amount}
-    </div>
-  </motion.div>
-);
-
 export const Features = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.6,
-        ease: [0.16, 1, 0.3, 1] as const,
-      },
-    },
-  };
-
   return (
-    <section id="features" className="py-24 bg-bg-layout-purple relative overflow-hidden">
-      {/* Background glow effects */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[150px] pointer-events-none" />
+    <section id="features" className="py-16 md:py-24 lg:py-32 bg-bg-layout-purple relative overflow-hidden">
+      {/* Subtle ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[1000px] h-[400px] md:h-[600px] bg-primary-purple/10 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-16"
-        >
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-primary-purple mb-4">
-            Modules
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        {/* Header */}
+        <div className="text-center max-w-2xl mx-auto mb-12 md:mb-20">
+          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-6">
+            <Layers className="w-4 h-4 text-primary-purple" />
+            <span className="text-sm text-white/70">Enterprise Modules</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight">
+            Everything you need.
+            <br />
+            <span className="text-gradient">
+              Nothing you don&apos;t.
+            </span>
           </h2>
-          <h3 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            Everything you need to{" "}
-            <span className="text-gradient">run your business.</span>
-          </h3>
-          <p className="text-text-gray text-lg">
-            A complete suite of integrated modules designed for modern enterprises.
+          <p className="text-base md:text-lg text-white/40 max-w-lg mx-auto px-4">
+            Twelve integrated modules built for enterprises that demand excellence.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-6 gap-4 max-w-7xl mx-auto"
-        >
-          {/* Finance & Accounting - Large with transactions */}
-          <motion.div variants={itemVariants} className="md:col-span-3">
-            <BentoCard className="h-95">
-              <div className="relative z-10">
-                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Calculator className="w-6 h-6 text-emerald-400" />
+        {/* Premium Bento Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 md:gap-4 max-w-6xl mx-auto">
+
+          {/* Finance - Hero card */}
+          <div className="sm:col-span-2 lg:col-span-8 relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-transparent to-teal-500/10 rounded-2xl md:rounded-3xl" />
+            <div className="relative h-full min-h-[280px] md:min-h-[320px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
+              <div>
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-4 md:mb-5 shadow-lg shadow-emerald-500/20">
+                  <Calculator className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Finance & Accounting</h3>
-                <p className="text-text-gray text-sm mb-4">Complete financial visibility and control</p>
+                <h3 className="text-xl md:text-2xl font-semibold text-white mb-2">Finance & Accounting</h3>
+                <p className="text-sm md:text-base text-white/40 max-w-sm">Complete general ledger, accounts payable & receivable, and multi-currency support.</p>
               </div>
 
-              {/* Gradient overlay */}
-              <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-emerald-500/10 to-transparent pointer-events-none" />
+              {/* Mini dashboard preview */}
+              <div className="mt-6 md:mt-8 grid grid-cols-3 gap-2 md:gap-3">
+                <div className="bg-white/[0.04] rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/[0.06]">
+                  <p className="text-[10px] md:text-xs text-white/30 mb-1">Revenue</p>
+                  <p className="text-base md:text-xl font-semibold text-white">₱12.4M</p>
+                  <p className="text-[10px] md:text-xs text-emerald-400 mt-1">+18.2%</p>
+                </div>
+                <div className="bg-white/[0.04] rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/[0.06]">
+                  <p className="text-[10px] md:text-xs text-white/30 mb-1">Expenses</p>
+                  <p className="text-base md:text-xl font-semibold text-white">₱4.2M</p>
+                  <p className="text-[10px] md:text-xs text-white/40 mt-1">On track</p>
+                </div>
+                <div className="bg-white/[0.04] rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/[0.06]">
+                  <p className="text-[10px] md:text-xs text-white/30 mb-1">Margin</p>
+                  <p className="text-base md:text-xl font-semibold text-white">34%</p>
+                  <p className="text-[10px] md:text-xs text-emerald-400 mt-1">+4.1%</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-              {/* Interactive transactions visualization */}
-              <div className="absolute bottom-6 left-6 right-6">
-                <div className="glass rounded-xl p-4 border border-white/10">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs text-white/50">Recent Transactions</span>
-                    <div className="flex items-center gap-1 text-emerald-400 text-xs">
-                      <TrendingUp className="w-3 h-3" />
-                      +24.5%
+          {/* HR - Vertical card */}
+          <div className="sm:col-span-2 lg:col-span-4 relative group">
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-500/15 to-transparent rounded-2xl md:rounded-3xl" />
+            <div className="relative h-full min-h-[280px] md:min-h-[320px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
+              <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center mb-4 md:mb-5 shadow-lg shadow-blue-500/20">
+                <Users className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              </div>
+              <h3 className="text-lg md:text-xl font-semibold text-white mb-2">HR & Payroll</h3>
+              <p className="text-sm text-white/40 mb-4 md:mb-6">Employee lifecycle, attendance, and automated payroll processing.</p>
+
+              {/* Employee avatars */}
+              <div className="mt-auto">
+                <div className="flex -space-x-2 md:-space-x-3 mb-3">
+                  {["bg-blue-500", "bg-purple-500", "bg-pink-500", "bg-amber-500", "bg-emerald-500"].map((color, i) => (
+                    <div key={i} className={cn("w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-bg-layout-purple flex items-center justify-center text-[10px] md:text-xs font-medium text-white", color)}>
+                      {String.fromCharCode(65 + i)}
                     </div>
+                  ))}
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-bg-layout-purple bg-white/10 flex items-center justify-center text-[10px] md:text-xs text-white/60">
+                    +847
                   </div>
-                  <TransactionRow icon={Receipt} label="Invoice #1234" amount="₱12,500" isPositive={true} delay={0.3} />
-                  <TransactionRow icon={Wallet} label="Payroll" amount="₱45,000" isPositive={false} delay={0.5} />
-                  <TransactionRow icon={DollarSign} label="Sales Revenue" amount="₱28,750" isPositive={true} delay={0.7} />
+                </div>
+                <p className="text-xs text-white/30">852 active employees</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Inventory - Wide card */}
+          <div className="sm:col-span-1 lg:col-span-6 relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-orange-500/5 rounded-2xl md:rounded-3xl" />
+            <div className="relative h-full min-h-[200px] md:min-h-[240px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0">
+                  <Package className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1 md:mb-2">Inventory & Warehouse</h3>
+                  <p className="text-xs md:text-sm text-white/40">Multi-location stock tracking with barcode support.</p>
                 </div>
               </div>
-            </BentoCard>
-          </motion.div>
 
-          {/* HR & Payroll - Large with floating cursors */}
-          <motion.div variants={itemVariants} className="md:col-span-3">
-            <BentoCard className="h-95">
-              <div className="relative z-10">
-                <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Users className="w-6 h-6 text-blue-400" />
+              {/* Stock indicators */}
+              <div className="mt-auto flex flex-col sm:flex-row sm:items-center gap-3 md:gap-6">
+                <div>
+                  <p className="text-2xl md:text-3xl font-bold text-white">24,847</p>
+                  <p className="text-[10px] md:text-xs text-white/30">SKUs tracked</p>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">HR & Payroll</h3>
-                <p className="text-text-gray text-sm mb-4">Streamline workforce management</p>
+                <div className="hidden sm:block h-12 w-px bg-white/10" />
+                <div className="flex flex-wrap gap-3 md:gap-4">
+                  <div className="flex items-center gap-1.5 md:gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <span className="text-xs md:text-sm text-white/50">In Stock</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 md:gap-2">
+                    <div className="w-2 h-2 rounded-full bg-amber-400" />
+                    <span className="text-xs md:text-sm text-white/50">Low</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 md:gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red-400" />
+                    <span className="text-xs md:text-sm text-white/50">Out</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sales - Wide card */}
+          <div className="sm:col-span-1 lg:col-span-6 relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-purple-500/5 rounded-2xl md:rounded-3xl" />
+            <div className="relative h-full min-h-[200px] md:min-h-[240px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
+                  <ShoppingCart className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1 md:mb-2">Sales & Orders</h3>
+                  <p className="text-xs md:text-sm text-white/40">Quote-to-cash automation with approval workflows.</p>
+                </div>
               </div>
 
-              {/* Floating cursors like BentoGrid */}
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <FloatingCursor
-                  name="Maria"
-                  color="bg-blue-500"
-                  initialX={50}
-                  initialY={120}
-                  animateX={[50, 150, 80, 50]}
-                  animateY={[120, 180, 220, 120]}
-                  duration={8}
-                />
-                <FloatingCursor
-                  name="Carlos"
-                  color="bg-purple-500"
-                  initialX={200}
-                  initialY={150}
-                  animateX={[200, 120, 180, 200]}
-                  animateY={[150, 200, 160, 150]}
-                  duration={10}
-                />
-                <FloatingCursor
-                  name="Ana"
-                  color="bg-button-orange"
-                  initialX={100}
-                  initialY={250}
-                  animateX={[100, 180, 140, 100]}
-                  animateY={[250, 200, 280, 250]}
-                  duration={12}
-                />
-              </div>
-
-              {/* Employee stats at bottom */}
-              <div className="absolute bottom-6 left-6 right-6 flex gap-3">
+              {/* Pipeline bars */}
+              <div className="mt-auto flex items-end gap-1.5 md:gap-2">
                 {[
-                  { label: "Active", value: "124", color: "text-emerald-400" },
-                  { label: "On Leave", value: "8", color: "text-amber-400" },
-                  { label: "New Hires", value: "12", color: "text-blue-400" },
-                ].map((stat, i) => (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 + i * 0.1 }}
-                    className="flex-1 glass rounded-lg p-3 border border-white/5 text-center"
-                  >
-                    <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
-                    <p className="text-[10px] text-white/40">{stat.label}</p>
-                  </motion.div>
+                  { label: "Leads", h: "60%", color: "bg-violet-500" },
+                  { label: "Qualified", h: "45%", color: "bg-purple-500" },
+                  { label: "Proposal", h: "30%", color: "bg-indigo-500" },
+                  { label: "Closed", h: "25%", color: "bg-emerald-500" },
+                ].map((stage) => (
+                  <div key={stage.label} className="flex-1 flex flex-col items-center">
+                    <div className="w-full h-12 md:h-16 bg-white/[0.04] rounded-md md:rounded-lg overflow-hidden flex items-end">
+                      <div className={cn("w-full rounded-t-sm md:rounded-t-md", stage.color)} style={{ height: stage.h }} />
+                    </div>
+                    <p className="text-[8px] md:text-[10px] text-white/30 mt-1.5 md:mt-2">{stage.label}</p>
+                  </div>
                 ))}
               </div>
-            </BentoCard>
-          </motion.div>
+            </div>
+          </div>
 
-          {/* Inventory - Tall with orbiting icons */}
-          <motion.div variants={itemVariants} className="md:col-span-2 md:row-span-2">
-            <BentoCard className="h-full min-h-100">
-              <div className="relative z-10">
-                <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Package className="w-6 h-6 text-amber-400" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Inventory & Warehouse</h3>
-                <p className="text-text-gray text-sm mb-6">Real-time stock visibility</p>
-
-                <div className="space-y-2">
-                  <ListItem icon={Boxes} text="Multi-location tracking" delay={0.2} />
-                  <ListItem icon={ScanBarcode} text="Barcode scanning" delay={0.3} />
-                  <ListItem icon={ClipboardList} text="Auto reorder alerts" delay={0.4} />
-                </div>
+          {/* Small cards row - 2x2 on mobile, 4 across on desktop */}
+          <div className="sm:col-span-1 lg:col-span-3 relative group">
+            <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-pink-500/20">
+                <Monitor className="w-4 h-4 md:w-5 md:h-5 text-white" />
               </div>
-
-              {/* Orbiting warehouse icons */}
-              <div className="absolute bottom-20 left-1/2 w-32 h-32 -translate-x-1/2">
-                <OrbitingIcon Icon={Boxes} radius={50} duration={8} color="bg-amber-500/80" />
-                <OrbitingIcon Icon={ScanBarcode} radius={50} duration={8} delay={2.67} color="bg-orange-500/80" />
-                <OrbitingIcon Icon={Package} radius={50} duration={8} delay={5.33} color="bg-yellow-500/80" />
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    <Package className="w-6 h-6 text-amber-400" />
-                  </motion.div>
-                </div>
+              <h3 className="text-sm md:text-base font-semibold text-white mb-1">Point of Sale</h3>
+              <p className="text-[10px] md:text-xs text-white/40 mb-3 md:mb-4">Fast retail checkout</p>
+              <div className="mt-auto">
+                <p className="text-xl md:text-2xl font-bold text-white">₱1.2M</p>
+                <p className="text-[9px] md:text-[10px] text-white/30">Today&apos;s transactions</p>
               </div>
+            </div>
+          </div>
 
-              {/* Stock stats */}
-              <div className="absolute bottom-6 left-6 right-6">
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { label: "In Stock", value: "2,847", color: "text-emerald-400" },
-                    { label: "Low Stock", value: "124", color: "text-amber-400" },
-                    { label: "Out", value: "18", color: "text-red-400" },
-                  ].map((item, i) => (
-                    <motion.div
-                      key={item.label}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5 + i * 0.1 }}
-                      className="glass rounded-lg p-2 text-center border border-white/5"
-                    >
-                      <p className={`text-lg font-bold ${item.color}`}>{item.value}</p>
-                      <p className="text-[9px] text-white/40">{item.label}</p>
-                    </motion.div>
-                  ))}
-                </div>
+          <div className="sm:col-span-1 lg:col-span-3 relative group">
+            <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-rose-400 to-red-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-rose-500/20">
+                <Clock className="w-4 h-4 md:w-5 md:h-5 text-white" />
               </div>
-            </BentoCard>
-          </motion.div>
+              <h3 className="text-sm md:text-base font-semibold text-white mb-1">Queue System</h3>
+              <p className="text-[10px] md:text-xs text-white/40 mb-3 md:mb-4">Customer flow</p>
+              <div className="mt-auto font-mono">
+                <p className="text-xl md:text-2xl font-bold text-white">A-042</p>
+                <p className="text-[9px] md:text-[10px] text-white/30">Now serving</p>
+              </div>
+            </div>
+          </div>
 
-          {/* POS - Small with card swipe animation */}
-          <motion.div variants={itemVariants} className="md:col-span-2">
-            <BentoCard className="h-50">
-              <div className="relative z-10 flex items-start justify-between h-full">
+          <div className="sm:col-span-1 lg:col-span-3 relative group">
+            <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-cyan-500/20">
+                <UserCircle className="w-4 h-4 md:w-5 md:h-5 text-white" />
+              </div>
+              <h3 className="text-sm md:text-base font-semibold text-white mb-1">CRM</h3>
+              <p className="text-[10px] md:text-xs text-white/40 mb-3 md:mb-4">Relationship tracking</p>
+              <div className="mt-auto">
+                <p className="text-xl md:text-2xl font-bold text-white">4,281</p>
+                <p className="text-[9px] md:text-[10px] text-white/30">Active contacts</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="sm:col-span-1 lg:col-span-3 relative group">
+            <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-orange-500/20">
+                <Truck className="w-4 h-4 md:w-5 md:h-5 text-white" />
+              </div>
+              <h3 className="text-sm md:text-base font-semibold text-white mb-1">Procurement</h3>
+              <p className="text-[10px] md:text-xs text-white/40 mb-3 md:mb-4">Vendor management</p>
+              <div className="mt-auto">
+                <p className="text-xl md:text-2xl font-bold text-white">127</p>
+                <p className="text-[9px] md:text-[10px] text-white/30">Active suppliers</p>
+              </div>
+            </div>
+          </div>
+
+          {/* BI - Wide card with chart */}
+          <div className="sm:col-span-2 lg:col-span-7 relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/5 rounded-2xl md:rounded-3xl" />
+            <div className="relative h-full min-h-[180px] md:min-h-[220px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/20 shrink-0">
+                  <BarChart3 className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                </div>
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <Monitor className="w-5 h-5 text-pink-400" />
-                  </div>
-                  <h3 className="text-lg font-bold text-white mb-1">Point of Sale</h3>
-                  <p className="text-text-gray text-xs">Lightning-fast checkout</p>
-                </div>
-
-                {/* Animated card swipe */}
-                <div className="relative">
-                  <motion.div
-                    animate={{
-                      y: [0, -5, 0],
-                      rotateZ: [0, -5, 0]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="glass rounded-lg p-3 border border-white/10"
-                  >
-                    <CreditCard className="w-8 h-8 text-pink-400" />
-                  </motion.div>
-                  <motion.div
-                    animate={{ opacity: [0, 1, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-[8px] text-emerald-400 font-medium whitespace-nowrap"
-                  >
-                    ✓ Payment received
-                  </motion.div>
+                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1 md:mb-2">Business Intelligence</h3>
+                  <p className="text-xs md:text-sm text-white/40">Real-time dashboards & custom reports</p>
                 </div>
               </div>
-            </BentoCard>
-          </motion.div>
 
-          {/* Queue Management - Small with animated queue */}
-          <motion.div variants={itemVariants} className="md:col-span-2">
-            <BentoCard className="h-50">
-              <div className="relative z-10 flex items-start justify-between h-full">
+              {/* Chart visualization */}
+              <div className="mt-auto flex items-end gap-1 md:gap-1.5 h-14 md:h-20">
+                {[40, 65, 45, 80, 55, 90, 70, 85, 60, 95, 75, 88].map((h, i) => (
+                  <div key={i} className="flex-1 bg-gradient-to-t from-purple-500/40 to-purple-500/10 rounded-t-sm" style={{ height: `${h}%` }} />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Project Management */}
+          <div className="sm:col-span-2 lg:col-span-5 relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-2xl md:rounded-3xl" />
+            <div className="relative h-full min-h-[180px] md:min-h-[220px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
+              <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-indigo-400 to-blue-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
+                  <FolderKanban className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                </div>
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <Clock className="w-5 h-5 text-rose-400" />
-                  </div>
-                  <h3 className="text-lg font-bold text-white mb-1">Queue Management</h3>
-                  <p className="text-text-gray text-xs">Serve efficiently</p>
-                </div>
-
-                {/* Animated queue numbers */}
-                <div className="flex flex-col gap-1.5">
-                  {["A-042", "A-043", "A-044"].map((num, i) => (
-                    <motion.div
-                      key={num}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{
-                        opacity: i === 0 ? 1 : 0.5 - i * 0.15,
-                        x: 0,
-                        scale: i === 0 ? 1 : 0.9
-                      }}
-                      transition={{ delay: i * 0.2 }}
-                      className={cn(
-                        "text-xs font-mono px-3 py-1 rounded",
-                        i === 0 ? "bg-rose-500/20 text-rose-400 border border-rose-500/30" : "bg-white/5 text-white/40"
-                      )}
-                    >
-                      {i === 0 && <span className="mr-1">→</span>}
-                      {num}
-                    </motion.div>
-                  ))}
+                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1">Project Management</h3>
+                  <p className="text-xs md:text-sm text-white/40">Tasks, timelines, resources</p>
                 </div>
               </div>
-            </BentoCard>
-          </motion.div>
 
-          {/* Sales & Order - Large with pipeline */}
-          <motion.div variants={itemVariants} className="md:col-span-4">
-            <BentoCard className="h-50">
-              <div className="relative z-10 flex gap-6 h-full">
-                <div className="shrink-0">
-                  <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <ShoppingCart className="w-6 h-6 text-violet-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-1">Sales & Order Management</h3>
-                  <p className="text-text-gray text-xs">Quote to delivery, seamlessly</p>
-                </div>
-
-                {/* Sales pipeline visualization with connecting lines */}
-                <div className="flex-1 flex items-center gap-1 relative">
-                  {/* Connecting line */}
-                  <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-violet-500 via-purple-500 via-indigo-500 to-emerald-500 opacity-30" />
-
-                  {[
-                    { stage: "Lead", count: 24, color: "bg-violet-500" },
-                    { stage: "Quote", count: 18, color: "bg-purple-500" },
-                    { stage: "Order", count: 12, color: "bg-indigo-500" },
-                    { stage: "Done", count: 8, color: "bg-emerald-500" },
-                  ].map((item, i) => (
-                    <motion.div
-                      key={item.stage}
-                      initial={{ opacity: 0, scaleY: 0 }}
-                      animate={{ opacity: 1, scaleY: 1 }}
-                      transition={{ delay: 0.3 + i * 0.15 }}
-                      className="flex-1 text-center relative z-10"
-                    >
-                      <motion.div
-                        className={`${item.color} h-16 rounded-lg mb-2 flex items-center justify-center shadow-lg`}
-                        style={{ opacity: 1 - i * 0.1 }}
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        <span className="text-white font-bold text-lg">{item.count}</span>
-                      </motion.div>
-                      <span className="text-[10px] text-white/50">{item.stage}</span>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </BentoCard>
-          </motion.div>
-
-          {/* CRM - with animated contact bubbles */}
-          <motion.div variants={itemVariants} className="md:col-span-2">
-            <BentoCard className="h-50">
-              <div className="relative z-10 h-full">
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                  <UserCircle className="w-5 h-5 text-cyan-400" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-1">CRM</h3>
-                <p className="text-text-gray text-xs mb-3">Build lasting relationships</p>
-
-                {/* Animated avatar stack */}
-                <div className="flex -space-x-3">
-                  {[
-                    { initials: "AC", color: "bg-cyan-500" },
-                    { initials: "BT", color: "bg-blue-500" },
-                    { initials: "CM", color: "bg-purple-500" },
-                    { initials: "DK", color: "bg-pink-500" },
-                  ].map((avatar, i) => (
-                    <motion.div
-                      key={avatar.initials}
-                      initial={{ opacity: 0, scale: 0, x: -20 }}
-                      animate={{ opacity: 1, scale: 1, x: 0 }}
-                      transition={{ delay: 0.3 + i * 0.1, type: "spring" }}
-                      whileHover={{ scale: 1.1, zIndex: 10 }}
-                      className={`w-10 h-10 rounded-full ${avatar.color} border-2 border-bg-layout-purple flex items-center justify-center text-xs font-bold text-white cursor-pointer relative`}
-                    >
-                      {avatar.initials}
-                    </motion.div>
-                  ))}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.7 }}
-                    className="w-10 h-10 rounded-full bg-white/10 border-2 border-bg-layout-purple flex items-center justify-center text-xs font-bold text-white/60"
-                  >
-                    +99
-                  </motion.div>
-                </div>
-              </div>
-            </BentoCard>
-          </motion.div>
-
-          {/* Procurement - with notification badges */}
-          <motion.div variants={itemVariants} className="md:col-span-2">
-            <BentoCard className="h-50">
-              <div className="relative z-10 h-full flex flex-col">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <Truck className="w-5 h-5 text-orange-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-white leading-tight">Procurement</h3>
-                    <p className="text-text-gray text-xs">Supply chain mastery</p>
-                  </div>
-                </div>
-
-                {/* Animated notification badges */}
-                <div className="mt-auto space-y-1.5">
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="flex items-center gap-2 bg-orange-500/10 rounded-full px-2.5 py-1"
-                  >
-                    <PulsingDot color="bg-orange-400" />
-                    <Send className="w-3 h-3 text-orange-400" />
-                    <span className="text-[11px] text-orange-400">12 POs pending</span>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="flex items-center gap-2 bg-emerald-500/10 rounded-full px-2.5 py-1"
-                  >
-                    <PulsingDot color="bg-emerald-400" delay={0.5} />
-                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                    <span className="text-[11px] text-emerald-400">8 delivered today</span>
-                  </motion.div>
-                </div>
-              </div>
-            </BentoCard>
-          </motion.div>
-
-          {/* Project Management - with animated progress */}
-          <motion.div variants={itemVariants} className="md:col-span-2">
-            <BentoCard className="h-50">
-              <div className="relative z-10 h-full">
-                <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                  <FolderKanban className="w-5 h-5 text-indigo-400" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-1">Project Management</h3>
-                <p className="text-text-gray text-xs mb-3">On time, on budget</p>
-
-                {/* Animated progress bars */}
-                <div className="space-y-3">
-                  {[
-                    { name: "Website Redesign", progress: 85, color: "bg-indigo-400" },
-                    { name: "Mobile App", progress: 60, color: "bg-purple-400" },
-                  ].map((project, i) => (
-                    <div key={project.name}>
-                      <div className="flex justify-between text-[10px] mb-1">
-                        <span className="text-white/60">{project.name}</span>
-                        <span className="text-indigo-400">{project.progress}%</span>
-                      </div>
-                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${project.progress}%` }}
-                          transition={{ delay: 0.5 + i * 0.2, duration: 1, ease: "easeOut" }}
-                          className={`h-full ${project.color} rounded-full relative`}
-                        >
-                          <motion.div
-                            animate={{ x: ["-100%", "100%"] }}
-                            transition={{ duration: 1.5, repeat: Infinity, delay: 1 + i * 0.2 }}
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                          />
-                        </motion.div>
-                      </div>
+              {/* Progress bars */}
+              <div className="mt-auto space-y-2 md:space-y-3">
+                {[
+                  { name: "Q1 Rollout", progress: 92 },
+                  { name: "Mobile App", progress: 67 },
+                  { name: "API v2", progress: 41 },
+                ].map((project) => (
+                  <div key={project.name}>
+                    <div className="flex justify-between text-[10px] md:text-xs mb-1 md:mb-1.5">
+                      <span className="text-white/50">{project.name}</span>
+                      <span className="text-white/70">{project.progress}%</span>
                     </div>
-                  ))}
+                    <div className="h-1 md:h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-indigo-400 to-blue-400 rounded-full" style={{ width: `${project.progress}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom row - Compliance & Integrations */}
+          <div className="sm:col-span-1 lg:col-span-4 relative group">
+            <div className="relative h-full min-h-[140px] md:min-h-[180px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-red-400 to-rose-500 flex items-center justify-center shadow-lg shadow-red-500/20 shrink-0">
+                <ShieldCheck className="w-6 h-6 md:w-8 md:h-8 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg md:text-xl font-semibold text-white mb-1 md:mb-2">Compliance</h3>
+                <p className="text-xs md:text-sm text-white/40">Audit trails & governance</p>
+                <div className="flex items-center gap-2 mt-2 md:mt-3">
+                  <Check className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-400" />
+                  <span className="text-[10px] md:text-xs text-white/50">SOC 2 Type II</span>
                 </div>
               </div>
-            </BentoCard>
-          </motion.div>
+            </div>
+          </div>
 
-          {/* Business Intelligence - Large with donut and metrics */}
-          <motion.div variants={itemVariants} className="md:col-span-3">
-            <BentoCard className="h-55">
-              <div className="relative z-10 flex gap-8 h-full">
+          <div className="sm:col-span-1 lg:col-span-8 relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-teal-500/5 via-cyan-500/5 to-blue-500/5 rounded-2xl md:rounded-3xl" />
+            <div className="relative h-full min-h-[140px] md:min-h-[180px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-teal-500/20 shrink-0">
+                  <Plug className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                </div>
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <BarChart3 className="w-6 h-6 text-purple-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-1">Business Intelligence</h3>
-                  <p className="text-text-gray text-xs mb-4">Data-driven decisions</p>
-
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                    {["Dashboards", "Custom reports", "KPI tracking", "Real-time analytics"].map((item) => (
-                      <div key={item} className="flex items-center gap-1.5 text-[10px] text-white/50">
-                        <div className="w-1 h-1 rounded-full bg-purple-400" />
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <DonutChart />
-                  <div className="space-y-2">
-                    {[
-                      { label: "Sales", value: "45%", color: "bg-primary-purple" },
-                      { label: "Operations", value: "28%", color: "bg-button-orange" },
-                      { label: "Other", value: "27%", color: "bg-white/20" },
-                    ].map((item, i) => (
-                      <motion.div
-                        key={item.label}
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.8 + i * 0.1 }}
-                        className="flex items-center gap-2 text-xs"
-                      >
-                        <div className={`w-3 h-3 rounded-full ${item.color}`} />
-                        <span className="text-white/60">{item.label}</span>
-                        <span className="text-white font-medium">{item.value}</span>
-                      </motion.div>
-                    ))}
-                  </div>
+                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1">Integrations</h3>
+                  <p className="text-xs md:text-sm text-white/40">Connect with 200+ enterprise tools</p>
                 </div>
               </div>
-            </BentoCard>
-          </motion.div>
 
-          {/* Compliance - with shield animation */}
-          <motion.div variants={itemVariants} className="md:col-span-1">
-            <BentoCard className="h-55">
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                  <ShieldCheck className="w-5 h-5 text-red-400" />
-                </div>
-                <h3 className="text-sm font-bold text-white mb-1">Compliance</h3>
-                <p className="text-text-gray text-[10px] mb-4">Audit & governance</p>
-
-                {/* Animated shield with checkmarks */}
-                <div className="flex-1 flex items-center justify-center">
-                  <div className="relative">
-                    <motion.div
-                      animate={{
-                        scale: [1, 1.05, 1],
-                        opacity: [0.5, 1, 0.5]
-                      }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    >
-                      <Shield className="w-12 h-12 text-red-400/30" />
-                    </motion.div>
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.5, type: "spring" }}
-                      className="absolute inset-0 flex items-center justify-center"
-                    >
-                      <Lock className="w-5 h-5 text-red-400" />
-                    </motion.div>
+              {/* Integration logos placeholder */}
+              <div className="mt-auto flex items-center gap-2 md:gap-3 flex-wrap">
+                {[Zap, Globe, Lock, Layers, BarChart3, Users].map((Icon, i) => (
+                  <div key={i} className="w-9 h-9 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center">
+                    <Icon className="w-4 h-4 md:w-5 md:h-5 text-white/40" />
                   </div>
+                ))}
+                <div className="w-9 h-9 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-[10px] md:text-xs text-white/40">
+                  +194
                 </div>
               </div>
-            </BentoCard>
-          </motion.div>
+            </div>
+          </div>
 
-          {/* Integration - with connected icons */}
-          <motion.div variants={itemVariants} className="md:col-span-2">
-            <BentoCard className="h-55">
-              <div className="relative z-10 h-full">
-                <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                  <Plug className="w-5 h-5 text-teal-400" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-1">Integrations</h3>
-                <p className="text-text-gray text-xs mb-4">Connect everything</p>
-
-                {/* Connected integration icons with lines */}
-                <div className="flex items-center justify-center gap-4 relative">
-                  {/* Connection lines */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ overflow: "visible" }}>
-                    <motion.line
-                      x1="25%" y1="50%" x2="50%" y2="50%"
-                      stroke="rgba(45, 212, 191, 0.3)"
-                      strokeWidth="2"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ delay: 0.5, duration: 0.5 }}
-                    />
-                    <motion.line
-                      x1="50%" y1="50%" x2="75%" y2="50%"
-                      stroke="rgba(45, 212, 191, 0.3)"
-                      strokeWidth="2"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ delay: 0.7, duration: 0.5 }}
-                    />
-                  </svg>
-
-                  {[
-                    { Icon: Database, delay: 0.3 },
-                    { Icon: Cloud, delay: 0.5 },
-                    { Icon: Smartphone, delay: 0.7 },
-                  ].map(({ Icon, delay }, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay, type: "spring" }}
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className="w-12 h-12 rounded-xl bg-white/5 border border-teal-500/20 flex items-center justify-center relative z-10"
-                    >
-                      <Icon className="w-5 h-5 text-teal-400" />
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </BentoCard>
-          </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
