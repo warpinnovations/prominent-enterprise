@@ -353,7 +353,7 @@ export const Hero = () => {
                       </div>
                       <div className="text-left">
                         <h4 className="font-bold text-white mb-0.5 text-sm">Full Payroll Calculations</h4>
-                        <p className="text-white/50 text-xs">Process SSS, Pag-ibig, PhilHealth & TRAIN tax automatically</p>
+                        <p className="text-white/50 text-xs">Automate SSS, Pag-IBIG, PhilHealth, and TRAIN deductions - accurate, fast, and hassle-free.</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -362,7 +362,7 @@ export const Hero = () => {
                       </div>
                       <div className="text-left">
                         <h4 className="font-bold text-white mb-0.5 text-sm">Upload & Process Excel</h4>
-                        <p className="text-white/50 text-xs">Process up to 50 employee records instantly</p>
+                        <p className="text-white/50 text-xs">Upload employee data and process up to 50 records instantly. Say goodbye to manual payroll errors.</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -371,7 +371,8 @@ export const Hero = () => {
                       </div>
                       <div className="text-left">
                         <h4 className="font-bold text-white mb-0.5 text-sm">Seamless UI & Reports</h4>
-                        <p className="text-white/50 text-xs">Generate professional payslips with detailed breakdowns</p>
+                        <p className="text-white/50 text-xs">Generate professional payslips with detailed breakdowns, ready to share with your team.
+</p>
                       </div>
                     </div>
                   </motion.div>
