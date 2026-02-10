@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Mail, User, Check, ArrowRight, Gift, Zap, Crown, Clock } from "lucide-react";
+import { Sparkles, Mail, User, Check, ArrowRight, Gift, Zap, Crown, Clock, Building2, Phone } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -10,6 +10,8 @@ import { Footer } from "@/components/Footer";
 export default function WaitlistPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -167,6 +169,44 @@ export default function WaitlistPage() {
                         </div>
                       </div>
 
+                      {/* Company Name Input */}
+                      <div className="space-y-2">
+                        <label htmlFor="companyName" className="block text-sm font-medium text-white/70">
+                          Company Name
+                        </label>
+                        <div className="relative">
+                          <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                          <input
+                            type="text"
+                            id="companyName"
+                            required
+                            value={companyName}
+                            onChange={(e) => setCompanyName(e.target.value)}
+                            placeholder="Your company"
+                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Mobile Number Input */}
+                      <div className="space-y-2">
+                        <label htmlFor="mobileNumber" className="block text-sm font-medium text-white/70">
+                          Mobile Number
+                        </label>
+                        <div className="relative">
+                          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                          <input
+                            type="tel"
+                            id="mobileNumber"
+                            required
+                            value={mobileNumber}
+                            onChange={(e) => setMobileNumber(e.target.value)}
+                            placeholder="+63 912 345 6789"
+                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all"
+                          />
+                        </div>
+                      </div>
+
                       {/* Submit Button */}
                       <button
                         type="submit"
@@ -235,10 +275,13 @@ export default function WaitlistPage() {
                   <h2 className="text-4xl md:text-5xl font-bold mb-4">
                     You&apos;re on the list! 🎉
                   </h2>
-                  <p className="text-xl text-white/60 mb-8">
-                    Welcome aboard, <span className="text-white font-semibold">{name}</span>!
-                    <br />
+                  <p className="text-xl text-white/60 mb-4">
+                    Welcome aboard, <span className="text-white font-semibold">{name}</span> from <span className="text-white font-semibold">{companyName}</span>!
+                  </p>
+                  <p className="text-lg text-white/50 mb-8">
                     We&apos;ve sent a confirmation to <span className="text-primary-purple">{email}</span>
+                    <br />
+                    You&apos;ll receive updates at <span className="text-primary-purple">{mobileNumber}</span>
                   </p>
 
                   <div className="bg-gradient-to-br from-white/[0.05] to-white/[0.02] border border-white/10 rounded-3xl p-8 mb-8">
@@ -280,7 +323,7 @@ export default function WaitlistPage() {
                       href="/prototype/payroll"
                       className="px-8 py-3 bg-gradient-to-r from-primary-purple to-purple-600 hover:opacity-90 text-white font-bold rounded-xl transition-all flex items-center gap-2"
                     >
-                      Try the Prototype
+                      Try The Prominent
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
