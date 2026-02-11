@@ -172,10 +172,8 @@ export async function POST(request: NextRequest) {
         `,
       });
       
-      console.log('Email sent successfully:', emailResult);
     } catch (emailError) {
       console.error('Email send error:', emailError);
-      console.error('Error details:', JSON.stringify(emailError, null, 2));
       // Continue even if email fails
     }
 
@@ -184,7 +182,6 @@ export async function POST(request: NextRequest) {
       message: 'Successfully added to waitlist!',
     });
   } catch (error) {
-    console.error('Waitlist submission error:', error);
     return NextResponse.json(
       { error: 'Failed to process request' },
       { status: 500 }
