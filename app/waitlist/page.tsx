@@ -59,7 +59,7 @@ export default function WaitlistPage() {
     {
       icon: Gift,
       title: "Exclusive Discounts",
-      description: "Get up to 50% off on your first 3 months",
+      description: "Waived Installation Fee",
       color: "from-primary-purple to-purple-600"
     },
     {
