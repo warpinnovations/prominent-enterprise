@@ -43,8 +43,8 @@ export const Footer = () => {
   return (
     <footer className="py-20 border-t border-white/5 bg-bg-layout-purple">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
-          <div className="col-span-2 lg:col-span-1">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+          <div>
             <Link href="/" className="flex items-center mb-6 group">
               <div className="relative w-32 h-16 md:w-40 md:h-20 group-hover:scale-105 transition-transform duration-300">
                 <Image
@@ -66,34 +66,18 @@ export const Footer = () => {
             <ul className="space-y-4">
               <li>
                 <Link
-                  href="#"
+                  href="/#modules"
                   className="text-text-gray hover:text-white transition-colors text-sm"
                 >
-                  Features
+                  Modules
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/#solutions"
                   className="text-text-gray hover:text-white transition-colors text-sm"
                 >
-                  Integrations
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  Changelog
+                  Solutions
                 </Link>
               </li>
             </ul>
@@ -104,102 +88,18 @@ export const Footer = () => {
             <ul className="space-y-4">
               <li>
                 <Link
-                  href="#"
+                  href="/quiz"
                   className="text-text-gray hover:text-white transition-colors text-sm"
                 >
-                  About
+                  Assessment
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/waitlist"
                   className="text-text-gray hover:text-white transition-colors text-sm"
                 >
-                  Customers
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h5 className="text-white font-semibold mb-6">Resources</h5>
-            <ul className="space-y-4">
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  Documentation
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  Community
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  API Reference
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h5 className="text-white font-semibold mb-6">Social</h5>
-            <ul className="space-y-4">
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  Twitter
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  GitHub
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  LinkedIn
+                  Join Waitlist
                 </Link>
               </li>
             </ul>
@@ -210,7 +110,7 @@ export const Footer = () => {
           <p className="text-text-gray text-xs">
             © 2026 The Prominent. All rights reserved.
           </p>
-          <div className="flex items-center gap-8">
+          {/* <div className="flex items-center gap-8">
             <Link
               href="#"
               className="text-text-gray hover:text-white transition-colors text-xs"
@@ -229,7 +129,7 @@ export const Footer = () => {
             >
               Cookie Policy
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>

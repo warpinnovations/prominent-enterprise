@@ -88,6 +88,71 @@ export default function PayrollPrototype() {
   const endIndex = startIndex + itemsPerPage;
   const paginatedEmployees = sortedEmployees.slice(startIndex, endIndex);
 
+  const calculateSSS = (salary: number): number => {
+    // Philippine SSS Contribution Table (Employee Share) - 2024/2025 Rates
+    if (salary < 5250) return 250.00;
+    if (salary < 5750) return 275.00;
+    if (salary < 6250) return 300.00;
+    if (salary < 6750) return 325.00;
+    if (salary < 7250) return 350.00;
+    if (salary < 7750) return 375.00;
+    if (salary < 8250) return 400.00;
+    if (salary < 8750) return 425.00;
+    if (salary < 9250) return 450.00;
+    if (salary < 9750) return 475.00;
+    if (salary < 10250) return 500.00;
+    if (salary < 10750) return 525.00;
+    if (salary < 11250) return 550.00;
+    if (salary < 11750) return 575.00;
+    if (salary < 12250) return 600.00;
+    if (salary < 12750) return 625.00;
+    if (salary < 13250) return 650.00;
+    if (salary < 13750) return 675.00;
+    if (salary < 14250) return 700.00;
+    if (salary < 14750) return 725.00;
+    if (salary < 15250) return 750.00;
+    if (salary < 15750) return 775.00;
+    if (salary < 16250) return 800.00;
+    if (salary < 16750) return 825.00;
+    if (salary < 17250) return 850.00;
+    if (salary < 17750) return 875.00;
+    if (salary < 18250) return 900.00;
+    if (salary < 18750) return 925.00;
+    if (salary < 19250) return 950.00;
+    if (salary < 19750) return 975.00;
+    if (salary < 20250) return 1000.00;
+    if (salary < 20750) return 1025.00;
+    if (salary < 21250) return 1050.00;
+    if (salary < 21750) return 1075.00;
+    if (salary < 22250) return 1100.00;
+    if (salary < 22750) return 1125.00;
+    if (salary < 23250) return 1150.00;
+    if (salary < 23750) return 1175.00;
+    if (salary < 24250) return 1200.00;
+    if (salary < 24750) return 1225.00;
+    if (salary < 25250) return 1250.00;
+    if (salary < 25750) return 1275.00;
+    if (salary < 26250) return 1300.00;
+    if (salary < 26750) return 1325.00;
+    if (salary < 27250) return 1350.00;
+    if (salary < 27750) return 1375.00;
+    if (salary < 28250) return 1400.00;
+    if (salary < 28750) return 1425.00;
+    if (salary < 29250) return 1450.00;
+    if (salary < 29750) return 1475.00;
+    if (salary < 30250) return 1500.00;
+    if (salary < 30750) return 1525.00;
+    if (salary < 31250) return 1550.00;
+    if (salary < 31750) return 1575.00;
+    if (salary < 32250) return 1600.00;
+    if (salary < 32750) return 1625.00;
+    if (salary < 33250) return 1650.00;
+    if (salary < 33750) return 1675.00;
+    if (salary < 34250) return 1700.00;
+    if (salary < 34750) return 1725.00;
+    return 1750.00; // 34,750 and above
+  };
+
   const calculatePayroll = (data: Array<{ [key: string]: string | number | undefined }>) => {
     return data.map((row, index) => {
       const basicSalary = parseFloat(String(row.Salary || row.salary || row["Basic Salary"] || 0));
@@ -96,8 +161,8 @@ export default function PayrollPrototype() {
       const dailyRate = basicSalary / 22;
       const hourlyRate = dailyRate / 8;
       
-      // SSS: Simplified Philippine Payroll Logic (2025 Rates - approx 4.5% for employee)
-      const sss = Math.min(basicSalary * 0.045, 1350);
+      // SSS: Based on official Philippine SSS contribution table
+      const sss = calculateSSS(basicSalary);
       
       // Pag-ibig: 2% but capped (simplified to 200)
       const pagIbig = 200;
@@ -241,7 +306,7 @@ export default function PayrollPrototype() {
             className="mb-16"
           >
             <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-              Payroll <span className="bg-gradient-to-r from-primary-purple to-purple-400 bg-clip-text text-transparent">Prototype</span>
+              Payroll <span className="bg-gradient-to-r from-primary-purple to-purple-400 bg-clip-text text-transparent">Calculator</span>
             </h1>
             <p className="text-xl text-white/50 max-w-3xl leading-relaxed">
               Experience how The Prominent automates complex payroll calculations. 

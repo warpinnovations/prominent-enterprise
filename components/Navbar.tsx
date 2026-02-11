@@ -70,7 +70,7 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
               href="/prototype/payroll"
               className="text-[13px] font-medium text-primary-purple hover:text-primary-purple/80 transition-colors tracking-wide"
             >
-              Prototype
+              Free Trial
             </Link>
           </div>
         )}
@@ -126,7 +126,17 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
             Solutions
           </Link>
           <Link href="/prototype/payroll" className="text-lg font-medium text-primary-purple">
-            Prototype
+            Free Trial
+          </Link>
+          <Link href="/#cta" className="text-lg font-medium text-white">
+            Contact
+          </Link>
+          <Link
+            href="/waitlist"
+            className="px-6 py-3 bg-gradient-to-r from-primary-purple to-button-orange text-white text-base font-semibold rounded-xl flex items-center justify-center gap-2 mt-2"
+          >
+            Join the Waitlist
+            <ChevronRight className="w-4 h-4" />
           </Link>
           <Link href="/#cta" className="text-lg font-medium text-white">
             Contact

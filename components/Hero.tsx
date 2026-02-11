@@ -136,24 +136,23 @@ export const Hero = () => {
               variants={itemVariants}
               className="flex flex-col sm:flex-row items-start gap-4"
             >
-              <button
-                onClick={() => setShowGiftModal(true)}
-                className="px-8 py-4 bg-gradient-to-r from-primary-purple to-purple-600 hover:from-purple-600 hover:to-primary-purple text-white font-bold rounded-2xl transition-all flex items-center gap-3 text-base hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary-purple/30 group relative overflow-hidden"
-              >
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                >
-                  <Gift className="w-5 h-5" />
-                </motion.div>
-                <span className="relative z-10">Claim Your Free Trial</span>
-                <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <motion.div
-                  animate={{ x: ["-100%", "100%"] }}
-                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 1 }}
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                />
-              </button>
+              <Link href="/prototype/payroll">
+                <button className="px-8 py-4 bg-gradient-to-r from-primary-purple to-purple-600 hover:from-purple-600 hover:to-primary-purple text-white font-bold rounded-2xl transition-all flex items-center gap-3 text-base hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary-purple/30 group relative overflow-hidden">
+                  <motion.div
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
+                  >
+                    <Gift className="w-5 h-5" />
+                  </motion.div>
+                  <span className="relative z-10">Claim your free gift</span>
+                  <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <motion.div
+                    animate={{ x: ["-100%", "100%"] }}
+                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 1 }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  />
+                </button>
+              </Link>
             </motion.div>
           </motion.div>
 
@@ -223,7 +222,7 @@ export const Hero = () => {
                 >
                   <Link href="/quiz">
                     <button className="w-full px-8 py-5 bg-gradient-to-r from-button-orange to-bg-orange-btn hover:from-bg-orange-btn hover:to-button-orange text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-3 text-lg group hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-button-orange/30 relative overflow-hidden">
-                      <span className="relative z-10">Take The Quiz</span>
+                      <span className="relative z-10">Take an assessment</span>
                       <ChevronRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
                       <motion.div
                         animate={{ x: ["-100%", "100%"] }}
@@ -311,14 +310,14 @@ export const Hero = () => {
                   <X className="w-4 h-4 md:w-5 md:h-5 text-white group-hover:rotate-90 transition-transform duration-300" />
                 </button>
 
-                {/* Gift Icon */}
+                {/* Waitlist Icon */}
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                   className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-6 bg-gradient-to-br from-primary-purple/30 to-purple-600/30 rounded-2xl flex items-center justify-center border border-primary-purple/40 relative"
                 >
-                  <Gift className="w-8 h-8 md:w-10 md:h-10 text-primary-purple" />
+                  <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-primary-purple" />
                   <motion.div
                     animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
                     transition={{ duration: 2, repeat: Infinity }}
@@ -334,10 +333,10 @@ export const Hero = () => {
                     transition={{ delay: 0.3 }}
                   >
                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                      🎁 Exclusive Gift for You!
+                      ✨ Join the Waitlist
                     </h3>
                     <p className="text-white/60 text-sm md:text-base">
-                      Experience the power of The Prominent with our interactive payroll prototype
+                      Be among the first to transform your business operations with exclusive perks
                     </p>
                   </motion.div>
 
@@ -348,12 +347,12 @@ export const Hero = () => {
                     className="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-6 space-y-3"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-primary-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <ChevronRight className="w-3 h-3 text-primary-purple" />
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400/30 to-orange-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <ChevronRight className="w-3 h-3 text-yellow-400" />
                       </div>
                       <div className="text-left">
-                        <h4 className="font-bold text-white mb-0.5 text-sm">Full Payroll Calculations</h4>
-                        <p className="text-white/50 text-xs">Automate SSS, Pag-IBIG, PhilHealth, and TRAIN deductions - accurate, fast, and hassle-free.</p>
+                        <h4 className="font-bold text-white mb-0.5 text-sm">Early Access</h4>
+                        <p className="text-white/50 text-xs">Be the first to experience The Prominent when we launch</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -361,18 +360,26 @@ export const Hero = () => {
                         <ChevronRight className="w-3 h-3 text-primary-purple" />
                       </div>
                       <div className="text-left">
-                        <h4 className="font-bold text-white mb-0.5 text-sm">Upload & Process Excel</h4>
-                        <p className="text-white/50 text-xs">Upload employee data and process up to 50 records instantly. Say goodbye to manual payroll errors.</p>
+                        <h4 className="font-bold text-white mb-0.5 text-sm">Exclusive Discounts</h4>
+                        <p className="text-white/50 text-xs">Get up to 50% off on your first 3 months</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-primary-purple/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <ChevronRight className="w-3 h-3 text-primary-purple" />
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400/30 to-cyan-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <ChevronRight className="w-3 h-3 text-blue-400" />
                       </div>
                       <div className="text-left">
-                        <h4 className="font-bold text-white mb-0.5 text-sm">Seamless UI & Reports</h4>
-                        <p className="text-white/50 text-xs">Generate professional payslips with detailed breakdowns, ready to share with your team.
-</p>
+                        <h4 className="font-bold text-white mb-0.5 text-sm">Priority Support</h4>
+                        <p className="text-white/50 text-xs">Jump the queue with dedicated onboarding assistance</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-green-400/30 to-emerald-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <ChevronRight className="w-3 h-3 text-green-400" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="font-bold text-white mb-0.5 text-sm">Lifetime Benefits</h4>
+                        <p className="text-white/50 text-xs">Lock in special pricing and features forever</p>
                       </div>
                     </div>
                   </motion.div>
@@ -383,9 +390,9 @@ export const Hero = () => {
                     transition={{ delay: 0.5 }}
                     className="pt-2"
                   >
-                    <Link href="/prototype/payroll">
+                    <Link href="/waitlist">
                       <button className="w-full px-6 md:px-8 py-3.5 md:py-4 bg-gradient-to-r from-primary-purple to-purple-600 hover:from-purple-600 hover:to-primary-purple text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-base group hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary-purple/40 relative overflow-hidden">
-                        <span className="relative z-10">Try The Prototype Now</span>
+                        <span className="relative z-10">Secure Your Spot</span>
                         <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                         <motion.div
                           animate={{ x: ["-100%", "100%"] }}
