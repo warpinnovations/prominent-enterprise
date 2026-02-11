@@ -351,7 +351,7 @@ export default function QuizPage() {
                   </button>
 
                   <Link
-                    href="/#pricing"
+                    href="/#solutions"
                     className="px-6 py-3 rounded-2xl bg-orange-500 hover:bg-orange-400 text-white font-semibold transition text-center shadow-[0_18px_50px_-30px_rgba(249,115,22,0.8)]"
                   >
                     See a plan that fits →
