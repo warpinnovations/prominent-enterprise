@@ -67,10 +67,6 @@ function readinessLabel(avg: number) {
   if (avg >= 2.2) return { title: "Needs Structure 🧩", hint: "You’ll feel big wins by centralizing your workflows." }
   return { title: "Early Stage 🌱", hint: "Start simple: one system at a time." }
 }
-type CSSVars = React.CSSProperties & {
-  "--mx"?: string
-  "--my"?: string
-}
 
 function BentoSurface({
   className = "",
@@ -80,7 +76,6 @@ function BentoSurface({
   children: React.ReactNode
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const [pos, setPos] = useState({ x: 0, y: 0 })
 
   return (
     <div
@@ -88,27 +83,25 @@ function BentoSurface({
       onMouseMove={(e) => {
         if (!ref.current) return
         const r = ref.current.getBoundingClientRect()
-        setPos({ x: e.clientX - r.left, y: e.clientY - r.top })
+        // Update CSS variables directly on the DOM element to avoid React re-renders
+        ref.current.style.setProperty("--mx", `${e.clientX - r.left}px`)
+        ref.current.style.setProperty("--my", `${e.clientY - r.top}px`)
       }}
-      style={
-        {
-          "--mx": `${pos.x}px`,
-          "--my": `${pos.y}px`,
-        } as CSSVars
-      }
       className={[
         "relative rounded-[32px] border border-white/10",
         "bg-white/[0.06] backdrop-blur-xl",
         "shadow-[0_40px_100px_-60px_rgba(168,85,247,0.55)]",
         "overflow-hidden",
+        "group", // Added group for hover detection if needed
         className,
       ].join(" ")}
     >
+      {/* Mobile-optimized: Only show dynamic gradient on hover (desktop) to save resources */}
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         style={{
           background:
-            "radial-gradient(420px 320px at var(--mx) var(--my), rgba(168,85,247,0.18), transparent 60%), radial-gradient(520px 360px at calc(var(--mx) + 140px) calc(var(--my) + 120px), rgba(249,115,22,0.12), transparent 60%)",
+            "radial-gradient(420px 320px at var(--mx, 50%) var(--my, 50%), rgba(168,85,247,0.18), transparent 60%), radial-gradient(520px 360px at calc(var(--mx, 50%) + 140px) calc(var(--my, 50%) + 120px), rgba(249,115,22,0.12), transparent 60%)",
         }}
       />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/[0.06] to-transparent" />

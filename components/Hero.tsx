@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform, Variants, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, Variants, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ChevronRight, Gift, X, Sparkles } from "lucide-react";
 import Link from "next/link"
 
 export const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
+  const shouldReduceMotion = useReducedMotion();
   const [showGiftModal, setShowGiftModal] = useState(false);
   const [currentHeadlineIndex, setCurrentHeadlineIndex] = useState(0);
   
@@ -90,10 +91,10 @@ export const Hero = () => {
       {/* Background Glows */}
       <motion.div 
         style={{ y: y1 }}
-        className="absolute top-0 left-1/4 -translate-x-1/2 w-full max-w-4xl h-[600px] bg-primary-purple/20 blur-[140px] rounded-full -z-10" 
+        className="absolute top-0 left-1/4 -translate-x-1/2 w-full max-w-4xl h-[600px] bg-primary-purple/20 blur-[80px] md:blur-[140px] rounded-full -z-10 will-change-transform" 
       />
-      <div className="absolute top-[10%] right-[20%] w-96 h-96 bg-button-orange/10 blur-[120px] rounded-full -z-10" />
-      <div className="absolute bottom-[20%] left-[10%] w-80 h-80 bg-primary-purple/10 blur-[100px] rounded-full -z-10" />
+      <div className="absolute top-[10%] right-[20%] w-96 h-96 bg-button-orange/10 blur-[60px] md:blur-[120px] rounded-full -z-10" />
+      <div className="absolute bottom-[20%] left-[10%] w-80 h-80 bg-primary-purple/10 blur-[60px] md:blur-[100px] rounded-full -z-10" />
 
       <motion.div 
         variants={containerVariants}
@@ -139,7 +140,7 @@ export const Hero = () => {
               <Link href="/prototype/payroll">
                 <button className="px-8 py-4 bg-gradient-to-r from-primary-purple to-purple-600 hover:from-purple-600 hover:to-primary-purple text-white font-bold rounded-2xl transition-all flex items-center gap-3 text-base hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary-purple/30 group relative overflow-hidden">
                   <motion.div
-                    animate={{ rotate: [0, 10, -10, 0] }}
+                    animate={shouldReduceMotion ? {} : { rotate: [0, 10, -10, 0] }}
                     transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
                   >
                     <Gift className="w-5 h-5" />
@@ -147,9 +148,9 @@ export const Hero = () => {
                   <span className="relative z-10">Claim your free gift</span>
                   <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform" />
                   <motion.div
-                    animate={{ x: ["-100%", "100%"] }}
+                    animate={shouldReduceMotion ? {} : { x: ["-100%", "100%"] }}
                     transition={{ duration: 3, repeat: Infinity, repeatDelay: 1 }}
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent will-change-transform"
                   />
                 </button>
               </Link>
@@ -169,13 +170,13 @@ export const Hero = () => {
             >
               {/* Animated Background Gradient */}
               <motion.div
-                animate={{
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 90, 0],
+                animate={shouldReduceMotion ? {} : {
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 45, 0],
                   opacity: [0.3, 0.5, 0.3]
                 }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-primary-purple/30 to-button-orange/30 blur-3xl rounded-full"
+                transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-primary-purple/30 to-button-orange/30 blur-[60px] md:blur-3xl rounded-full will-change-transform"
               />
               
               <div className="relative z-10 space-y-8">
@@ -225,9 +226,9 @@ export const Hero = () => {
                       <span className="relative z-10">Take an assessment</span>
                       <ChevronRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
                       <motion.div
-                        animate={{ x: ["-100%", "100%"] }}
+                        animate={shouldReduceMotion ? {} : { x: ["-100%", "100%"] }}
                         transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent will-change-transform"
                       />
                     </button>
                   </Link>
@@ -293,13 +294,13 @@ export const Hero = () => {
               >
                 {/* Animated Background */}
                 <motion.div
-                  animate={{
-                    scale: [1, 1.2, 1],
+                  animate={shouldReduceMotion ? {} : {
+                    scale: [1, 1.1, 1],
                     rotate: [0, 180, 360],
                     opacity: [0.3, 0.5, 0.3]
                   }}
-                  transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-primary-purple/40 to-button-orange/40 blur-3xl rounded-full"
+                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                  className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-primary-purple/40 to-button-orange/40 blur-[80px] md:blur-3xl rounded-full will-change-transform"
                 />
 
                 {/* Close Button */}
@@ -395,9 +396,9 @@ export const Hero = () => {
                         <span className="relative z-10">Secure Your Spot</span>
                         <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                         <motion.div
-                          animate={{ x: ["-100%", "100%"] }}
+                          animate={shouldReduceMotion ? {} : { x: ["-100%", "100%"] }}
                           transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5 }}
-                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent will-change-transform"
                         />
                       </button>
                     </Link>
