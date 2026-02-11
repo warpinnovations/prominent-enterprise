@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
                                   <span style="color: #9838d9; font-size: 24px; margin-right: 12px;">🎁</span>
                                   <div>
                                     <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Exclusive Discounts</strong>
-                                    <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;">Get up to 50% off your first 3 months</span>
+                                    <span style="color: rgba(255, 255, 255, 0.6); font-size: 14px;">Waived Installation Fee</span>
                                   </div>
                                 </div>
                               </td>
