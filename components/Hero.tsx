@@ -361,7 +361,7 @@ export const Hero = () => {
                       </div>
                       <div className="text-left">
                         <h4 className="font-bold text-white mb-0.5 text-sm">Exclusive Discounts</h4>
-                        <p className="text-white/50 text-xs">Get up to 50% off on your first 3 months</p>
+                        <p className="text-white/50 text-xs">Waived Installation Fee</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
