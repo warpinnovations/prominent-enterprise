@@ -43,8 +43,8 @@ export const Footer = () => {
   return (
     <footer className="py-20 border-t border-white/5 bg-bg-layout-purple">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
-          <div className="col-span-2 md:col-span-1">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+          <div>
             <Link href="/" className="flex items-center mb-6 group">
               <div className="relative w-32 h-16 md:w-40 md:h-20 group-hover:scale-105 transition-transform duration-300">
                 <Image
@@ -100,36 +100,6 @@ export const Footer = () => {
                   className="text-text-gray hover:text-white transition-colors text-sm"
                 >
                   Join Waitlist
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h5 className="text-white font-semibold mb-6">Social</h5>
-            <ul className="space-y-4">
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  Twitter
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  GitHub
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-text-gray hover:text-white transition-colors text-sm"
-                >
-                  LinkedIn
                 </Link>
               </li>
             </ul>
