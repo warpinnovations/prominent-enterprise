@@ -19,11 +19,34 @@ export default function WaitlistPage() {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    try {
+      const response = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          company: companyName,
+          mobile: mobileNumber,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit');
+      }
+
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('❌ Submission error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to submit. Please try again.';
+      alert(`Submission failed: ${errorMessage}\n\nPlease check the console for details.`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const perks = [
