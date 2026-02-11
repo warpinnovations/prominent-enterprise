@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Check, ChevronDown } from "lucide-react";
 
 const packages = [
@@ -69,6 +69,7 @@ const packages = [
 
 export const Pricing = () => {
   const [expandedPackages, setExpandedPackages] = useState<string[]>([]);
+  const shouldReduceMotion = useReducedMotion();
 
   const toggleExpand = (packageId: string) => {
     setExpandedPackages(prev =>
@@ -83,13 +84,13 @@ export const Pricing = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: shouldReduceMotion ? 0 : 0.1,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 30 },
     visible: {
       opacity: 1,
       y: 0,
@@ -103,8 +104,8 @@ export const Pricing = () => {
   return (
     <section id="solutions" className="py-24 bg-bg-layout-purple/30 relative overflow-hidden">
       {/* Background glow effects */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[128px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[128px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[60px] md:blur-[128px] pointer-events-none will-change-transform" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[60px] md:blur-[128px] pointer-events-none will-change-transform" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -135,11 +136,8 @@ export const Pricing = () => {
               <motion.div
                 key={pkg.id}
                 variants={itemVariants}
-                whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 20 } }}
-                className="relative p-8 rounded-4xl border border-white/10 overflow-hidden group"
-                style={{
-                  backdropFilter: "blur(16px)",
-                }}
+                whileHover={shouldReduceMotion ? {} : { y: -5, transition: { type: "spring", stiffness: 300, damping: 20 } }}
+                className="relative p-8 rounded-4xl border border-white/10 overflow-hidden group backdrop-blur-md md:backdrop-blur-xl transform-gpu"
               >
                 {/* Animated background */}
                 <div
@@ -173,7 +171,7 @@ export const Pricing = () => {
                 >
                   <span>{expandedPackages.includes(pkg.id) ? "Hide Details" : "View Details"}</span>
                   <motion.div
-                    animate={{ rotate: expandedPackages.includes(pkg.id) ? 180 : 0 }}
+                    animate={shouldReduceMotion ? {} : { rotate: expandedPackages.includes(pkg.id) ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                   >
                     <ChevronDown className="w-4 h-4" />
@@ -188,7 +186,7 @@ export const Pricing = () => {
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
+                      className="overflow-hidden will-change-[height,opacity]"
                     >
                       {/* Description */}
                       <p className="text-text-gray text-sm mb-4">{pkg.description}</p>
@@ -216,10 +214,10 @@ export const Pricing = () => {
                             <motion.li
                               key={module}
                               className="flex items-center gap-2 text-sm text-white/70"
-                              initial={{ opacity: 0, x: -10 }}
+                              initial={{ opacity: 0, x: shouldReduceMotion ? 0 : -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{
-                                delay: index * 0.05,
+                                delay: shouldReduceMotion ? 0 : index * 0.05,
                                 duration: 0.2,
                               }}
                             >
