@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
                           <table role="presentation" style="width: 100%; border-collapse: collapse;">
                             <tr>
                               <td style="text-align: center; padding: 20px 0;">
-                                <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://theprominent.ph'}/prototype/payroll" style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #9838d9 0%, #7c3aed 100%); color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 16px;">
+                                <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://theprominent.ph'}/payroll" style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #9838d9 0%, #7c3aed 100%); color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 16px;">
                                   Try out The Prominent
                                 </a>
                               </td>

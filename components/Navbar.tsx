@@ -67,7 +67,7 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
               Contact
             </Link>
             <Link
-              href="/prototype/payroll"
+              href="/payroll"
               className="text-[13px] font-medium text-primary-purple hover:text-primary-purple/80 transition-colors tracking-wide"
             >
               Free Trial
@@ -125,7 +125,7 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
           <Link href="/#solutions" className="text-lg font-medium text-white">
             Solutions
           </Link>
-          <Link href="/prototype/payroll" className="text-lg font-medium text-primary-purple">
+          <Link href="/payroll" className="text-lg font-medium text-primary-purple">
             Free Trial
           </Link>
           <Link href="/#cta" className="text-lg font-medium text-white">

@@ -343,7 +343,7 @@ export default function WaitlistPage() {
                       Back to Home
                     </Link>
                     <Link
-                      href="/prototype/payroll"
+                      href="/payroll"
                       className="px-8 py-3 bg-gradient-to-r from-primary-purple to-purple-600 hover:opacity-90 text-white font-bold rounded-xl transition-all flex items-center gap-2"
                     >
                       Try The Prominent

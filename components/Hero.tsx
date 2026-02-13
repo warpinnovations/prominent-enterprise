@@ -136,7 +136,7 @@ export const Hero = () => {
               variants={itemVariants}
               className="flex flex-col sm:flex-row items-start gap-4"
             >
-              <Link href="/prototype/payroll">
+              <Link href="/payroll">
                 <button className="px-8 py-4 bg-gradient-to-r from-primary-purple to-purple-600 hover:from-purple-600 hover:to-primary-purple text-white font-bold rounded-2xl transition-all flex items-center gap-3 text-base hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary-purple/30 group relative overflow-hidden">
                   <motion.div
                     animate={{ rotate: [0, 10, -10, 0] }}
