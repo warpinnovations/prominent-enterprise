@@ -17,6 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "The Prominent | Enterprise ERP System",
   description: "The next generation ERP system for modern enterprises. Streamline operations, finance, and HR with purpose-built tools.",
+  verification: {
+    other: {
+      "facebook-domain-verification": "wahkkadtb4043iz29eki58hksytksh",
+    },
+  },
 };
 
 export default function RootLayout({
