@@ -26,9 +26,9 @@ export const CTA = () => {
             Transform your business operations with smart solutions designed for growth and efficiency.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/waitlist">
+            <Link href="/book-a-demo">
               <button className="px-8 py-4 bg-button-orange hover:bg-bg-orange-btn text-white font-semibold rounded-full transition-all flex items-center gap-2 text-lg group">
-                Enter the waitlist
+                Book a Demo
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
@@ -96,10 +96,10 @@ export const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/waitlist"
+                  href="/book-a-demo"
                   className="text-text-gray hover:text-white transition-colors text-sm"
                 >
-                  Join Waitlist
+                  Book a Demo
                 </Link>
               </li>
             </ul>

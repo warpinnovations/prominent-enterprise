@@ -453,10 +453,10 @@ export default function PayrollPrototype() {
                   <p className="text-white/50 text-sm">Get unlimited access and unlock all features today.</p>
                 </div>
                 <Link
-                  href="/waitlist"
+                  href="/book-a-demo"
                   className="relative z-10 px-8 py-3 bg-primary-purple hover:bg-primary-purple/90 text-white font-bold rounded-full transition-all hover:scale-105 shadow-xl shadow-primary-purple/30 flex items-center gap-2 group"
                 >
-                  Enter the waitlist 
+                  Book a Demo
                   <motion.svg 
                     className="w-4 h-4 group-hover:translate-x-1 transition-transform" 
                     fill="none" 

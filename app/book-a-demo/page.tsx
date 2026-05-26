@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-export default function WaitlistPage() {
+export default function BookADemoPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -101,19 +101,18 @@ export default function WaitlistPage() {
                 >
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary-purple/30 bg-primary-purple/10 text-sm font-medium text-primary-purple">
                     <Sparkles className="w-4 h-4" />
-                    Limited Spots Available
+                    Schedule a Free Demo
                   </div>
 
                   <div>
                     <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
-                      Join the{" "}
+                      Book a{" "}
                       <span className="bg-gradient-to-r from-primary-purple to-purple-400 bg-clip-text text-transparent">
-                        Waitlist
+                        Demo
                       </span>
                     </h1>
                     <p className="text-xl text-white/60 leading-relaxed">
-                      Be among the first to transform your business operations. 
-                      Get exclusive early access and special pricing when we launch.
+                      See The Prominent in action. Get a personalized walkthrough of how we can transform your business operations.
                     </p>
                   </div>
 
@@ -151,7 +150,7 @@ export default function WaitlistPage() {
                   <div className="relative bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-[40px] p-10 shadow-2xl">
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div>
-                        <h2 className="text-2xl font-bold mb-2">Secure Your Spot</h2>
+                        <h2 className="text-2xl font-bold mb-2">Schedule Your Demo</h2>
                       </div>
 
                       {/* Name Input */}
@@ -243,11 +242,11 @@ export default function WaitlistPage() {
                               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                               className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
                             />
-                            <span>Joining...</span>
+                            <span>Booking...</span>
                           </>
                         ) : (
                           <>
-                            <span>Join the Waitlist</span>
+                            <span>Book a Demo</span>
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                           </>
                         )}
@@ -296,7 +295,7 @@ export default function WaitlistPage() {
                   transition={{ delay: 0.3 }}
                 >
                   <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                    You&apos;re on the list! 🎉
+                    Demo Booked! 🎉
                   </h2>
                   <p className="text-xl text-white/60 mb-4">
                     Welcome aboard, <span className="text-white font-semibold">{name}</span> from <span className="text-white font-semibold">{companyName}</span>!
@@ -304,7 +303,7 @@ export default function WaitlistPage() {
                   <p className="text-lg text-white/50 mb-8">
                     We&apos;ve sent a confirmation to <span className="text-primary-purple">{email}</span>
                     <br />
-                    You&apos;ll receive updates at <span className="text-primary-purple">{mobileNumber}</span>
+                    Our team will reach you at <span className="text-primary-purple">{mobileNumber}</span>
                   </p>
 
                   <div className="bg-gradient-to-br from-white/[0.05] to-white/[0.02] border border-white/10 rounded-3xl p-8 mb-8">
@@ -314,10 +313,10 @@ export default function WaitlistPage() {
                     </h3>
                     <div className="space-y-4 text-left max-w-md mx-auto">
                       {[
-                        "Check your email for a confirmation link",
-                        "We'll notify you as soon as we launch",
-                        "Get ready for exclusive early-bird pricing",
-                        "Connect with our team for personalized onboarding"
+                        "Check your email for a confirmation",
+                        "Our team will reach out to schedule a time",
+                        "Get a personalized walkthrough of The Prominent",
+                        "Receive a tailored proposal after the demo"
                       ].map((step, idx) => (
                         <motion.div
                           key={step}

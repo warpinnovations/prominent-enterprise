@@ -90,10 +90,10 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
               whileTap={{ scale: 0.95 }}
             >
               <Link
-                href="/waitlist"
+                href="/book-a-demo"
                 className="px-6 py-2.5 bg-gradient-to-r from-primary-purple to-button-orange text-white text-[13px] font-semibold rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2"
               >
-                Join the Waitlist
+                Book a Demo
                 <ChevronRight className="w-4 h-4" />
               </Link>
             </motion.div>
@@ -132,10 +132,10 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
             Contact
           </Link>
           <Link
-            href="/waitlist"
+            href="/book-a-demo"
             className="px-6 py-3 bg-gradient-to-r from-primary-purple to-button-orange text-white text-base font-semibold rounded-xl flex items-center justify-center gap-2 mt-2"
           >
-            Join the Waitlist
+            Book a Demo
             <ChevronRight className="w-4 h-4" />
           </Link>
         </motion.div>

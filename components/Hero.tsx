@@ -310,7 +310,7 @@ export const Hero = () => {
                   <X className="w-4 h-4 md:w-5 md:h-5 text-white group-hover:rotate-90 transition-transform duration-300" />
                 </button>
 
-                {/* Waitlist Icon */}
+                {/* Demo Icon */}
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
@@ -333,7 +333,7 @@ export const Hero = () => {
                     transition={{ delay: 0.3 }}
                   >
                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                      ✨ Join the Waitlist
+                      ✨ Book a Demo
                     </h3>
                     <p className="text-white/60 text-sm md:text-base">
                       Be among the first to transform your business operations with exclusive perks
@@ -390,7 +390,7 @@ export const Hero = () => {
                     transition={{ delay: 0.5 }}
                     className="pt-2"
                   >
-                    <Link href="/waitlist">
+                    <Link href="/book-a-demo">
                       <button className="w-full px-6 md:px-8 py-3.5 md:py-4 bg-gradient-to-r from-primary-purple to-purple-600 hover:from-purple-600 hover:to-primary-purple text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-base group hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary-purple/40 relative overflow-hidden">
                         <span className="relative z-10">Secure Your Spot</span>
                         <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
