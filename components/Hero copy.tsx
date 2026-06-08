@@ -153,12 +153,6 @@ export const Hero = () => {
                   />
                 </button>
               </Link>
-              <a href="/book-a-demo">
-                <button className="px-8 py-4 bg-button-orange hover:bg-bg-orange-btn text-white font-bold rounded-2xl transition-all flex items-center gap-3 text-base hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-button-orange/30 group">
-                  Book a Demo
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                </button>
-              </a>
             </motion.div>
           </motion.div>
 
@@ -396,7 +390,7 @@ export const Hero = () => {
                     transition={{ delay: 0.5 }}
                     className="pt-2"
                   >
-                    <a href="/book-a-demo">
+                    <Link href="/book-a-demo">
                       <button className="w-full px-6 md:px-8 py-3.5 md:py-4 bg-gradient-to-r from-primary-purple to-purple-600 hover:from-purple-600 hover:to-primary-purple text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-base group hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary-purple/40 relative overflow-hidden">
                         <span className="relative z-10">Secure Your Spot</span>
                         <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
@@ -406,7 +400,7 @@ export const Hero = () => {
                           className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                         />
                       </button>
-                    </a>
+                    </Link>
                   </motion.div>
                 </div>
 
