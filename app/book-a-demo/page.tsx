@@ -53,9 +53,9 @@ const BENEFITS = [
 ];
 
 const STATS = [
-  { value: "500+", label: "Businesses onboarded" },
-  { value: "12", label: "Integrated modules" },
-  { value: "6", label: "Industries served" },
+  { value: "1 platform", label: "for accurate data" },
+  { value: "95%+", label: "stock accuracy" },
+  { value: "100%", label: "actions tracked" },
 ];
 
 const NEXT_STEPS = [
