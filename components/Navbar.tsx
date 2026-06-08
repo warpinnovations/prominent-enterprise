@@ -47,7 +47,13 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
 
         {/* Desktop Menu */}
         {variant === "default" && (
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-8">
+            <Link
+              href="/#business"
+              className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
+            >
+              Business
+            </Link>
             <Link
               href="/#modules"
               className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
@@ -55,22 +61,16 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
               Modules
             </Link>
             <Link
-              href="/#solutions"
+              href="/#about"
               className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
             >
-              Solutions
+              About
             </Link>
             <Link
-              href="/#cta"
+              href="/#plans"
               className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
             >
-              Contact
-            </Link>
-            <Link
-              href="/payroll"
-              className="text-[13px] font-medium text-primary-purple hover:text-primary-purple/80 transition-colors tracking-wide"
-            >
-              Free Trial
+              Plans
             </Link>
           </div>
         )}
@@ -89,13 +89,13 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Link
+              <a
                 href="/book-a-demo"
-                className="px-6 py-2.5 bg-gradient-to-r from-primary-purple to-button-orange text-white text-[13px] font-semibold rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2"
+                className="px-6 py-2.5 bg-button-orange hover:bg-bg-orange-btn text-white text-[13px] font-semibold rounded-full transition-colors flex items-center gap-2"
               >
                 Book a Demo
                 <ChevronRight className="w-4 h-4" />
-              </Link>
+              </a>
             </motion.div>
           )}
         </div>
@@ -103,7 +103,7 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
         {/* Mobile Toggle (default only) */}
         {variant === "default" && (
           <button
-            className="md:hidden text-white"
+            className="md:hidden text-white cursor-pointer"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -117,27 +117,28 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute top-full left-0 right-0 bg-bg-layout-purple border-b border-white/10 p-6 md:hidden flex flex-col gap-6"
+          className="absolute top-full left-0 right-0 bg-bg-layout-purple border-b border-white/10 p-6 md:hidden flex flex-col gap-5"
         >
-          <Link href="/#modules" className="text-lg font-medium text-white">
+          <Link href="/#business" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
+            Business
+          </Link>
+          <Link href="/#modules" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
             Modules
           </Link>
-          <Link href="/#solutions" className="text-lg font-medium text-white">
-            Solutions
+          <Link href="/#about" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
+            About
           </Link>
-          <Link href="/payroll" className="text-lg font-medium text-primary-purple">
-            Free Trial
+          <Link href="/#plans" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
+            Plans
           </Link>
-          <Link href="/#cta" className="text-lg font-medium text-white">
-            Contact
-          </Link>
-          <Link
+          <a
             href="/book-a-demo"
-            className="px-6 py-3 bg-gradient-to-r from-primary-purple to-button-orange text-white text-base font-semibold rounded-xl flex items-center justify-center gap-2 mt-2"
+            className="px-6 py-3 bg-button-orange hover:bg-bg-orange-btn text-white text-base font-semibold rounded-full flex items-center justify-center gap-2 mt-2 transition-colors"
+            onClick={() => setMobileMenuOpen(false)}
           >
             Book a Demo
             <ChevronRight className="w-4 h-4" />
-          </Link>
+          </a>
         </motion.div>
       )}
     </nav>
