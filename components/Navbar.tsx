@@ -49,22 +49,22 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
         {variant === "default" && (
           <div className="hidden md:flex items-center gap-8">
             <Link
-              href="/#business"
+              href="/#about"
               className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
             >
-              Business
+              About
+            </Link>
+            <Link
+              href="/#testimonials"
+              className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
+            >
+              Testimonials
             </Link>
             <Link
               href="/#modules"
               className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
             >
               Modules
-            </Link>
-            <Link
-              href="/#about"
-              className="text-[13px] font-medium text-white/60 hover:text-white transition-colors tracking-wide"
-            >
-              About
             </Link>
             <Link
               href="/#plans"
@@ -119,14 +119,14 @@ export const Navbar = ({ variant = "default" }: NavbarProps) => {
           animate={{ opacity: 1, y: 0 }}
           className="absolute top-full left-0 right-0 bg-bg-layout-purple border-b border-white/10 p-6 md:hidden flex flex-col gap-5"
         >
-          <Link href="/#business" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
-            Business
+          <Link href="/#about" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
+            About
+          </Link>
+          <Link href="/#testimonials" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
+            Testimonials
           </Link>
           <Link href="/#modules" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
             Modules
-          </Link>
-          <Link href="/#about" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
-            About
           </Link>
           <Link href="/#plans" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
             Plans
