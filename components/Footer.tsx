@@ -26,12 +26,12 @@ export const CTA = () => {
             Transform your business operations with smart solutions designed for growth and efficiency.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/book-a-demo">
+            <a href="/book-a-demo">
               <button className="px-8 py-4 bg-button-orange hover:bg-bg-orange-btn text-white font-semibold rounded-full transition-all flex items-center gap-2 text-lg group">
                 Book a Demo
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
-            </Link>
+            </a>
           </div>
         </motion.div>
       </div>
@@ -43,27 +43,27 @@ export const Footer = () => {
   return (
     <footer className="py-20 border-t border-white/5 bg-bg-layout-purple">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div>
-            <Link href="/" className="flex items-center mb-6 group">
+            <Link href="/" className="flex items-center mb-3 group">
               <div className="relative w-32 h-16 md:w-40 md:h-20 group-hover:scale-105 transition-transform duration-300">
                 <Image
                   src="/prominent-logo.png"
                   alt="The Prominent"
                   fill
-                  className="object-contain"
+                  className="object-contain -mt-7 -ml-2"
                 />
               </div>
             </Link>
-            <p className="text-text-gray text-sm leading-relaxed">
-              The next generation ERP system for modern enterprises. Built for
-              speed, scale, and intelligence.
+            <p className="text-text-gray text-sm leading-relaxed -mt-14">
+              The next generation ERP system for modern enterprises in the
+              Philippines. Built for efficiency, accuracy, and ease of use.
             </p>
           </div>
 
           <div>
-            <h5 className="text-white font-semibold mb-6">Product</h5>
-            <ul className="space-y-4">
+            <h5 className="text-white font-semibold mb-6 ml-16">Product</h5>
+            <ul className="space-y-4 ml-16">
               <li>
                 <Link
                   href="/#modules"
@@ -74,10 +74,10 @@ export const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/#solutions"
+                  href="/#plans"
                   className="text-text-gray hover:text-white transition-colors text-sm"
                 >
-                  Solutions
+                  Plans
                 </Link>
               </li>
             </ul>
@@ -88,10 +88,18 @@ export const Footer = () => {
             <ul className="space-y-4">
               <li>
                 <Link
-                  href="/quiz"
+                  href="/#about"
                   className="text-text-gray hover:text-white transition-colors text-sm"
                 >
-                  Assessment
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#testimonials"
+                  className="text-text-gray hover:text-white transition-colors text-sm"
+                >
+                  Customers
                 </Link>
               </li>
               <li>
@@ -104,33 +112,27 @@ export const Footer = () => {
               </li>
             </ul>
           </div>
+
+          <div>
+            <h5 className="text-white font-semibold mb-6">Contact</h5>
+            <ul className="space-y-4">
+              <li>
+                <a
+                  href="mailto:inquiry.prominent@warp.ph"
+                  className="text-text-gray hover:text-white transition-colors text-sm"
+                >
+                  inquiry.prominent@warp.ph
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <div className="pt-8 border-t border-white/5 flex flex-col md:row items-center justify-between gap-6">
-          <p className="text-text-gray text-xs">
-            © 2026 The Prominent. All rights reserved.
-          </p>
-          {/* <div className="flex items-center gap-8">
-            <Link
-              href="#"
-              className="text-text-gray hover:text-white transition-colors text-xs"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              href="#"
-              className="text-text-gray hover:text-white transition-colors text-xs"
-            >
-              Terms of Service
-            </Link>
-            <Link
-              href="#"
-              className="text-text-gray hover:text-white transition-colors text-xs"
-            >
-              Cookie Policy
-            </Link>
-          </div> */}
-        </div>
+      </div>
+      <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-center -mb-10">
+        <p className="text-text-gray text-xs">
+          © 2026 The Prominent. All rights reserved.
+        </p>
       </div>
     </footer>
   );
