@@ -1,17 +1,24 @@
 import { Navbar } from "@/components/Navbar";
-import { Hero } from "@/components/Hero";
-import { Features } from "@/components/Features";
-import { Pricing } from "@/components/Pricing";
-import { CTA, Footer } from "@/components/Footer";
+import { HeroSection } from "@/components/hero/HeroSection";
+import { BusinessStats } from "@/components/home/BusinessStats";
+import { AboutSection } from "@/components/home/AboutSection";
+import { TestimonialsPreview } from "@/components/home/TestimonialsPreview";
+import { ModulesSection } from "@/components/home/ModulesSection";
+import { PlansSection } from "@/components/home/PlansSection";
+import { CTASection } from "@/components/home/CTASection";
+import { Footer } from "@/components/Footer";
 
 export default function Home() {
   return (
     <main className="min-h-screen mesh-gradient">
       <Navbar />
-      <Hero />
-      <Features />
-      <Pricing />
-      <CTA />
+      <HeroSection />
+      <BusinessStats />
+      <AboutSection />
+      <TestimonialsPreview />
+      <ModulesSection />
+      <PlansSection />
+      <CTASection />
       <Footer />
     </main>
   );
