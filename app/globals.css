@@ -22,8 +22,12 @@
 }
 
 :root {
-  --background: #290143;
+  /* Deeper, more refined base than the flat purple — reads more premium.
+     Individual sections still layer their own tones on top. */
+  --background: #0b0614;
   --foreground: #ffffff;
+  --hairline: rgba(255, 255, 255, 0.08);
+  --hairline-strong: rgba(255, 255, 255, 0.14);
 }
 
 body {
@@ -31,6 +35,20 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fixed film-grain overlay for depth. Sits above content but below modals,
+   is non-interactive, and stays subtle. */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* Linear-like glass effect */
@@ -50,13 +68,100 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* Stripe-inspired mesh gradient */
+/* Refined, deeper mesh — less saturated, more premium than flat purple. */
 .mesh-gradient {
-  background-color: #290143;
-  background-image: 
-    radial-gradient(at 0% 0%, hsla(273, 100%, 20%, 1) 0, transparent 50%), 
-    radial-gradient(at 50% 0%, hsla(260, 100%, 15%, 1) 0, transparent 50%), 
-    radial-gradient(at 100% 0%, hsla(280, 100%, 25%, 1) 0, transparent 50%);
+  background-color: #0b0614;
+  background-image:
+    radial-gradient(at 12% 0%, hsla(273, 85%, 16%, 0.9) 0, transparent 45%),
+    radial-gradient(at 50% -5%, hsla(262, 80%, 12%, 0.8) 0, transparent 50%),
+    radial-gradient(at 92% 2%, hsla(280, 90%, 18%, 0.7) 0, transparent 45%);
+}
+
+/* ---- Professional utility layer ---- */
+
+/* Hairline-bordered surface used for cards / panels. */
+.panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+  border: 1px solid var(--hairline);
+  border-radius: 1.5rem;
+  backdrop-filter: blur(12px);
+}
+
+.hairline {
+  border-color: var(--hairline);
+}
+
+/* Small caps eyebrow label above section headings. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-widget-title-purple);
+}
+
+/* Tighter, more confident display headings. */
+.display {
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Consistent primary / secondary buttons. */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  /* Wide gradient; hover slides it to reveal a warmer highlight. */
+  background-image: linear-gradient(120deg, #7c3aed 0%, #9838d9 45%, #b14be0 75%, #d96a2e 118%);
+  background-size: 190% 100%;
+  background-position: 0% 50%;
+  box-shadow: 0 10px 40px -12px rgba(152, 56, 217, 0.55);
+  transition: background-position 0.55s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+.btn-primary:hover {
+  background-position: 100% 50%;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 50px -10px rgba(175, 70, 220, 0.7);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
+  background-image: linear-gradient(120deg, rgba(152, 56, 217, 0), rgba(243, 91, 4, 0));
+  border: 1px solid var(--hairline-strong);
+  transition: background-image 0.3s ease, border-color 0.2s ease, box-shadow 0.3s ease;
+}
+.btn-secondary:hover {
+  background-image: linear-gradient(120deg, rgba(152, 56, 217, 0.28), rgba(243, 91, 4, 0.16));
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 8px 30px -14px rgba(152, 56, 217, 0.55);
+}
+
+/* Faint dotted grid backdrop for feature sections. */
+.grid-backdrop {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 40%, transparent 80%);
 }
 
 .bento-card {
@@ -74,4 +179,51 @@ body {
 
 .bento-card:hover::before {
   opacity: 1;
+}
+
+/* =========================================================
+   Reveal-on-scroll (IntersectionObserver + CSS class)
+   - Add `reveal` to any element to fade + slide it into view.
+   - Add `reveal-stagger` to a container to sequence its children.
+   - Optional direction: `reveal-left` / `reveal-right`.
+   - Only active when JS is on (`.js-reveal` on <html>) AND the user
+     hasn't requested reduced motion — so no-JS / reduced-motion
+     users always see fully-visible content.
+   ========================================================= */
+@media (prefers-reduced-motion: no-preference) {
+  .js-reveal .reveal,
+  .js-reveal .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    will-change: opacity, transform;
+  }
+
+  .js-reveal .reveal.is-visible,
+  .js-reveal .reveal-stagger.is-visible > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Directional variants — slide in from the sides of the screen.
+     (body has overflow-x:hidden, so the off-screen start never
+     creates a horizontal scrollbar.) */
+  .js-reveal .reveal.reveal-left {
+    transform: translateX(-90px);
+  }
+  .js-reveal .reveal.reveal-right {
+    transform: translateX(90px);
+  }
+
+  /* Stagger children of a `.reveal-stagger` container once it's visible */
+  .js-reveal .reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0ms; }
+  .js-reveal .reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 80ms; }
+  .js-reveal .reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 160ms; }
+  .js-reveal .reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 240ms; }
+  .js-reveal .reveal-stagger.is-visible > *:nth-child(5) { transition-delay: 320ms; }
+  .js-reveal .reveal-stagger.is-visible > *:nth-child(6) { transition-delay: 400ms; }
+  .js-reveal .reveal-stagger.is-visible > *:nth-child(7) { transition-delay: 480ms; }
+  .js-reveal .reveal-stagger.is-visible > *:nth-child(8) { transition-delay: 560ms; }
+  /* 9th child onward share the final delay so long lists don't lag */
+  .js-reveal .reveal-stagger.is-visible > *:nth-child(n + 9) { transition-delay: 640ms; }
 }

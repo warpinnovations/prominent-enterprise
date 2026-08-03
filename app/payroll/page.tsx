@@ -295,7 +295,7 @@ export default function PayrollPrototype() {
       
       <main className="container mx-auto px-6 pt-32 pb-20">
         <div className="max-w-4xl mx-auto">
-          <Link href="/" className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-8 transition-colors group">
+          <Link href="/enterprise" className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-8 transition-colors group">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </Link>
@@ -313,6 +313,33 @@ export default function PayrollPrototype() {
               Upload an employee list to generate instant payslips with SSS, Pag-ibig, PhilHealth, and Tax deductions.
             </p>
           </motion.div>
+
+          {!employees.length && !isProcessing && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10"
+            >
+              {[
+                { icon: Calculator, title: "Auto Deductions", desc: "SSS, Pag-IBIG & PhilHealth computed from official tables" },
+                { icon: Receipt, title: "TRAIN-Law Tax", desc: "Withholding tax based on current BIR brackets" },
+                { icon: User, title: "Instant Payslips", desc: "Per-employee breakdown generated in seconds" },
+                { icon: Download, title: "Excel In & Out", desc: "Upload your sheet, export results anytime" },
+              ].map((f) => (
+                <div
+                  key={f.title}
+                  className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 hover:border-white/20 transition-all"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-primary-purple/15 flex items-center justify-center mb-3">
+                    <f.icon className="w-5 h-5 text-widget-title-purple" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-white mb-1">{f.title}</h3>
+                  <p className="text-xs text-white/40 leading-relaxed">{f.desc}</p>
+                </div>
+              ))}
+            </motion.div>
+          )}
 
           {!employees.length && !isProcessing ? (
             <motion.div

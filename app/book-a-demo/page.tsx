@@ -116,6 +116,16 @@ export default function BookADemoPage() {
                     </p>
                   </div>
 
+                  {/* Reassurance row */}
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/50">
+                    {["No credit card required", "30-minute walkthrough", "Free readiness assessment"].map((item) => (
+                      <div key={item} className="flex items-center gap-2">
+                        <Check className="w-4 h-4 text-primary-purple" />
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+
                   {/* Perks Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8">
                     {perks.map((perk, idx) => (
@@ -336,7 +346,7 @@ export default function BookADemoPage() {
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link
-                      href="/"
+                      href="/enterprise"
                       className="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-bold rounded-xl transition-all"
                     >
                       Back to Home

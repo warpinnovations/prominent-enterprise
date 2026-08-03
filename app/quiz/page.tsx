@@ -200,6 +200,17 @@ export default function QuizPage() {
             Is your business <span className="text-white/55">Digitally Ready?</span>
           </h1>
           <p className="mt-4 text-white/65">8 quick questions. Choose one answer per item.</p>
+
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+            {["~2 minutes", "No email required", "Instant result"].map((chip) => (
+              <span
+                key={chip}
+                className="px-3 py-1 rounded-full border border-white/10 bg-white/[0.06] text-white/70 text-xs"
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
         </div>
 
         <BentoSurface className="mt-10">
@@ -351,7 +362,7 @@ export default function QuizPage() {
                   </button>
 
                   <Link
-                    href="/#solutions"
+                    href="/enterprise#solutions"
                     className="px-6 py-3 rounded-2xl bg-orange-500 hover:bg-orange-400 text-white font-semibold transition text-center shadow-[0_18px_50px_-30px_rgba(249,115,22,0.8)]"
                   >
                     See a plan that fits →

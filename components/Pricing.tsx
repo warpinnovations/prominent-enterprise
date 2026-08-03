@@ -1,8 +1,63 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useMotionTemplate,
+} from "framer-motion";
 import { Check, ChevronDown } from "lucide-react";
+import { ParallaxGlow } from "@/components/ParallaxGlow";
+
+/** Card that tilts in 3D toward the cursor with a light glare that tracks it. */
+function TiltCard({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const spring = { stiffness: 220, damping: 18 };
+  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [8, -8]), spring);
+  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-8, 8]), spring);
+  const glareX = useTransform(mx, [-0.5, 0.5], ["12%", "88%"]);
+  const glareY = useTransform(my, [-0.5, 0.5], ["12%", "88%"]);
+  const glare = useMotionTemplate`radial-gradient(240px circle at ${glareX} ${glareY}, rgba(255,255,255,0.1), transparent 60%)`;
+
+  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
+  };
+  const handleLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
+
+  return (
+    <motion.div
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      style={{ rotateX, rotateY, transformPerspective: 1200 }}
+      suppressHydrationWarning
+      className={className}
+    >
+      {children}
+      <motion.div
+        aria-hidden
+        suppressHydrationWarning
+        className="pointer-events-none absolute inset-0"
+        style={{ background: glare }}
+      />
+    </motion.div>
+  );
+}
+import { alternatingItem } from "@/components/Reveal";
 
 const packages = [
   {
@@ -67,6 +122,15 @@ const packages = [
   },
 ];
 
+const CARD_COLORS = [
+  "from-emerald-400 to-teal-500",
+  "from-orange-400 to-amber-500",
+  "from-blue-400 to-indigo-500",
+  "from-amber-400 to-yellow-500",
+  "from-violet-400 to-purple-500",
+  "from-cyan-400 to-blue-500",
+];
+
 export const Pricing = () => {
   const [expandedPackages, setExpandedPackages] = useState<string[]>([]);
 
@@ -88,23 +152,21 @@ export const Pricing = () => {
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.21, 0.47, 0.32, 0.98] as const,
-      },
-    },
-  };
-
   return (
-    <section id="solutions" className="py-24 bg-bg-layout-purple/30 relative overflow-hidden">
+    <section id="solutions" className="py-24 md:py-32 relative overflow-hidden">
+      {/* Layered gradient background */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-bg-layout-purple/45 via-bg-purple/15 to-bg-layout-purple/45" />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 55% at 50% 32%, rgba(152,56,217,0.18), transparent 70%)",
+        }}
+      />
+      <div className="grid-backdrop pointer-events-none absolute inset-0 opacity-50" />
       {/* Background glow effects */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[128px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[128px] pointer-events-none" />
+      <ParallaxGlow speed={70} className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[128px] pointer-events-none" />
+      <ParallaxGlow speed={-50} className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[128px] pointer-events-none" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -130,17 +192,10 @@ export const Pricing = () => {
           viewport={{ once: true, margin: "-50px" }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
         >
-          {packages.map((pkg) => {
+          {packages.map((pkg, index) => {
             return (
-              <motion.div
-                key={pkg.id}
-                variants={itemVariants}
-                whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 20 } }}
-                className="relative p-8 rounded-4xl border border-white/10 overflow-hidden group"
-                style={{
-                  backdropFilter: "blur(16px)",
-                }}
-              >
+              <motion.div key={pkg.id} variants={alternatingItem(index)} className="group">
+                <TiltCard className="relative p-8 rounded-4xl border border-white/10 overflow-hidden bg-white/[0.02] backdrop-blur-md transition-shadow duration-300 hover:border-white/20 hover:shadow-[0_35px_70px_-30px_rgba(10,4,24,0.95)]">
                 {/* Animated background */}
                 <div
                   className="absolute inset-0 -z-10"
@@ -157,14 +212,21 @@ export const Pricing = () => {
                   }}
                 />
 
-                {/* Icon */}
-                <div className="text-4xl mb-3">
-                  {pkg.icon}
+                {/* Header: icon tile + title */}
+                <div className="flex items-start gap-4 mb-4">
+                  <div
+                    className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${CARD_COLORS[index]} flex items-center justify-center text-3xl shadow-lg shadow-black/20 shrink-0`}
+                  >
+                    {pkg.icon}
+                  </div>
+                  <div className="min-w-0 pt-0.5">
+                    <h4 className="text-lg font-bold text-white leading-tight">{pkg.name}</h4>
+                    <p className="text-widget-title-purple text-sm font-medium mt-0.5">{pkg.subtitle}</p>
+                  </div>
                 </div>
 
-                {/* Title & Subtitle */}
-                <h4 className="text-xl font-bold text-white">{pkg.name}</h4>
-                <p className="text-primary-purple text-sm font-medium mb-3">{pkg.subtitle}</p>
+                {/* Description (always visible) */}
+                <p className="text-white/50 text-sm leading-relaxed mb-4">{pkg.description}</p>
 
                 {/* Expand/Collapse Button */}
                 <button
@@ -190,9 +252,6 @@ export const Pricing = () => {
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      {/* Description */}
-                      <p className="text-text-gray text-sm mb-4">{pkg.description}</p>
-
                       {/* Pain Points */}
                       <div className="mb-4">
                         <p className="text-white/50 text-xs uppercase tracking-wider mb-2">Solves</p>
@@ -232,6 +291,7 @@ export const Pricing = () => {
                     </motion.div>
                   )}
                 </AnimatePresence>
+                </TiltCard>
               </motion.div>
             );
           })}

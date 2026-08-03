@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,10 +31,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        {/* Add the js-reveal flag before paint so above-the-fold `.reveal`
+            elements start hidden instead of flashing in, then fading. */}
+        <Script id="reveal-init" strategy="beforeInteractive">
+          {`document.documentElement.classList.add('js-reveal')`}
+        </Script>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-primary-purple/30`}
       >
+        <ScrollReveal />
+        <div className="grain-overlay" aria-hidden />
         {children}
         <Analytics />
         {process.env.NEXT_PUBLIC_META_PIXEL_ID && (

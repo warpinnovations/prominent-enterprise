@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Reveal, staggerContainer, staggerItem } from "@/components/Reveal";
+import { ParallaxGlow } from "@/components/ParallaxGlow";
 import {
   Calculator,
   Users,
@@ -26,12 +29,12 @@ export const Features = () => {
   return (
     <section id="modules" className="py-24 bg-bg-layout-purple relative overflow-hidden">
       {/* Background glow effects */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[150px] pointer-events-none" />
+      <ParallaxGlow speed={70} className="absolute top-0 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[150px] pointer-events-none" />
+      <ParallaxGlow speed={-50} className="absolute bottom-0 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12 md:mb-20">
+        <Reveal direction="left" className="text-center max-w-2xl mx-auto mb-12 md:mb-20">
           <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-6">
             <Layers className="w-4 h-4 text-primary-purple" />
             <span className="text-sm text-white/70">Enterprise Modules</span>
@@ -43,13 +46,19 @@ export const Features = () => {
           <p className="text-text-gray text-lg">
             A complete suite of integrated modules designed for modern enterprises.
           </p>
-        </div>
+        </Reveal>
 
         {/* Premium Bento Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 md:gap-4 max-w-6xl mx-auto">
+        <motion.div
+          variants={staggerContainer(0.07)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 md:gap-4 max-w-6xl mx-auto"
+        >
 
           {/* Finance - Hero card */}
-          <div className="sm:col-span-2 lg:col-span-8 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-2 lg:col-span-8 relative group">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-transparent to-teal-500/10 rounded-2xl md:rounded-3xl" />
             <div className="relative h-full min-h-[280px] md:min-h-[320px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
               <div>
@@ -79,10 +88,10 @@ export const Features = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* HR - Vertical card */}
-          <div className="sm:col-span-2 lg:col-span-4 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-2 lg:col-span-4 relative group">
             <div className="absolute inset-0 bg-gradient-to-b from-blue-500/15 to-transparent rounded-2xl md:rounded-3xl" />
             <div className="relative h-full min-h-[280px] md:min-h-[320px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
               <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center mb-4 md:mb-5 shadow-lg shadow-blue-500/20">
@@ -106,10 +115,10 @@ export const Features = () => {
                 <p className="text-xs text-white/30">852 active employees</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Inventory - Wide card */}
-          <div className="sm:col-span-1 lg:col-span-6 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-6 relative group">
             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-orange-500/5 rounded-2xl md:rounded-3xl" />
             <div className="relative h-full min-h-[200px] md:min-h-[240px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
               <div className="flex items-start gap-3 md:gap-4">
@@ -145,10 +154,10 @@ export const Features = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Sales - Wide card */}
-          <div className="sm:col-span-1 lg:col-span-6 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-6 relative group">
             <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-purple-500/5 rounded-2xl md:rounded-3xl" />
             <div className="relative h-full min-h-[200px] md:min-h-[240px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
               <div className="flex items-start gap-3 md:gap-4">
@@ -178,10 +187,10 @@ export const Features = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Small cards row - 2x2 on mobile, 4 across on desktop */}
-          <div className="sm:col-span-1 lg:col-span-3 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-3 relative group">
             <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
               <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-pink-500/20">
                 <Monitor className="w-4 h-4 md:w-5 md:h-5 text-white" />
@@ -193,9 +202,9 @@ export const Features = () => {
                 <p className="text-[9px] md:text-[10px] text-white/30">Today&apos;s transactions</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="sm:col-span-1 lg:col-span-3 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-3 relative group">
             <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
               <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-rose-400 to-red-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-rose-500/20">
                 <Clock className="w-4 h-4 md:w-5 md:h-5 text-white" />
@@ -207,9 +216,9 @@ export const Features = () => {
                 <p className="text-[9px] md:text-[10px] text-white/30">Now serving</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="sm:col-span-1 lg:col-span-3 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-3 relative group">
             <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
               <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-cyan-500/20">
                 <UserCircle className="w-4 h-4 md:w-5 md:h-5 text-white" />
@@ -221,9 +230,9 @@ export const Features = () => {
                 <p className="text-[9px] md:text-[10px] text-white/30">Active contacts</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="sm:col-span-1 lg:col-span-3 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-3 relative group">
             <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
               <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-orange-500/20">
                 <Truck className="w-4 h-4 md:w-5 md:h-5 text-white" />
@@ -235,10 +244,10 @@ export const Features = () => {
                 <p className="text-[9px] md:text-[10px] text-white/30">Active suppliers</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* BI - Wide card with chart */}
-          <div className="sm:col-span-2 lg:col-span-7 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-2 lg:col-span-7 relative group">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/5 rounded-2xl md:rounded-3xl" />
             <div className="relative h-full min-h-[180px] md:min-h-[220px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
               <div className="flex items-start gap-3 md:gap-4">
@@ -258,10 +267,10 @@ export const Features = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Project Management */}
-          <div className="sm:col-span-2 lg:col-span-5 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-2 lg:col-span-5 relative group">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-2xl md:rounded-3xl" />
             <div className="relative h-full min-h-[180px] md:min-h-[220px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
               <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
@@ -293,10 +302,10 @@ export const Features = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Bottom row - Compliance & Integrations */}
-          <div className="sm:col-span-1 lg:col-span-4 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-4 relative group">
             <div className="relative h-full min-h-[140px] md:min-h-[180px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6">
               <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-red-400 to-rose-500 flex items-center justify-center shadow-lg shadow-red-500/20 shrink-0">
                 <ShieldCheck className="w-6 h-6 md:w-8 md:h-8 text-white" />
@@ -310,9 +319,9 @@ export const Features = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="sm:col-span-1 lg:col-span-8 relative group">
+          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-8 relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-teal-500/5 via-cyan-500/5 to-blue-500/5 rounded-2xl md:rounded-3xl" />
             <div className="relative h-full min-h-[140px] md:min-h-[180px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
               <div className="flex items-start gap-3 md:gap-4">
@@ -337,9 +346,9 @@ export const Features = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
       </div>
     </section>
   );
