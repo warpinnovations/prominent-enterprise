@@ -40,7 +40,7 @@ const panels: Panel[] = [
   {
     href: "/government",
     icon: Landmark,
-    kicker: "For Government",
+    kicker: "For Governance",
     title: "Prominent Government",
     desc: "Run your LGU — treasury, taxation, permits, budget and citizen services, built for transparency.",
     bg: "bg-gradient-to-br from-[#0b1c44] via-[#0a0f22] to-[#0b0614]",
