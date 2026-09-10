@@ -17,10 +17,10 @@ type NavbarProps = {
 };
 
 const navLinks = [
+  { label: "About", href: "/enterprise#about" },
+  { label: "Testimonials", href: "/enterprise#testimonials" },
   { label: "Modules", href: "/enterprise#modules" },
-  { label: "Solutions", href: "/enterprise#solutions" },
-  { label: "Integrations", href: "/enterprise#integrations" },
-  { label: "Security", href: "/enterprise#security" },
+  { label: "Plans", href: "/enterprise#solutions" },
 ];
 
 export const Navbar = ({
@@ -60,9 +60,18 @@ export const Navbar = ({
         "transition-all duration-300",
         embedded ? "relative z-40" : "fixed top-0 left-0 right-0 z-50",
         isScrolled
-          ? "bg-[#0b0614]/85 backdrop-blur-xl border-b border-white/10 py-3 shadow-lg shadow-black/20"
-          : "bg-transparent border-b border-transparent py-5"
+          ? "border-b border-white/15 py-3 shadow-lg shadow-black/20"
+          : "border-b border-transparent py-5"
       )}
+      style={
+        isScrolled
+          ? {
+              backgroundColor: "rgba(130,130,145,0.14)",
+              backdropFilter: "blur(22px)",
+              WebkitBackdropFilter: "blur(22px)",
+            }
+          : { backgroundColor: "transparent" }
+      }
     >
       <div className="container mx-auto px-6 flex items-center justify-between gap-4">
         {/* Logo */}
@@ -114,7 +123,11 @@ export const Navbar = ({
               <motion.div whileTap={{ scale: 0.97 }}>
                 <Link
                   href="/book-a-demo"
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary-purple via-purple-600 to-button-orange bg-[length:200%_100%] bg-left hover:bg-right text-white text-[13px] font-semibold shadow-lg shadow-primary-purple/25 hover:shadow-primary-purple/50 transition-[background-position,box-shadow] duration-500"
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-white text-[13px] font-semibold transition hover:brightness-110"
+                  style={{
+                    background: "linear-gradient(90deg, #FF9E00 0%, #F35B04 100%)",
+                    boxShadow: "0 8px 24px -6px rgba(243,91,4,0.5)",
+                  }}
                 >
                   Book a Demo
                   <ArrowRight className="w-4 h-4" />
@@ -178,7 +191,11 @@ export const Navbar = ({
                 <Link
                   href="/book-a-demo"
                   onClick={closeMenu}
-                  className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-primary-purple via-purple-600 to-button-orange bg-[length:200%_100%] bg-left hover:bg-right text-white text-base font-semibold shadow-lg shadow-primary-purple/25 transition-[background-position] duration-500"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-white text-base font-semibold transition hover:brightness-110"
+                  style={{
+                    background: "linear-gradient(90deg, #FF9E00 0%, #F35B04 100%)",
+                    boxShadow: "0 8px 24px -6px rgba(243,91,4,0.5)",
+                  }}
                 >
                   Book a Demo
                   <ArrowRight className="w-4 h-4" />

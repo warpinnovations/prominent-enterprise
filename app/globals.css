@@ -227,3 +227,28 @@ body {
   /* 9th child onward share the final delay so long lists don't lag */
   .js-reveal .reveal-stagger.is-visible > *:nth-child(n + 9) { transition-delay: 640ms; }
 }
+
+/* --- Modules "root" tree liveliness --- */
+@keyframes root-flow-y {
+  from { background-position: 0 0; }
+  to { background-position: 0 12px; }
+}
+@keyframes soft-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes core-halo {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.14); }
+}
+@keyframes flow-x {
+  from { background-position: 0 0; }
+  to { background-position: 12px 0; }
+}
+.animate-root-flow { animation: root-flow-y 0.9s linear infinite; }
+.animate-flow-x { animation: flow-x 0.9s linear infinite; }
+.animate-soft-float { animation: soft-float 4.5s ease-in-out infinite; }
+.animate-core-halo { animation: core-halo 3s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .animate-root-flow, .animate-flow-x, .animate-soft-float, .animate-core-halo { animation: none; }
+}

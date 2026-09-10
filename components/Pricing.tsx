@@ -1,301 +1,154 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useMotionValue,
-  useSpring,
-  useTransform,
-  useMotionTemplate,
-} from "framer-motion";
-import { Check, ChevronDown } from "lucide-react";
+import React from "react";
+import { motion } from "framer-motion";
+import { Check } from "lucide-react";
+import Link from "next/link";
 import { ParallaxGlow } from "@/components/ParallaxGlow";
+import { Reveal, staggerContainer, staggerItem } from "@/components/Reveal";
 
-/** Card that tilts in 3D toward the cursor with a light glare that tracks it. */
-function TiltCard({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const spring = { stiffness: 220, damping: 18 };
-  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [8, -8]), spring);
-  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-8, 8]), spring);
-  const glareX = useTransform(mx, [-0.5, 0.5], ["12%", "88%"]);
-  const glareY = useTransform(my, [-0.5, 0.5], ["12%", "88%"]);
-  const glare = useMotionTemplate`radial-gradient(240px circle at ${glareX} ${glareY}, rgba(255,255,255,0.1), transparent 60%)`;
+type Plan = {
+  name: string;
+  price: string;
+  tagline: string;
+  note?: string;
+  features: string[];
+  featured?: boolean;
+};
 
-  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    mx.set((e.clientX - r.left) / r.width - 0.5);
-    my.set((e.clientY - r.top) / r.height - 0.5);
-  };
-  const handleLeave = () => {
-    mx.set(0);
-    my.set(0);
-  };
-
-  return (
-    <motion.div
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
-      style={{ rotateX, rotateY, transformPerspective: 1200 }}
-      suppressHydrationWarning
-      className={className}
-    >
-      {children}
-      <motion.div
-        aria-hidden
-        suppressHydrationWarning
-        className="pointer-events-none absolute inset-0"
-        style={{ background: glare }}
-      />
-    </motion.div>
-  );
-}
-import { alternatingItem } from "@/components/Reveal";
-
-const packages = [
+const plans: Plan[] = [
   {
-    id: "retail",
-    name: "Sales & Stock Tracker",
-    subtitle: "for Retail",
-    price: 49,
-    description: "Perfect for sari-sari stores, boutiques, specialty shops, and small groceries.",
-    painPoints: ["Daily sales tracking", "Stock running out alerts", "Cash mismatch prevention"],
-    modules: ["POS", "Inventory & Warehouse", "Finance & Accounting", "Basic Reporting"],
-    icon: "🏪",
+    name: "Essential",
+    price: "₱8,000",
+    tagline: "Start with what matters most.",
+    features: ["3 Core Modules", "1 module of your choice", "10 Users", "1 Branch · 1 Warehouse", "20 GB Storage"],
   },
   {
-    id: "fnb",
-    name: "Restaurant Sales & Expense",
-    subtitle: "for Food & Beverage",
-    price: 59,
-    description: "Built for dine-in restaurants, takeout spots, cafés, and food kiosks.",
-    painPoints: ["Daily sales monitoring", "Ingredient usage tracking", "Staff cost management"],
-    modules: ["POS", "Inventory & Warehouse", "Procurement & Supplier", "Finance & Accounting", "Basic Reporting"],
-    icon: "🍽️",
+    name: "Build",
+    price: "₱14,000",
+    tagline: "Strengthen your business foundation.",
+    note: "₱10,000 if you sign up on or before June 25, 2026",
+    features: ["3 Core Modules", "3 modules of your choice", "20 Users", "1 Branch · 1 Warehouse", "50 GB Storage"],
   },
   {
-    id: "wholesale",
-    name: "Order, Stock & Billing",
-    subtitle: "for Wholesale & Distribution",
-    price: 69,
-    description: "Ideal for traders, distributors, and resellers managing bulk orders.",
-    painPoints: ["Orders not getting lost", "Stock accuracy", "Margin tracking"],
-    modules: ["Sales & Order Management", "Inventory & Warehouse", "CRM", "Finance & Accounting", "Basic Reporting"],
-    icon: "📦",
+    name: "Scale",
+    price: "₱20,000",
+    tagline: "Streamline daily operations.",
+    featured: true,
+    features: ["3 Core Modules", "5 modules of your choice", "35 Users", "2 Branches · 2 Warehouses", "100 GB Storage"],
   },
   {
-    id: "construction",
-    name: "Project Cost & Materials",
-    subtitle: "for Construction & Trade",
-    price: 79,
-    description: "Designed for contractors, suppliers, and small developers.",
-    painPoints: ["Project cost control", "Material tracking", "Labor pay management"],
-    modules: ["Project Management", "Procurement & Supplier", "Inventory & Warehouse", "HR & Payroll", "Finance & Accounting"],
-    icon: "🏗️",
+    name: "Expand",
+    price: "₱25,000",
+    tagline: "Unlock growth across all departments.",
+    features: ["3 Core Modules", "7 modules of your choice", "50 Users", "3 Branches · 3 Warehouses", "150 GB Storage"],
   },
   {
-    id: "manufacturing",
-    name: "Production & Cost Control",
-    subtitle: "for Manufacturing",
-    price: 89,
-    description: "For food production facilities, light manufacturing, and workshops.",
-    painPoints: ["Raw material management", "Production delay prevention", "Cost per output tracking"],
-    modules: ["Inventory & Warehouse", "Procurement & Supplier", "Sales & Order Management", "Finance & Accounting", "Basic Reporting"],
-    icon: "🏭",
+    name: "Prime",
+    price: "₱35,000",
+    tagline: "The complete Prominent Enterprise ecosystem.",
+    features: ["All available modules", "50 Users", "5 Branches · 5 Warehouses", "250 GB Storage"],
   },
-  {
-    id: "services",
-    name: "Client, Job & Billing",
-    subtitle: "for Service Businesses",
-    price: 59,
-    description: "Perfect for creative agencies, repair services, and clinics.",
-    painPoints: ["Client tracking", "Job progress monitoring", "Proper billing"],
-    modules: ["CRM", "Project Management", "Sales & Order Management", "Finance & Accounting", "Basic Reporting"],
-    icon: "💼",
-  },
-];
-
-const CARD_COLORS = [
-  "from-emerald-400 to-teal-500",
-  "from-orange-400 to-amber-500",
-  "from-blue-400 to-indigo-500",
-  "from-amber-400 to-yellow-500",
-  "from-violet-400 to-purple-500",
-  "from-cyan-400 to-blue-500",
 ];
 
 export const Pricing = () => {
-  const [expandedPackages, setExpandedPackages] = useState<string[]>([]);
-
-  const toggleExpand = (packageId: string) => {
-    setExpandedPackages(prev =>
-      prev.includes(packageId)
-        ? prev.filter(id => id !== packageId)
-        : [...prev, packageId]
-    );
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
   return (
     <section id="solutions" className="py-24 md:py-32 relative overflow-hidden">
       {/* Layered gradient background */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-bg-layout-purple/45 via-bg-purple/15 to-bg-layout-purple/45" />
       <div
         className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 55% at 50% 32%, rgba(152,56,217,0.18), transparent 70%)",
-        }}
+        style={{ background: "radial-gradient(ellipse 70% 55% at 50% 32%, rgba(152,56,217,0.16), transparent 70%)" }}
       />
-      <div className="grid-backdrop pointer-events-none absolute inset-0 opacity-50" />
-      {/* Background glow effects */}
       <ParallaxGlow speed={70} className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[128px] pointer-events-none" />
       <ParallaxGlow speed={-50} className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[128px] pointer-events-none" />
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-center max-w-3xl mx-auto mb-16"
-      >
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-primary-purple mb-4">
-          Industry Solutions
-        </h2>
-        <h3 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-          Built for YOUR <span className="text-gradient">business.</span>
-        </h3>
-        <p className="text-text-gray text-lg">
-          Or choose our pre-selected packages for specific industries
-        </p>
-      </motion.div>
 
-        {/* Industry Packages Grid */}
+      <div className="container mx-auto px-6 relative z-10">
+        <Reveal className="text-center max-w-2xl mx-auto mb-16">
+          {/* pill badge */}
+          <span className="inline-flex items-center rounded-full border border-primary-purple/40 bg-primary-purple/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-widget-title-purple mb-5">
+            Pricing
+          </span>
+          <h2 className="display text-4xl md:text-5xl font-bold text-white mb-5">
+            Plans that fit{" "}
+            <span className="text-gradient">your scale.</span>
+          </h2>
+          <p className="text-white/55 text-lg text-balance">
+            Simple, transparent pricing that grows with you. Every plan includes 3 core modules —
+            add more as you grow.
+          </p>
+        </Reveal>
+
         <motion.div
-          variants={containerVariants}
+          variants={staggerContainer(0.08)}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 max-w-6xl mx-auto items-stretch"
         >
-          {packages.map((pkg, index) => {
-            return (
-              <motion.div key={pkg.id} variants={alternatingItem(index)} className="group">
-                <TiltCard className="relative p-8 rounded-4xl border border-white/10 overflow-hidden bg-white/[0.02] backdrop-blur-md transition-shadow duration-300 hover:border-white/20 hover:shadow-[0_35px_70px_-30px_rgba(10,4,24,0.95)]">
-                {/* Animated background */}
-                <div
-                  className="absolute inset-0 -z-10"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%)",
-                  }}
-                />
+          {plans.map((plan) => (
+            <motion.div
+              key={plan.name}
+              variants={staggerItem}
+              className={`relative flex flex-col rounded-3xl border p-6 transition-colors ${
+                plan.featured
+                  ? "border-primary-purple/60 bg-primary-purple/[0.10] ring-2 ring-primary-purple/40 shadow-xl shadow-primary-purple/20 lg:-my-2"
+                  : "border-white/10 bg-white/[0.02] hover:border-white/20"
+              }`}
+            >
+              {plan.featured && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary-purple to-purple-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white whitespace-nowrap">
+                  Most popular
+                </span>
+              )}
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-widget-title-purple">
+                {plan.name}
+              </h3>
+              <div className="mt-2 flex items-baseline gap-1">
+                <span className="text-3xl font-bold text-white">{plan.price}</span>
+                <span className="text-xs text-white/40">per month</span>
+              </div>
+              <p className="mt-2 text-sm text-white/55 min-h-[40px]">{plan.tagline}</p>
+              {plan.note && <p className="mt-1 text-[11px] leading-snug text-button-orange">{plan.note}</p>}
 
-                {/* Liquid glass top highlight */}
-                <div
-                  className="absolute top-0 left-4 right-4 h-px"
-                  style={{
-                    background: "linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent)",
-                  }}
-                />
-
-                {/* Header: icon tile + title */}
-                <div className="flex items-start gap-4 mb-4">
-                  <div
-                    className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${CARD_COLORS[index]} flex items-center justify-center text-3xl shadow-lg shadow-black/20 shrink-0`}
-                  >
-                    {pkg.icon}
-                  </div>
-                  <div className="min-w-0 pt-0.5">
-                    <h4 className="text-lg font-bold text-white leading-tight">{pkg.name}</h4>
-                    <p className="text-widget-title-purple text-sm font-medium mt-0.5">{pkg.subtitle}</p>
-                  </div>
-                </div>
-
-                {/* Description (always visible) */}
-                <p className="text-white/50 text-sm leading-relaxed mb-4">{pkg.description}</p>
-
-                {/* Expand/Collapse Button */}
-                <button
-                  onClick={() => toggleExpand(pkg.id)}
-                  className="flex items-center gap-2 text-white/60 hover:text-white text-xs font-medium mb-3 transition-colors"
+              {/* CTAs — primary + secondary (peg's two-button pattern) */}
+              <div className="mt-5 flex flex-col gap-2">
+                <Link
+                  href="/book-a-demo"
+                  className={`inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition ${
+                    plan.featured
+                      ? "bg-gradient-to-r from-primary-purple to-purple-600 text-white shadow-lg shadow-primary-purple/30 hover:brightness-110"
+                      : "border border-white/15 bg-white/5 text-white hover:bg-white/10"
+                  }`}
                 >
-                  <span>{expandedPackages.includes(pkg.id) ? "Hide Details" : "View Details"}</span>
-                  <motion.div
-                    animate={{ rotate: expandedPackages.includes(pkg.id) ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <ChevronDown className="w-4 h-4" />
-                  </motion.div>
-                </button>
+                  Book a Demo
+                </Link>
+                <a
+                  href="mailto:inquiry.prominent@warp.ph"
+                  className="inline-flex items-center justify-center rounded-full px-5 py-2 text-xs font-medium text-white/55 hover:text-white transition"
+                >
+                  Talk to sales
+                </a>
+              </div>
 
-                {/* Collapsible Content */}
-                <AnimatePresence>
-                  {expandedPackages.includes(pkg.id) && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      {/* Pain Points */}
-                      <div className="mb-4">
-                        <p className="text-white/50 text-xs uppercase tracking-wider mb-2">Solves</p>
-                        <div className="flex flex-wrap gap-2">
-                          {pkg.painPoints.map((point) => (
-                            <span
-                              key={point}
-                              className="text-xs bg-white/5 text-white/70 px-2 py-1 rounded-full"
-                            >
-                              {point}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Modules included */}
-                      <div>
-                        <p className="text-white/50 text-xs uppercase tracking-wider mb-2">Modules Included</p>
-                        <ul className="space-y-1.5">
-                          {pkg.modules.map((module, index) => (
-                            <motion.li
-                              key={module}
-                              className="flex items-center gap-2 text-sm text-white/70"
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{
-                                delay: index * 0.05,
-                                duration: 0.2,
-                              }}
-                            >
-                              <Check className="w-4 h-4 text-primary-purple shrink-0" />
-                              {module}
-                            </motion.li>
-                          ))}
-                        </ul>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                </TiltCard>
-              </motion.div>
-            );
-          })}
+              {/* Features */}
+              <p className="mt-6 mb-3 text-[11px] font-semibold uppercase tracking-wider text-white/40">
+                Features
+              </p>
+              <ul className="space-y-2.5 flex-1">
+                {plan.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-white/65">
+                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-purple/20">
+                      <Check className="h-3 w-3 text-widget-title-purple" />
+                    </span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
         </motion.div>
+      </div>
     </section>
   );
 };

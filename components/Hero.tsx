@@ -4,8 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronRight, Star } from "lucide-react";
 import Link from "next/link";
-import { HeroDashboardStack } from "@/components/HeroDashboardStack";
-import { RotatingText } from "@/components/RotatingText";
+import { HeroHub } from "@/components/HeroHub";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -32,20 +31,15 @@ export const Hero = () => {
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
           {/* LEFT — value proposition */}
           <div>
-            <motion.div
+            <motion.p
               custom={0}
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 mb-6"
+              className="mb-6 text-xs md:text-sm font-semibold uppercase tracking-[0.2em] text-button-orange"
             >
-              <span className="flex h-2 w-2">
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-              </span>
-              <span className="text-xs font-medium text-white/70 tracking-wide">
-                Enterprise ERP · Built for the Philippines
-              </span>
-            </motion.div>
+              Enterprise ERP, reimagined for the Philippines
+            </motion.p>
 
             <motion.h1
               custom={1}
@@ -54,11 +48,8 @@ export const Hero = () => {
               animate="visible"
               className="display text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-white mb-6"
             >
-              Run your entire business on{" "}
-              <RotatingText
-                className="text-gradient"
-                words={["one platform.", "one system.", "one dashboard.", "one workspace."]}
-              />
+              Everything you need to run your business{" "}
+              <span className="text-gradient">in one place.</span>
             </motion.h1>
 
             <motion.p
@@ -68,9 +59,9 @@ export const Hero = () => {
               animate="visible"
               className="text-lg md:text-xl text-white/60 leading-relaxed max-w-xl mb-8 text-balance"
             >
-              The Prominent unifies finance, HR &amp; payroll, inventory, sales, and
-              compliance into a single system — purpose-built for the way local
-              enterprises and government units actually operate.
+              Simplify operations, reduce manual work, and stay in control. The Prominent
+              Enterprise is the solution to every Filipino business&apos; operational
+              challenges.
             </motion.p>
 
             <motion.div
@@ -84,8 +75,8 @@ export const Hero = () => {
                 Book a Demo
                 <ArrowRight className="w-5 h-5" />
               </Link>
-              <Link href="/quiz" className="btn-secondary text-base">
-                Take the readiness assessment
+              <Link href="#modules" className="btn-secondary text-base">
+                Explore Modules
                 <ChevronRight className="w-5 h-5" />
               </Link>
             </motion.div>
@@ -126,8 +117,8 @@ export const Hero = () => {
             </motion.div>
           </div>
 
-          {/* RIGHT — interactive product dashboard stack */}
-          <HeroDashboardStack />
+          {/* RIGHT — unified-platform hub (circle + module icons) */}
+          <HeroHub />
         </div>
       </div>
     </section>

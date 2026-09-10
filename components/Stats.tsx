@@ -19,12 +19,13 @@ export const Stats = ({
   stats?: Stat[];
   heading?: string;
 }) => {
+  const colClass = stats.length === 3 ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2 md:grid-cols-4";
   return (
     <section className="py-16 border-y border-white/5 bg-bg-layout-purple/40 relative overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary-purple/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="container mx-auto px-6 relative z-10">
         {heading && (
-          <p className="text-center text-sm font-medium text-text-gray uppercase tracking-[0.2em] mb-10">
+          <p className="text-center text-white/60 text-base md:text-lg max-w-2xl mx-auto mb-10 text-balance">
             {heading}
           </p>
         )}
@@ -33,7 +34,7 @@ export const Stats = ({
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 max-w-5xl mx-auto"
+          className={`grid ${colClass} gap-6 md:gap-10 max-w-5xl mx-auto`}
         >
           {stats.map((stat) => (
             <motion.div

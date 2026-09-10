@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Mail, User, Check, ArrowRight, Gift, Zap, Crown, Clock, Building2, Phone } from "lucide-react";
+import { Sparkles, Mail, User, Check, ArrowRight, Gift, Zap, Crown, Clock, Building2, Phone, Briefcase, Users } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -12,6 +12,9 @@ export default function BookADemoPage() {
   const [email, setEmail] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+  const [employees, setEmployees] = useState("");
+  const [subscribe, setSubscribe] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -30,6 +33,8 @@ export default function BookADemoPage() {
           email,
           company: companyName,
           mobile: mobileNumber,
+          jobTitle,
+          employees,
         }),
       });
 
@@ -157,87 +162,112 @@ export default function BookADemoPage() {
                   {/* Glow Effect */}
                   <div className="absolute -inset-4 bg-gradient-to-r from-primary-purple/20 to-purple-600/20 blur-3xl opacity-30" />
                   
-                  <div className="relative bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-[40px] p-10 shadow-2xl">
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div>
-                        <h2 className="text-2xl font-bold mb-2">Schedule Your Demo</h2>
+                  <div className="relative bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-[40px] p-8 md:p-10 shadow-2xl">
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                      <div className="mb-1">
+                        <h2 className="text-2xl font-bold mb-2">
+                          Get started with a{" "}
+                          <span className="bg-gradient-to-r from-primary-purple to-purple-400 bg-clip-text text-transparent">
+                            smarter way to run your business
+                          </span>
+                        </h2>
+                        <p className="text-sm text-white/55">
+                          Transform operations, finance, and everyday work with one connected platform.
+                        </p>
                       </div>
 
-                      {/* Name Input */}
-                      <div className="space-y-2">
-                        <label htmlFor="name" className="block text-sm font-medium text-white/70">
-                          Full Name
-                        </label>
+                      {/* Row 1 — Full Name / Email / Contact Number */}
+                      <div className="grid sm:grid-cols-2 gap-4">
                         <div className="relative">
                           <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
                           <input
                             type="text"
-                            id="name"
                             required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="Enter your name"
-                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all"
+                            placeholder="Full Name*"
+                            className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/40 focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all"
                           />
                         </div>
-                      </div>
-
-                      {/* Email Input */}
-                      <div className="space-y-2">
-                        <label htmlFor="email" className="block text-sm font-medium text-white/70">
-                          Email Address
-                        </label>
                         <div className="relative">
                           <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
                           <input
                             type="email"
-                            id="email"
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="you@company.com"
-                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all"
+                            placeholder="Email Address*"
+                            className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/40 focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all"
                           />
                         </div>
-                      </div>
-
-                      {/* Company Name Input */}
-                      <div className="space-y-2">
-                        <label htmlFor="companyName" className="block text-sm font-medium text-white/70">
-                          Company Name
-                        </label>
-                        <div className="relative">
-                          <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
-                          <input
-                            type="text"
-                            id="companyName"
-                            required
-                            value={companyName}
-                            onChange={(e) => setCompanyName(e.target.value)}
-                            placeholder="Your company"
-                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Mobile Number Input */}
-                      <div className="space-y-2">
-                        <label htmlFor="mobileNumber" className="block text-sm font-medium text-white/70">
-                          Mobile Number
-                        </label>
                         <div className="relative">
                           <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
                           <input
                             type="tel"
-                            id="mobileNumber"
                             required
                             value={mobileNumber}
                             onChange={(e) => setMobileNumber(e.target.value)}
-                            placeholder="+63 912 345 6789"
-                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all"
+                            placeholder="Contact Number*"
+                            className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/40 focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all"
                           />
                         </div>
+                        <div className="relative">
+                          <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                          <input
+                            type="text"
+                            required
+                            value={jobTitle}
+                            onChange={(e) => setJobTitle(e.target.value)}
+                            placeholder="Job Title*"
+                            className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/40 focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all"
+                          />
+                        </div>
+                        <div className="relative">
+                          <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                          <input
+                            type="text"
+                            required
+                            value={companyName}
+                            onChange={(e) => setCompanyName(e.target.value)}
+                            placeholder="Company Name*"
+                            className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/40 focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all"
+                          />
+                        </div>
+                        <div className="relative">
+                          <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                          <select
+                            required
+                            value={employees}
+                            onChange={(e) => setEmployees(e.target.value)}
+                            className={`w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-primary-purple/50 focus:ring-2 focus:ring-primary-purple/20 transition-all appearance-none ${
+                              employees ? "text-white" : "text-white/40"
+                            }`}
+                          >
+                            <option value="" disabled className="bg-bg-layout-purple text-white/60">
+                              Number of Employees*
+                            </option>
+                            {["1–10", "11–50", "51–200", "201–500", "500+"].map((r) => (
+                              <option key={r} value={r} className="bg-bg-layout-purple text-white">
+                                {r}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
                       </div>
+
+                      {/* Consent */}
+                      <label className="flex items-start gap-3 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={subscribe}
+                          onChange={(e) => setSubscribe(e.target.checked)}
+                          className="mt-0.5 h-4 w-4 shrink-0 rounded border-white/20 bg-white/5 accent-primary-purple"
+                        />
+                        <span className="text-xs leading-relaxed text-white/50">
+                          Keep me updated with product news, event invites, and offers from The
+                          Prominent. You can unsubscribe anytime.
+                        </span>
+                      </label>
 
                       {/* Submit Button */}
                       <button
@@ -256,7 +286,7 @@ export default function BookADemoPage() {
                           </>
                         ) : (
                           <>
-                            <span>Book a Demo</span>
+                            <span>Book a Meeting</span>
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                           </>
                         )}
@@ -268,9 +298,9 @@ export default function BookADemoPage() {
                       </button>
 
                       <p className="text-xs text-white/40 text-center">
-                        By joining, you agree to receive updates about The Prominent.
-                        <br />
-                        You can unsubscribe at any time.
+                        By submitting this form, you consent to a representative from The Prominent
+                        contacting you regarding your inquiry. We value your privacy and won&apos;t
+                        share your information without your permission.
                       </p>
                     </form>
                   </div>

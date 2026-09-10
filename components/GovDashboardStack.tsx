@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   TrendingUp,
@@ -107,16 +107,73 @@ const VIEWS = [
 
 export const GovDashboardStack = () => {
   const [front, setFront] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  // auto-cycle the stack — swap the cards on a timer (pause on hover)
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => {
+      setFront((f) => (f + 1) % VIEWS.length);
+    }, 2200);
+    return () => clearInterval(id);
+  }, [paused]);
 
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.96, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ delay: 0.35, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
       className="relative h-[500px] sm:h-[520px]"
       style={{ perspective: "1800px" }}
     >
-      <div className="absolute -inset-6 bg-gradient-to-tr from-primary-purple/25 to-button-orange/10 blur-3xl rounded-[40px] -z-10" />
+      {/* pulsing ambient glow */}
+      <motion.div
+        aria-hidden
+        animate={{ scale: [1, 1.06, 1], opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -inset-6 bg-gradient-to-tr from-primary-purple/25 to-button-orange/10 blur-3xl rounded-[40px] -z-10"
+      />
+
+      {/* drifting particles around the stack */}
+      {[
+        { x: "-6%", y: "12%", s: 7, d: 0 },
+        { x: "104%", y: "24%", s: 5, d: 0.8 },
+        { x: "98%", y: "70%", s: 8, d: 1.5 },
+        { x: "-4%", y: "82%", s: 6, d: 0.4 },
+      ].map((p, i) => (
+        <motion.span
+          key={i}
+          aria-hidden
+          animate={{ y: [0, -14, 0], opacity: [0.3, 0.85, 0.3] }}
+          transition={{ duration: 4 + i, repeat: Infinity, ease: "easeInOut", delay: p.d }}
+          className="pointer-events-none absolute z-30 rounded-full bg-widget-title-purple"
+          style={{ left: p.x, top: p.y, width: p.s, height: p.s, boxShadow: "0 0 12px rgba(167,139,250,0.8)" }}
+        />
+      ))}
+
+      {/* floating stat chip (top-right) */}
+      <motion.div
+        initial={{ opacity: 0, y: -18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2, duration: 0.6 }}
+        className="absolute -top-4 -right-4 z-30"
+      >
+        <motion.div
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+          className="panel flex items-center gap-3 rounded-2xl px-4 py-3 shadow-xl"
+        >
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-purple/15">
+            <TrendingUp className="h-5 w-5 text-widget-title-purple" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-white">Live · Real-time</p>
+            <p className="text-[10px] text-white/40">Synced across offices</p>
+          </div>
+        </motion.div>
+      </motion.div>
 
       {VIEWS.map((view, i) => {
         const isFront = i === front;
@@ -162,15 +219,21 @@ export const GovDashboardStack = () => {
         initial={{ opacity: 0, x: 20, y: 20 }}
         animate={{ opacity: 1, x: 0, y: 0 }}
         transition={{ delay: 1, duration: 0.6 }}
-        className="absolute -bottom-5 -left-5 z-30 panel rounded-2xl px-4 py-3 flex items-center gap-3 shadow-xl"
+        className="absolute -bottom-5 -left-5 z-30"
       >
-        <div className="w-9 h-9 rounded-xl bg-emerald-400/15 flex items-center justify-center">
-          <ShieldCheck className="w-5 h-5 text-emerald-400" />
-        </div>
-        <div>
-          <p className="text-xs font-semibold text-white">COA · Audit-ready</p>
-          <p className="text-[10px] text-white/40">Full transparency</p>
-        </div>
+        <motion.div
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+          className="panel flex items-center gap-3 rounded-2xl px-4 py-3 shadow-xl"
+        >
+          <div className="w-9 h-9 rounded-xl bg-emerald-400/15 flex items-center justify-center">
+            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-white">COA · Audit-ready</p>
+            <p className="text-[10px] text-white/40">Full transparency</p>
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* View switch indicator */}

@@ -6,9 +6,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, company, mobile } = await request.json();
+    const { name, email, company, mobile, jobTitle = '', employees = '' } = await request.json();
 
-    // Validate input
+    // Validate input (core fields required; jobTitle/employees optional for backward-compat)
     if (!name || !email || !company || !mobile) {
       return NextResponse.json(
         { error: 'All fields are required' },
@@ -37,10 +37,10 @@ export async function POST(request: NextRequest) {
     const timestamp = new Date().toISOString();
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'Sheet1!A:E', // Adjust sheet name if needed
+      range: 'Sheet1!A:G', // timestamp, name, email, company, mobile, jobTitle, employees
       valueInputOption: 'USER_ENTERED',
       requestBody: {
-        values: [[timestamp, name, email, company, mobile]],
+        values: [[timestamp, name, email, company, mobile, jobTitle, employees]],
       },
     });
 

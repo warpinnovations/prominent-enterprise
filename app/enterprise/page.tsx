@@ -25,7 +25,14 @@ export default function EnterpriseHome() {
       </header>
       <Hero />
       <LogoCloud />
-      <Stats />
+      <Stats
+        heading="The Prominent Enterprise is a trusted system backed by real-world results and proven impact from the organizations that use it."
+        stats={[
+          { value: "1", label: "platform for accurate data" },
+          { value: "95%+", label: "stock accuracy" },
+          { value: "100%", label: "actions tracked" },
+        ]}
+      />
       <Features />
       <WhyProminent />
       <HowItWorks />

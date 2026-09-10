@@ -1,354 +1,139 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { Reveal, staggerContainer, staggerItem } from "@/components/Reveal";
+import { Reveal } from "@/components/Reveal";
 import { ParallaxGlow } from "@/components/ParallaxGlow";
-import {
-  Calculator,
-  Users,
-  Package,
-  Truck,
-  ShoppingCart,
-  UserCircle,
-  FolderKanban,
-  BarChart3,
-  ShieldCheck,
-  Plug,
-  Monitor,
-  Clock,
-  Check,
-  Zap,
-  Globe,
-  Lock,
-  Layers,
-} from "lucide-react";
+
+const DIR = "/oribital-modules-items";
+const src = (n: number) => `${DIR}/orbital-module%20(${n}).png`;
+const LINE = "rgba(167,139,250,0.6)"; // same purple as the hero orbit lines
+const DOT = "rgba(167,139,250,0.95)";
+
+type Module = { img: number; title: string; color: string };
+
+// img = orbital illustration number. Confirmed: 4=SALE, 6=boxes, 3=pie chart,
+// 1=scale, 2=workflow. The rest (5,7–11) are best-guess — tell me to reorder.
+const modules: Module[] = [
+  { img: 4, title: "Sales & Order Management", color: "from-violet-400 to-purple-500" },
+  { img: 7, title: "Point of Sale (POS)", color: "from-pink-400 to-rose-500" },
+  { img: 6, title: "Inventory & Warehouse", color: "from-amber-400 to-orange-500" },
+  { img: 8, title: "Procurement & Suppliers", color: "from-orange-400 to-amber-500" },
+  { img: 9, title: "Finance & Accounting", color: "from-emerald-400 to-teal-500" },
+  { img: 5, title: "Human Resources & Payroll", color: "from-blue-400 to-indigo-500" },
+  { img: 3, title: "Business Intelligence", color: "from-purple-400 to-pink-500" },
+  { img: 10, title: "Queue Management", color: "from-rose-400 to-red-500" },
+  { img: 11, title: "Project Management", color: "from-indigo-400 to-blue-500" },
+  { img: 1, title: "Compliance", color: "from-red-400 to-rose-500" },
+  { img: 2, title: "Business Integration", color: "from-cyan-400 to-blue-500" },
+];
+
+const ICON = 76;
+const dashV = `repeating-linear-gradient(to bottom, ${LINE} 0 6px, transparent 6px 12px)`;
+const dashH = `repeating-linear-gradient(to right, ${LINE} 0 6px, transparent 6px 12px)`;
+
+const Dot = () => (
+  <span aria-hidden className="shrink-0" style={{ width: 7, height: 7, borderRadius: "9999px", background: DOT, boxShadow: `0 0 8px ${DOT}` }} />
+);
+
+/** horizontal flowing connector between two boxes */
+const HConn = () => (
+  <span aria-hidden className="mx-1 flex shrink-0 items-center">
+    <Dot />
+    <span className="animate-flow-x" style={{ height: 2, width: 44, backgroundImage: dashH }} />
+    <Dot />
+  </span>
+);
+
+/** vertical flowing connector between two rows */
+const VConn = () => (
+  <span aria-hidden className="my-1 flex flex-col items-center">
+    <Dot />
+    <span className="animate-root-flow" style={{ width: 2, height: 34, backgroundImage: dashV }} />
+    <Dot />
+  </span>
+);
+
+function ModuleBox({ idx }: { idx: number }) {
+  const mod = modules[idx];
+  return (
+    <div className="group flex w-[168px] shrink-0 flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-5 text-center shadow-lg shadow-black/10 transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.06]">
+      <div className="relative animate-soft-float" style={{ animationDelay: `${(idx % 6) * 0.4}s` }}>
+        <div className={`pointer-events-none absolute -inset-1 rounded-full bg-gradient-to-br ${mod.color} opacity-30 blur-lg transition-opacity duration-500 group-hover:opacity-70`} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src(mod.img)}
+          alt={mod.title}
+          className="relative object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-110"
+          style={{ height: ICON, width: ICON }}
+        />
+      </div>
+      <span className="text-xs font-semibold leading-tight text-white/90">{mod.title}</span>
+    </div>
+  );
+}
+
+/** a horizontal row of boxes joined by flowing connectors */
+const Row = ({ idxs }: { idxs: number[] }) => (
+  <div className="flex items-center justify-center">
+    {idxs.map((idx, i) => (
+      <React.Fragment key={idx}>
+        <ModuleBox idx={idx} />
+        {i < idxs.length - 1 && <HConn />}
+      </React.Fragment>
+    ))}
+  </div>
+);
 
 export const Features = () => {
+  const rows = [
+    [0, 1, 2, 3],
+    [4, 5, 6, 7],
+    [8, 9, 10],
+  ];
+
   return (
-    <section id="modules" className="py-24 bg-bg-layout-purple relative overflow-hidden">
-      {/* Background glow effects */}
+    <section id="modules" className="py-24 md:py-32 bg-bg-layout-purple relative overflow-hidden">
       <ParallaxGlow speed={70} className="absolute top-0 left-1/4 w-96 h-96 bg-primary-purple/20 rounded-full blur-[150px] pointer-events-none" />
       <ParallaxGlow speed={-50} className="absolute bottom-0 right-1/4 w-96 h-96 bg-button-orange/10 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        {/* Header */}
-        <Reveal direction="left" className="text-center max-w-2xl mx-auto mb-12 md:mb-20">
-          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-6">
-            <Layers className="w-4 h-4 text-primary-purple" />
-            <span className="text-sm text-white/70">Enterprise Modules</span>
-          </div>
-          <h3 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+      <div className="container mx-auto px-6 relative z-10">
+        <Reveal direction="left" className="text-center max-w-2xl mx-auto mb-14">
+          <p className="eyebrow justify-center mb-4">Modules</p>
+          <h2 className="display text-4xl md:text-5xl font-bold text-white mb-5">
             Everything you need to{" "}
             <span className="text-gradient">run your business.</span>
-          </h3>
-          <p className="text-text-gray text-lg">
-            A complete suite of integrated modules designed for modern enterprises.
+          </h2>
+          <p className="text-white/55 text-lg text-balance">
+            One connected platform — every module flows into the next.
           </p>
         </Reveal>
 
-        {/* Premium Bento Grid */}
-        <motion.div
-          variants={staggerContainer(0.07)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-80px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 md:gap-4 max-w-6xl mx-auto"
-        >
-
-          {/* Finance - Hero card */}
-          <motion.div variants={staggerItem} className="sm:col-span-2 lg:col-span-8 relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-transparent to-teal-500/10 rounded-2xl md:rounded-3xl" />
-            <div className="relative h-full min-h-[280px] md:min-h-[320px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
-              <div>
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-4 md:mb-5 shadow-lg shadow-emerald-500/20">
-                  <Calculator className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                </div>
-                <h3 className="text-xl md:text-2xl font-semibold text-white mb-2">Finance & Accounting</h3>
-                <p className="text-sm md:text-base text-white/40 max-w-sm">Complete general ledger, accounts payable & receivable, and multi-currency support.</p>
-              </div>
-
-              {/* Mini dashboard preview */}
-              <div className="mt-6 md:mt-8 grid grid-cols-3 gap-2 md:gap-3">
-                <div className="bg-white/[0.04] rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/[0.06]">
-                  <p className="text-[10px] md:text-xs text-white/30 mb-1">Revenue</p>
-                  <p className="text-base md:text-xl font-semibold text-white">₱12.4M</p>
-                  <p className="text-[10px] md:text-xs text-emerald-400 mt-1">+18.2%</p>
-                </div>
-                <div className="bg-white/[0.04] rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/[0.06]">
-                  <p className="text-[10px] md:text-xs text-white/30 mb-1">Expenses</p>
-                  <p className="text-base md:text-xl font-semibold text-white">₱4.2M</p>
-                  <p className="text-[10px] md:text-xs text-white/40 mt-1">On track</p>
-                </div>
-                <div className="bg-white/[0.04] rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/[0.06]">
-                  <p className="text-[10px] md:text-xs text-white/30 mb-1">Margin</p>
-                  <p className="text-base md:text-xl font-semibold text-white">34%</p>
-                  <p className="text-[10px] md:text-xs text-emerald-400 mt-1">+4.1%</p>
-                </div>
-              </div>
+        {/* horizontal connected flow (desktop) */}
+        <div className="hidden md:flex flex-col items-center overflow-x-auto pb-2">
+          {/* core node with pulsing halo */}
+          <div className="relative">
+            <div aria-hidden className="animate-core-halo pointer-events-none absolute -inset-3 rounded-[1.75rem] bg-gradient-to-r from-primary-purple/40 to-button-orange/30 blur-xl" />
+            <div className="relative flex items-center gap-2.5 rounded-2xl border border-primary-purple/40 bg-primary-purple/15 px-6 py-3.5 shadow-lg shadow-primary-purple/25 backdrop-blur">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`${DIR}/TPE-middle-icon.png`} alt="The Prominent" style={{ height: 42, width: 42 }} className="object-contain" />
+              <span className="whitespace-nowrap text-base font-semibold text-white">The Prominent</span>
             </div>
-          </motion.div>
+          </div>
 
-          {/* HR - Vertical card */}
-          <motion.div variants={staggerItem} className="sm:col-span-2 lg:col-span-4 relative group">
-            <div className="absolute inset-0 bg-gradient-to-b from-blue-500/15 to-transparent rounded-2xl md:rounded-3xl" />
-            <div className="relative h-full min-h-[280px] md:min-h-[320px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
-              <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center mb-4 md:mb-5 shadow-lg shadow-blue-500/20">
-                <Users className="w-5 h-5 md:w-6 md:h-6 text-white" />
-              </div>
-              <h3 className="text-lg md:text-xl font-semibold text-white mb-2">HR & Payroll</h3>
-              <p className="text-sm text-white/40 mb-4 md:mb-6">Employee lifecycle, attendance, and automated payroll processing.</p>
+          <VConn />
+          <Row idxs={rows[0]} />
+          <VConn />
+          <Row idxs={rows[1]} />
+          <VConn />
+          <Row idxs={rows[2]} />
+        </div>
 
-              {/* Employee avatars */}
-              <div className="mt-auto">
-                <div className="flex -space-x-2 md:-space-x-3 mb-3">
-                  {["bg-blue-500", "bg-purple-500", "bg-pink-500", "bg-amber-500", "bg-emerald-500"].map((color, i) => (
-                    <div key={i} className={cn("w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-bg-layout-purple flex items-center justify-center text-[10px] md:text-xs font-medium text-white", color)}>
-                      {String.fromCharCode(65 + i)}
-                    </div>
-                  ))}
-                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-bg-layout-purple bg-white/10 flex items-center justify-center text-[10px] md:text-xs text-white/60">
-                    +847
-                  </div>
-                </div>
-                <p className="text-xs text-white/30">852 active employees</p>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Inventory - Wide card */}
-          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-6 relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-orange-500/5 rounded-2xl md:rounded-3xl" />
-            <div className="relative h-full min-h-[200px] md:min-h-[240px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0">
-                  <Package className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1 md:mb-2">Inventory & Warehouse</h3>
-                  <p className="text-xs md:text-sm text-white/40">Multi-location stock tracking with barcode support.</p>
-                </div>
-              </div>
-
-              {/* Stock indicators */}
-              <div className="mt-auto flex flex-col sm:flex-row sm:items-center gap-3 md:gap-6">
-                <div>
-                  <p className="text-2xl md:text-3xl font-bold text-white">24,847</p>
-                  <p className="text-[10px] md:text-xs text-white/30">SKUs tracked</p>
-                </div>
-                <div className="hidden sm:block h-12 w-px bg-white/10" />
-                <div className="flex flex-wrap gap-3 md:gap-4">
-                  <div className="flex items-center gap-1.5 md:gap-2">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                    <span className="text-xs md:text-sm text-white/50">In Stock</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 md:gap-2">
-                    <div className="w-2 h-2 rounded-full bg-amber-400" />
-                    <span className="text-xs md:text-sm text-white/50">Low</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 md:gap-2">
-                    <div className="w-2 h-2 rounded-full bg-red-400" />
-                    <span className="text-xs md:text-sm text-white/50">Out</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Sales - Wide card */}
-          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-6 relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-purple-500/5 rounded-2xl md:rounded-3xl" />
-            <div className="relative h-full min-h-[200px] md:min-h-[240px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
-                  <ShoppingCart className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1 md:mb-2">Sales & Orders</h3>
-                  <p className="text-xs md:text-sm text-white/40">Quote-to-cash automation with approval workflows.</p>
-                </div>
-              </div>
-
-              {/* Pipeline bars */}
-              <div className="mt-auto flex items-end gap-1.5 md:gap-2">
-                {[
-                  { label: "Leads", h: "60%", color: "bg-violet-500" },
-                  { label: "Qualified", h: "45%", color: "bg-purple-500" },
-                  { label: "Proposal", h: "30%", color: "bg-indigo-500" },
-                  { label: "Closed", h: "25%", color: "bg-emerald-500" },
-                ].map((stage) => (
-                  <div key={stage.label} className="flex-1 flex flex-col items-center">
-                    <div className="w-full h-12 md:h-16 bg-white/[0.04] rounded-md md:rounded-lg overflow-hidden flex items-end">
-                      <div className={cn("w-full rounded-t-sm md:rounded-t-md", stage.color)} style={{ height: stage.h }} />
-                    </div>
-                    <p className="text-[8px] md:text-[10px] text-white/30 mt-1.5 md:mt-2">{stage.label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Small cards row - 2x2 on mobile, 4 across on desktop */}
-          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-3 relative group">
-            <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
-              <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-pink-500/20">
-                <Monitor className="w-4 h-4 md:w-5 md:h-5 text-white" />
-              </div>
-              <h3 className="text-sm md:text-base font-semibold text-white mb-1">Point of Sale</h3>
-              <p className="text-[10px] md:text-xs text-white/40 mb-3 md:mb-4">Fast retail checkout</p>
-              <div className="mt-auto">
-                <p className="text-xl md:text-2xl font-bold text-white">₱1.2M</p>
-                <p className="text-[9px] md:text-[10px] text-white/30">Today&apos;s transactions</p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-3 relative group">
-            <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
-              <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-rose-400 to-red-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-rose-500/20">
-                <Clock className="w-4 h-4 md:w-5 md:h-5 text-white" />
-              </div>
-              <h3 className="text-sm md:text-base font-semibold text-white mb-1">Queue System</h3>
-              <p className="text-[10px] md:text-xs text-white/40 mb-3 md:mb-4">Customer flow</p>
-              <div className="mt-auto font-mono">
-                <p className="text-xl md:text-2xl font-bold text-white">A-042</p>
-                <p className="text-[9px] md:text-[10px] text-white/30">Now serving</p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-3 relative group">
-            <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
-              <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-cyan-500/20">
-                <UserCircle className="w-4 h-4 md:w-5 md:h-5 text-white" />
-              </div>
-              <h3 className="text-sm md:text-base font-semibold text-white mb-1">CRM</h3>
-              <p className="text-[10px] md:text-xs text-white/40 mb-3 md:mb-4">Relationship tracking</p>
-              <div className="mt-auto">
-                <p className="text-xl md:text-2xl font-bold text-white">4,281</p>
-                <p className="text-[9px] md:text-[10px] text-white/30">Active contacts</p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-3 relative group">
-            <div className="relative h-full min-h-[160px] md:min-h-[200px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-4 sm:p-5 md:p-6 flex flex-col">
-              <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center mb-3 md:mb-4 shadow-lg shadow-orange-500/20">
-                <Truck className="w-4 h-4 md:w-5 md:h-5 text-white" />
-              </div>
-              <h3 className="text-sm md:text-base font-semibold text-white mb-1">Procurement</h3>
-              <p className="text-[10px] md:text-xs text-white/40 mb-3 md:mb-4">Vendor management</p>
-              <div className="mt-auto">
-                <p className="text-xl md:text-2xl font-bold text-white">127</p>
-                <p className="text-[9px] md:text-[10px] text-white/30">Active suppliers</p>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* BI - Wide card with chart */}
-          <motion.div variants={staggerItem} className="sm:col-span-2 lg:col-span-7 relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/5 rounded-2xl md:rounded-3xl" />
-            <div className="relative h-full min-h-[180px] md:min-h-[220px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/20 shrink-0">
-                  <BarChart3 className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1 md:mb-2">Business Intelligence</h3>
-                  <p className="text-xs md:text-sm text-white/40">Real-time dashboards & custom reports</p>
-                </div>
-              </div>
-
-              {/* Chart visualization */}
-              <div className="mt-auto flex items-end gap-1 md:gap-1.5 h-14 md:h-20">
-                {[40, 65, 45, 80, 55, 90, 70, 85, 60, 95, 75, 88].map((h, i) => (
-                  <div key={i} className="flex-1 bg-gradient-to-t from-purple-500/40 to-purple-500/10 rounded-t-sm" style={{ height: `${h}%` }} />
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Project Management */}
-          <motion.div variants={staggerItem} className="sm:col-span-2 lg:col-span-5 relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-2xl md:rounded-3xl" />
-            <div className="relative h-full min-h-[180px] md:min-h-[220px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
-              <div className="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-indigo-400 to-blue-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
-                  <FolderKanban className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1">Project Management</h3>
-                  <p className="text-xs md:text-sm text-white/40">Tasks, timelines, resources</p>
-                </div>
-              </div>
-
-              {/* Progress bars */}
-              <div className="mt-auto space-y-2 md:space-y-3">
-                {[
-                  { name: "Q1 Rollout", progress: 92 },
-                  { name: "Mobile App", progress: 67 },
-                  { name: "API v2", progress: 41 },
-                ].map((project) => (
-                  <div key={project.name}>
-                    <div className="flex justify-between text-[10px] md:text-xs mb-1 md:mb-1.5">
-                      <span className="text-white/50">{project.name}</span>
-                      <span className="text-white/70">{project.progress}%</span>
-                    </div>
-                    <div className="h-1 md:h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-indigo-400 to-blue-400 rounded-full" style={{ width: `${project.progress}%` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Bottom row - Compliance & Integrations */}
-          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-4 relative group">
-            <div className="relative h-full min-h-[140px] md:min-h-[180px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-red-400 to-rose-500 flex items-center justify-center shadow-lg shadow-red-500/20 shrink-0">
-                <ShieldCheck className="w-6 h-6 md:w-8 md:h-8 text-white" />
-              </div>
-              <div>
-                <h3 className="text-lg md:text-xl font-semibold text-white mb-1 md:mb-2">Compliance</h3>
-                <p className="text-xs md:text-sm text-white/40">Audit trails & governance</p>
-                <div className="flex items-center gap-2 mt-2 md:mt-3">
-                  <Check className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-400" />
-                  <span className="text-[10px] md:text-xs text-white/50">SOC 2 Type II</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div variants={staggerItem} className="sm:col-span-1 lg:col-span-8 relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-teal-500/5 via-cyan-500/5 to-blue-500/5 rounded-2xl md:rounded-3xl" />
-            <div className="relative h-full min-h-[140px] md:min-h-[180px] rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-5 sm:p-6 md:p-8 flex flex-col">
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-teal-500/20 shrink-0">
-                  <Plug className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1">Integrations</h3>
-                  <p className="text-xs md:text-sm text-white/40">Connect with 200+ enterprise tools</p>
-                </div>
-              </div>
-
-              {/* Integration logos placeholder */}
-              <div className="mt-auto flex items-center gap-2 md:gap-3 flex-wrap">
-                {[Zap, Globe, Lock, Layers, BarChart3, Users].map((Icon, i) => (
-                  <div key={i} className="w-9 h-9 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center">
-                    <Icon className="w-4 h-4 md:w-5 md:h-5 text-white/40" />
-                  </div>
-                ))}
-                <div className="w-9 h-9 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-[10px] md:text-xs text-white/40">
-                  +194
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-        </motion.div>
+        {/* compact grid (mobile) */}
+        <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto md:hidden">
+          {modules.map((_, i) => (
+            <ModuleBox key={i} idx={i} />
+          ))}
+        </div>
       </div>
     </section>
   );

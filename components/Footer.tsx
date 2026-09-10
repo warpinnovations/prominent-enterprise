@@ -24,21 +24,17 @@ export const CTA = () => {
 
           <div className="relative px-8 py-16 md:px-20 md:py-24 text-center">
             <p className="eyebrow justify-center mb-5">Get started</p>
-            <h2 className="display text-4xl md:text-6xl font-bold text-white mb-6">
-              Ready to run a{" "}
-              <span className="text-gradient">tighter operation?</span>
+            <h2 className="display text-4xl md:text-5xl font-bold text-white mb-6 max-w-3xl mx-auto">
+              Ready to see how The Prominent Enterprise can{" "}
+              <span className="text-gradient">streamline your operations?</span>
             </h2>
             <p className="text-lg text-white/60 mb-10 max-w-2xl mx-auto text-balance">
-              See The Prominent on your own numbers. Book a walkthrough and we&apos;ll show you
-              exactly where it saves you time and money.
+              Let us walk you through your next business solution.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex justify-center">
               <Link href="/book-a-demo" className="btn-primary text-base">
                 Book a Demo
                 <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link href="/quiz" className="btn-secondary text-base">
-                Take the free assessment
               </Link>
             </div>
           </div>
@@ -59,7 +55,7 @@ const quickLinks = [
 const contactItems = [
   { icon: Phone, label: "(033) 329-28-38", href: "tel:0333292838" },
   { icon: Phone, label: "(033) 511-36-05", href: "tel:0335113605" },
-  { icon: Mail, label: "marketing@prometheus.ph", href: "mailto:marketing@prometheus.ph" },
+  { icon: Mail, label: "inquiry.prominent@warp.ph", href: "mailto:inquiry.prominent@warp.ph" },
 ];
 
 export const Footer = () => {
@@ -124,7 +120,8 @@ export const Footer = () => {
             </Link>
 
             <p className="text-white/55 text-sm leading-relaxed max-w-sm mb-6">
-              To forever chase excellence with curiosity as our guide.
+              The Prominent Enterprise — the next-generation ERP system for modern enterprises
+              in the Philippines. Built for efficiency, accuracy, and ease of use.
             </p>
 
             {/* Address */}
